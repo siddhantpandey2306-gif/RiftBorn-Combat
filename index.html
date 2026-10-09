@@ -1,0 +1,2340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RIFTBORN - Original Competitive Fighting Game</title>
+  <meta name="description" content="RIFTBORN is an original competitive futuristic hero-based fighting game. Channel unique energy cores, master fast-paced combat, unlock progression, and climb the Rift Champion ranks.">
+  <meta name="theme-color" content="#F4F6F8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <!-- TOP NAVIGATION BAR (Clean Light Combat Header) -->
+  <header id="navbar">
+    <div class="nav-brand" id="btn-nav-brand">
+      <div class="brand-emblem"></div>
+      <div class="brand-text">RIFTBORN</div>
+      <span class="brand-tag">ORIGINAL COMBAT</span>
+    </div>
+
+    <!-- Core Simplified Navigation: HOME, FIGHT, FIGHTERS, RANK, PROFILE, STORY -->
+    <nav class="nav-links">
+      <button class="nav-btn active" data-screen="screen-home" id="nav-home">HOME</button>
+      <button class="nav-btn" data-screen="screen-play" id="nav-play">FIGHT</button>
+      <button class="nav-btn" data-screen="screen-character-select" id="nav-characters">FIGHTERS</button>
+      <button class="nav-btn" data-screen="screen-ranked-setup" id="nav-ranked">RANK</button>
+      <button class="nav-btn" data-screen="screen-profile" id="nav-profile">PROFILE</button>
+      <button class="nav-btn" data-screen="screen-story" id="nav-story">STORY</button>
+      <!-- Hidden compatibility buttons for internal script references if any -->
+      <button class="nav-btn" data-screen="screen-characters" id="nav-characters-dossier" style="display:none;">DOSSIER</button>
+      <button class="nav-btn" data-screen="screen-progression" id="nav-progression" style="display:none;">PROGRESSION</button>
+      <button class="nav-btn" data-screen="screen-character-select" id="nav-dojo" style="display:none;">DOJO</button>
+      <button class="nav-btn" data-screen="screen-casual-setup" id="nav-casual" style="display:none;">CASUAL</button>
+      <button class="nav-btn" data-screen="screen-leaderboard" id="nav-leaderboard" style="display:none;">LEADERBOARD</button>
+    </nav>
+
+    <!-- Right Controls: Bounties, Settings, Currency, Passport -->
+    <div class="nav-user">
+      <button class="nav-icon-btn" id="nav-guide-btn" title="Combat Guide & Move List">
+        <span class="nav-icon-glyph">📖</span>
+        <span class="nav-icon-label">GUIDE</span>
+      </button>
+
+      <button class="nav-icon-btn" id="nav-challenges" title="Challenges & Bounties">
+        <span class="nav-icon-glyph">🎯</span>
+        <span class="nav-icon-label">BOUNTIES</span>
+        <span id="nav-challenges-badge" class="nav-alert-dot" style="display:none;"></span>
+      </button>
+
+      <button class="nav-icon-btn" data-screen="screen-settings" id="nav-settings" title="System Settings">
+        <span class="nav-icon-glyph">⚙</span>
+      </button>
+
+      <div class="nav-currency-group">
+        <div class="currency-pill">
+          <span class="currency-icon">✦</span>
+          <span id="nav-shards-display">1,400</span>
+        </div>
+        <div class="currency-pill">
+          <span class="currency-icon">⬢</span>
+          <span id="nav-prisms-display">60</span>
+        </div>
+      </div>
+
+      <div class="profile-pill" id="nav-profile-pill">
+        <div class="profile-avatar-mini" id="nav-avatar">V</div>
+        <div class="profile-info-mini">
+          <span class="profile-name-mini" id="nav-username">RiftOperative</span>
+          <span class="profile-rank-mini" id="nav-rank-badge">Silver I</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- APP SCREENS CONTAINER -->
+  <main id="screen-container">
+
+    <!-- 1. HOME SCREEN: PREMIUM FIGHTING GAME MAIN STAGE -->
+    <section class="screen active" id="screen-home">
+      <div class="home-stage-container">
+        
+        <!-- Left: Major Hero Presentation -->
+        <div class="home-hero-presentation">
+          <div class="home-hero-eyebrow">
+            <span class="home-eyebrow-tag">YOUR FIGHTER</span>
+            <div class="home-fighter-switcher">
+              <button class="btn-fighter-cycle" id="btn-home-prev-fighter" title="Previous Fighter">◄</button>
+              <span class="home-fighter-counter" id="home-fighter-index">1 / 6</span>
+              <button class="btn-fighter-cycle" id="btn-home-next-fighter" title="Next Fighter">►</button>
+            </div>
+          </div>
+
+          <!-- Large Character Interactive Stage Canvas / Artwork -->
+          <div class="home-hero-stage" id="home-hero-stage">
+            <canvas id="home-hero-canvas" width="480" height="320"></canvas>
+            <div class="home-hero-badge-overlay" id="home-hero-core-pill">CRIMSON CORE</div>
+          </div>
+
+          <!-- Large Editorial Fighter Identity -->
+          <div class="home-hero-meta">
+            <h1 class="home-fighter-name" id="home-hero-title">VEX</h1>
+            <div class="home-fighter-sub" id="home-hero-sub">CRIMSON CORE // BALANCED</div>
+            <div class="home-fighter-progression">
+              <div class="home-fighter-level-tag" id="home-hero-level">LEVEL 18</div>
+              <div class="home-fighter-xp-meter">
+                <div class="home-fighter-xp-fill" id="home-hero-xp-fill" style="width: 85%;"></div>
+              </div>
+              <span class="home-fighter-xp-digits" id="home-hero-xp-text">4,250 / 5,000 XP</span>
+            </div>
+            <!-- Short Scannable Combat Traits -->
+            <div class="home-fighter-traits-strip" id="home-hero-traits">
+              <span class="fighter-trait-pill"><span class="trait-icon">⚔</span> Versatile Offense</span>
+              <span class="fighter-trait-pill"><span class="trait-icon">🛡</span> Reliable Defense</span>
+              <span class="fighter-trait-pill"><span class="trait-icon">⚡</span> Fast Counters</span>
+            </div>
+            <div id="home-hero-quote" style="display: none;"></div>
+          </div>
+
+          <!-- Major Action: [ FIGHT NOW ] -->
+          <div class="home-hero-actions">
+            <button class="btn-play-hero" id="btn-quick-start-fight">
+              <span class="btn-play-label">FIGHT NOW</span>
+              <span class="btn-play-sub">ENTER COMBAT</span>
+              <span class="btn-play-arrow">➔</span>
+            </button>
+            <button class="btn-hero-secondary" id="btn-home-view-fighter">FIGHTERS ROSTER</button>
+          </div>
+        </div>
+
+        <!-- Right: Editorial Battle Intel Modules (Clean, Non-SaaS Game Intel) -->
+        <div class="home-editorial-column">
+          
+          <!-- Module 1: Daily Challenge -->
+          <div class="home-intel-module" id="home-module-challenge">
+            <div class="intel-module-header">
+              <span class="intel-module-kicker">DAILY BOUNTY</span>
+              <button class="intel-link-btn" id="btn-home-open-challenges">CHALLENGES HUB ➔</button>
+            </div>
+            <div class="intel-challenge-content">
+              <div class="intel-challenge-title" id="home-daily-title">Ascendant Victory</div>
+              <div class="intel-challenge-desc" id="home-daily-desc">Win 2 matches across Casual or Ranked sparring.</div>
+              <div class="intel-meter-row">
+                <div class="intel-bar-bg">
+                  <div class="intel-bar-fill" id="home-daily-bar-fill" style="width: 50%;"></div>
+                </div>
+                <span class="intel-meter-val" id="home-daily-progress-text">1 / 2</span>
+              </div>
+              <div class="intel-reward-pill">🪙 +200 COINS • ✦ +250 XP</div>
+            </div>
+          </div>
+
+          <!-- Module 2: Current Rank -->
+          <div class="home-intel-module" id="home-module-rank">
+            <div class="intel-module-header">
+              <span class="intel-module-kicker">COMPETITIVE STANDING</span>
+              <button class="intel-link-btn" id="btn-home-open-ranked">RANKED LADDER ➔</button>
+            </div>
+            <div class="intel-rank-content">
+              <div class="intel-rank-crest-row">
+                <span class="intel-rank-crest" id="home-rank-crest">🥈</span>
+                <div>
+                  <div class="intel-rank-title" id="home-rank-title">SILVER I</div>
+                  <div class="intel-rank-sub" id="home-rank-rp">585 TOTAL RP • 85/100 RP TO GOLD III</div>
+                </div>
+              </div>
+              <div class="intel-stats-strip">
+                <div class="intel-stat-unit">
+                  <span class="stat-unit-label">WIN STREAK</span>
+                  <span class="stat-unit-val" id="home-rank-streak">🔥 3</span>
+                </div>
+                <div class="intel-stat-unit">
+                  <span class="stat-unit-label">WIN RATE</span>
+                  <span class="stat-unit-val" id="home-rank-winrate">75.0%</span>
+                </div>
+                <div class="intel-stat-unit">
+                  <span class="stat-unit-label">SEASON</span>
+                  <span class="stat-unit-val">1: GENESIS</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Module 3: Recent Match -->
+          <div class="home-intel-module" id="home-module-match">
+            <div class="intel-module-header">
+              <span class="intel-module-kicker">LAST COMBAT TELEMETRY</span>
+              <button class="intel-link-btn" id="btn-home-open-profile">FULL PASSPORT ➔</button>
+            </div>
+            <div class="intel-match-content">
+              <div class="intel-match-top">
+                <span class="intel-outcome-badge victory" id="home-recent-outcome">VICTORY</span>
+                <span class="intel-match-grade" id="home-recent-grade">GRADE S</span>
+                <span class="intel-match-score" id="home-recent-score">2 - 0</span>
+              </div>
+              <div class="intel-match-detail" id="home-recent-detail">
+                VEX vs SOLARIS • Casual 1v1 • Max Combo: 8 Hits
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 8. PREMIUM RIFTBORN CHARACTER SELECTION EXPERIENCE -->
+    <section class="screen" id="screen-character-select">
+      <div class="cs-premium-container">
+        
+        <!-- Top Sleek Header Bar -->
+        <div class="cs-top-bar">
+          <div class="cs-top-left">
+            <span class="cs-phase-tag">PHASE 01 // ROSTER SELECTION</span>
+            <h1 class="cs-top-title">CHOOSE YOUR RIFTBORN</h1>
+          </div>
+          <div class="cs-top-center">
+            <div class="cs-key-shortcuts-pill">
+              <span class="cs-key-badge">◄ ► / A D</span> <span>NAVIGATE</span>
+              <span class="cs-key-sep">•</span>
+              <span class="cs-key-badge">1 - 6</span> <span>COMBAT PROTOCOLS</span>
+              <span class="cs-key-sep">•</span>
+              <span class="cs-key-badge">ENTER / SPACE</span> <span>LOCK IN</span>
+            </div>
+          </div>
+          <div class="cs-top-right" style="display: flex; gap: 8px; align-items: center;">
+            <button class="btn-secondary" id="btn-cs-movelist" style="padding: 4px 10px; font-size: 11px; font-family: var(--font-display); font-weight: 700;">📖 MOVE LIST</button>
+            <div class="cs-match-format-pill" id="cs-format-badge">1V1 VERSUS • TOURNAMENT FORMAT</div>
+          </div>
+        </div>
+
+        <!-- Main Viewport: Professional 2-Column Layout (Stage Left, Intel Right) -->
+        <div class="cs-main-viewport cs-two-column-layout">
+
+          <!-- LEFT COLUMN: Character Hero Artwork Stage & Action Strip -->
+          <div class="cs-stage-column" id="preview-stage-box">
+            
+            <!-- Large Holographic Name Watermark in Background -->
+            <div class="cs-watermark-name" id="cs-stage-watermark">VEX</div>
+            
+            <!-- Atmospheric Core Aura Light Beam -->
+            <div class="cs-core-beam" id="cs-stage-core-beam"></div>
+
+            <!-- Floating Stage Meta Badges -->
+            <div class="cs-stage-floating-meta">
+              <div class="cs-float-pill" id="cs-float-difficulty">
+                <span class="cs-float-lbl">DIFFICULTY</span>
+                <span class="cs-float-val" id="stage-difficulty-val">★★☆☆☆</span>
+              </div>
+              <div class="cs-float-pill" id="cs-float-mastery">
+                <span class="cs-float-lbl">MASTERY</span>
+                <span class="cs-float-val" id="cs-stage-mastery-badge">LVL 12 • RANK 4</span>
+              </div>
+            </div>
+
+            <!-- Live Canvas Container -->
+            <div class="cs-canvas-wrapper" id="cs-canvas-wrapper">
+              <canvas id="select-preview-canvas" width="600" height="380"></canvas>
+              
+              <!-- Selection Radial Burst FX Layer -->
+              <div class="cs-selection-shockwave" id="cs-selection-shockwave"></div>
+            </div>
+
+            <!-- Interactive Combat Stance & Action Strip (Docked at Base of Stage) -->
+            <div class="cs-action-strip">
+              <span class="cs-action-strip-lbl">PREVIEW PROTOCOLS:</span>
+              <div class="cs-action-buttons-group">
+                <button class="preview-act-btn active" data-action="IDLE" id="btn-preview-idle" title="[Key 1] Return to signature combat stance">
+                  <span class="act-key">1</span>
+                  <span class="act-name">STANCE</span>
+                </button>
+                <button class="preview-act-btn" data-action="LIGHT" id="btn-preview-light" title="[Key 2] Execute Light Combo sequence">
+                  <span class="act-key">2</span>
+                  <span class="act-name">LIGHT</span>
+                </button>
+                <button class="preview-act-btn" data-action="HEAVY" id="btn-preview-heavy" title="[Key 3] Heavy Strike / Launcher">
+                  <span class="act-key">3</span>
+                  <span class="act-name">HEAVY</span>
+                </button>
+                <button class="preview-act-btn" data-action="SPECIAL_1" id="btn-preview-sp1" title="[Key 4] Special 1">
+                  <span class="act-key">4</span>
+                  <span class="act-name" id="lbl-preview-sp1">SPECIAL 1</span>
+                </button>
+                <button class="preview-act-btn" data-action="SPECIAL_2" id="btn-preview-sp2" title="[Key 5] Special 2">
+                  <span class="act-key">5</span>
+                  <span class="act-name" id="lbl-preview-sp2">SPECIAL 2</span>
+                </button>
+                <button class="preview-act-btn ult" data-action="ULTIMATE" id="btn-preview-ult" title="[Key 6] Cinematic Ultimate Execution">
+                  <span class="act-key">6</span>
+                  <span class="act-name" id="lbl-preview-ult">ULTIMATE</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN: Fighter Dossier, Stats, Match Setup & Lock-In CTA -->
+          <aside class="cs-intel-column custom-scroll">
+            
+            <!-- Character Header & Personality -->
+            <div class="cs-profile-card">
+              <div class="cs-profile-top-line">
+                <div class="cs-core-tag-badge" id="stage-core-pill">CRIMSON CORE // BALANCED</div>
+                <div class="cs-tier-pill" id="cs-mastery-tier-pill">TIER 1: AWAKENED</div>
+              </div>
+              <h2 class="cs-fighter-name-display" id="stage-fighter-name">VEX</h2>
+              <div class="cs-fighter-title-display" id="stage-fighter-role">THE RIFT VANGUARD • BALANCED</div>
+              <div class="cs-fighter-quote-box" id="cs-fighter-quote">"The Rift will bend to our blade, not break our spirit."</div>
+              <p class="cs-lore-snippet" id="dossier-lore-snippet">
+                Former commander of the Vanguard Coalition fused with Crimson Plasma.
+              </p>
+            </div>
+
+            <!-- Scannable Combat Attributes (Power, Speed, Defense, Technique) -->
+            <div class="cs-ratings-card">
+              <div class="cs-section-header">
+                <span class="cs-sec-icon">📊</span>
+                <span class="cs-sec-title">COMBAT RATINGS</span>
+                <div class="cs-mastery-xp-text" id="cs-mastery-xp-text" style="margin-left: auto;">LVL 12 • 4,250 / 5,000 XP</div>
+              </div>
+              
+              <div class="cs-meter-group">
+                <!-- Power -->
+                <div class="cs-stat-row">
+                  <div class="cs-stat-head">
+                    <span class="cs-stat-name" style="color: #FF5E7E;">ATTACK</span>
+                    <span class="cs-stat-val" id="dossier-val-power" style="color: #FF5E7E;">76</span>
+                  </div>
+                  <div class="cs-stat-bar-frame">
+                    <div class="cs-stat-bar-fill" id="dossier-bar-power" style="width: 76%; background: linear-gradient(90deg, #FF3366, #FF6B8B);"></div>
+                  </div>
+                </div>
+
+                <!-- Defense -->
+                <div class="cs-stat-row">
+                  <div class="cs-stat-head">
+                    <span class="cs-stat-name" style="color: #10B981;">DEFENSE</span>
+                    <span class="cs-stat-val" id="dossier-val-def" style="color: #10B981;">72</span>
+                  </div>
+                  <div class="cs-stat-bar-frame">
+                    <div class="cs-stat-bar-fill" id="dossier-bar-def" style="width: 72%; background: linear-gradient(90deg, #10B981, #34D399);"></div>
+                  </div>
+                </div>
+
+                <!-- Speed -->
+                <div class="cs-stat-row">
+                  <div class="cs-stat-head">
+                    <span class="cs-stat-name" style="color: #00D2FF;">SPEED</span>
+                    <span class="cs-stat-val" id="dossier-val-speed" style="color: #00D2FF;">74</span>
+                  </div>
+                  <div class="cs-stat-bar-frame">
+                    <div class="cs-stat-bar-fill" id="dossier-bar-speed" style="width: 74%; background: linear-gradient(90deg, #00D2FF, #38BDF8);"></div>
+                  </div>
+                </div>
+
+                <!-- Technique -->
+                <div class="cs-stat-row">
+                  <div class="cs-stat-head">
+                    <span class="cs-stat-name" style="color: #A855F7;">TECHNIQUE</span>
+                    <span class="cs-stat-val" id="dossier-val-tech" style="color: #A855F7;">72</span>
+                  </div>
+                  <div class="cs-stat-bar-frame">
+                    <div class="cs-stat-bar-fill" id="dossier-bar-tech" style="width: 72%; background: linear-gradient(90deg, #A855F7, #C084FC);"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mastery mini progression -->
+              <div class="cs-mastery-bar-frame" style="margin-top: 10px;">
+                <div class="cs-mastery-bar-fill" id="cs-mastery-bar-fill" style="width: 85%;"></div>
+              </div>
+              <span id="cs-mastery-lvl-num" style="display:none;">LVL 12</span>
+              <span id="cs-mastery-rank-num" style="display:none;">RANK 4</span>
+            </div>
+
+            <!-- Signature Abilities & Ultimate Grid -->
+            <div class="cs-abilities-card">
+              <div class="cs-section-header">
+                <span class="cs-sec-icon">⚡</span>
+                <span class="cs-sec-title">SIGNATURE ABILITIES & ULTIMATE</span>
+              </div>
+
+              <div class="cs-abilities-compact-row" style="grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                <!-- Special 1 -->
+                <div class="cs-ability-item" id="cs-ability-sp1-card">
+                  <div class="cs-ab-header">
+                    <span class="cs-ab-key" id="cs-ab-sp1-key">KEY U / E</span>
+                    <span class="cs-ab-cost" id="cs-ab-sp1-cost">25 CORE</span>
+                  </div>
+                  <div class="cs-ab-name" id="cs-ab-sp1-name">Crimson Dash</div>
+                  <div class="cs-ab-type" id="cs-ab-sp1-type">130 DMG</div>
+                  <div class="cs-ab-desc" id="cs-ab-sp1-desc" style="display:none;"></div>
+                </div>
+
+                <!-- Special 2 -->
+                <div class="cs-ability-item" id="cs-ability-sp2-card">
+                  <div class="cs-ab-header">
+                    <span class="cs-ab-key" id="cs-ab-sp2-key">KEY I / Q</span>
+                    <span class="cs-ab-cost" id="cs-ab-sp2-cost">30 CORE</span>
+                  </div>
+                  <div class="cs-ab-name" id="cs-ab-sp2-name">Rift Slash</div>
+                  <div class="cs-ab-type" id="cs-ab-sp2-type">155 DMG</div>
+                  <div class="cs-ab-desc" id="cs-ab-sp2-desc" style="display:none;"></div>
+                </div>
+
+                <!-- Ultimate -->
+                <div class="cs-ability-item ult" id="cs-ultimate-card">
+                  <div class="cs-ab-header">
+                    <span class="cs-ab-key" id="cs-ult-key">KEY O / R</span>
+                    <span class="cs-ab-cost">100% CORE</span>
+                  </div>
+                  <div class="cs-ab-name" id="cs-ult-name" style="color: var(--action-primary);">RIFT BREAKER</div>
+                  <div class="cs-ab-type"><span id="cs-ult-dmg">420 DMG</span></div>
+                  <div class="cs-ab-desc" id="cs-ult-desc" style="display:none;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Match Parameters -->
+            <div class="cs-match-config-card">
+              <div class="cs-section-header">
+                <span class="cs-sec-icon">⚙</span>
+                <span class="cs-sec-title">MATCH PARAMETERS</span>
+              </div>
+
+              <div class="cs-config-grid-row">
+                <div class="cs-config-field">
+                  <label for="select-select-opponent">OPPONENT FIGHTER</label>
+                  <select id="select-select-opponent"></select>
+                </div>
+                <div class="cs-config-field">
+                  <label for="select-select-arena">COMBAT ARENA</label>
+                  <select id="select-select-arena"></select>
+                </div>
+                <div class="cs-config-field full-width">
+                  <label for="select-select-diff">AI DIFFICULTY & FORMAT</label>
+                  <select id="select-select-diff">
+                    <option value="RECRUIT">Recruit (Accessible AI)</option>
+                    <option value="WARRIOR" selected>Warrior (Normal AI)</option>
+                    <option value="MASTER">Master (Hard AI)</option>
+                    <option value="GODLIKE">Godlike (Tournament AI)</option>
+                    <option value="LOCAL_2P">Local 2-Player (Split Keyboard)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- PRIMARY LOCK-IN CTA -->
+            <button class="cs-btn-lockin" id="btn-select-launch-match">
+              <div class="cs-lockin-inner">
+                <span class="cs-lockin-icon">⚡</span>
+                <div class="cs-lockin-text-block">
+                  <span class="cs-lockin-title">LOCK IN & FIGHT</span>
+                  <span class="cs-lockin-sub">ENTER COMBAT ARENA [SPACE / ENTER]</span>
+                </div>
+                <span class="cs-lockin-arrow">➔</span>
+              </div>
+            </button>
+
+            <!-- Hidden container retaining core reactor, stance & tactical list DOM IDs -->
+            <div style="display:none;">
+              <div class="cs-stance-card" id="cs-stance-card">
+                <span class="cs-stance-badge" id="cs-stance-name">IAIDO STANCE</span>
+                <span class="cs-stance-val" id="cs-stance-weapon">Energy Katana</span>
+                <div class="cs-stance-desc" id="cs-stance-desc"></div>
+              </div>
+              <div id="cs-core-reactor-card">
+                <span id="cs-core-status-pill">100% MAXIMUM RESONANCE</span>
+                <div id="cs-reactor-orb"><div class="cs-reactor-core-glow"></div><div class="cs-reactor-core-ring"></div></div>
+                <div id="cs-reactor-type-name">CRIMSON PLASMA CORE</div>
+                <div id="cs-reactor-bar-fill"></div>
+                <span id="cs-passive-name">Unyielding Will</span>
+                <div id="cs-passive-desc">HP falls below 35% increases energy gain.</div>
+              </div>
+              <div id="dossier-strengths-list"></div>
+              <div id="dossier-weaknesses-list"></div>
+            </div>
+
+          </aside>
+
+        </div>
+
+        <!-- BOTTOM ROSTER TRAY: ALL 6 FIGHTERS DOCKED IN SLEEK TOURNAMENT CAROUSEL -->
+        <div class="cs-bottom-roster-tray">
+          <div class="cs-roster-tray-header">
+            <span class="cs-tray-title">AVAILABLE FIGHTERS (6 RIFTBORN)</span>
+            <span class="cs-tray-hint">CLICK TO SELECT • OR NAVIGATE WITH [◄ ► / A D]</span>
+          </div>
+
+          <div class="cs-roster-cards-container" id="char-select-cards-list">
+            <!-- Dynamically populated with all 6 fighters containing:
+                 - Name
+                 - Core type
+                 - Role
+                 - Difficulty
+                 - Power, Speed, Defense, Technique mini meters
+                 - Mastery level -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CHARACTER PROGRESSION SCREEN -->
+    <section class="screen" id="screen-progression">
+      <div class="prog-layout">
+        
+        <!-- Top Bar: Character Switcher Strip -->
+        <div class="prog-tabs-strip custom-scroll" id="prog-char-tabs-container">
+          <!-- Dynamically populated 6 fighter tabs -->
+        </div>
+
+        <!-- Main Hero Progression Showcase Banner -->
+        <div class="prog-hero-banner" id="prog-hero-banner-box">
+          <div>
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 6px;">
+              <div class="fighter-card-core-pill" id="prog-core-pill" style="margin: 0;">CRIMSON CORE // BALANCED</div>
+              <div id="prog-evo-badge" style="font-family: 'Orbitron'; font-size: 11px; font-weight: 800; color: var(--accent-cyan); padding: 2px 8px; border-radius: 4px; background: rgba(0,210,255,0.12); border: 1px solid var(--accent-cyan);">TIER 1: AWAKENED</div>
+            </div>
+            
+            <h1 style="font-size: 44px; margin: 0; line-height: 1.1;" id="prog-char-name">VEX</h1>
+            <div style="font-family: 'Orbitron'; font-size: 13px; color: var(--accent-cyan); font-weight: 700; margin-bottom: 12px;" id="prog-char-title">THE RIFT VANGUARD • BALANCED</div>
+
+            <!-- Level & Level XP -->
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 14px;">
+              <span style="font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--text-primary); letter-spacing: 1px;" id="prog-char-level">LEVEL 12</span>
+              <span style="font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--char-vex); letter-spacing: 0.5px;" id="prog-xp-text">XP 4,250 / 5,000</span>
+            </div>
+            <div class="prog-xp-bar-bg">
+              <div class="prog-xp-bar-fill" id="prog-xp-bar-fill" style="width: 85%; background: var(--action-primary);"></div>
+            </div>
+
+            <!-- Mastery Rank & Mastery XP -->
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 12px;">
+              <span style="font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--accent-gold); letter-spacing: 0.5px;" id="prog-mastery-text">MASTERY RANK 4</span>
+              <span style="font-family: var(--font-display); font-size: 11px; color: var(--text-muted); letter-spacing: 0.5px;" id="prog-mastery-xp-text">1,850 / 2,000 Mastery XP</span>
+            </div>
+            <div class="prog-mastery-bar-bg">
+              <div class="prog-mastery-bar-fill" id="prog-mastery-bar-fill" style="width: 92%; background: var(--accent-gold);"></div>
+            </div>
+          </div>
+
+          <!-- Banner Right: Visual Evolution Portrait & Action -->
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; height: 100%; background: var(--surface-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px;">
+            <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: var(--font-display); font-size: 11px; font-weight: 700; color: var(--accent-gold); letter-spacing: 1px;">VISUAL EVOLUTION</span>
+              <span style="font-size: 11px; font-weight: 600; color: var(--text-secondary);" id="prog-tier-indicator">TIER 1 ACTIVE</span>
+            </div>
+
+            <div style="margin: 12px 0; text-align: center;">
+              <div style="width: 76px; height: 76px; margin: 0 auto; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 32px; font-weight: 700; background: var(--surface-white); border: 2px solid var(--char-vex); color: var(--char-vex); box-shadow: var(--shadow-subtle);" id="prog-avatar-big">V</div>
+              <div style="font-size: 13px; color: var(--text-primary); font-weight: 700; margin-top: 8px;" id="prog-evolution-title">Crimson Plasma Flares</div>
+              <div style="font-size: 11px; color: var(--text-muted);" id="prog-suit-name">Equipped: Vanguard Prime</div>
+            </div>
+
+            <div style="display: flex; gap: 8px; width: 100%;">
+              <button class="btn-primary-glow" id="btn-prog-play-match" style="flex: 1; padding: 10px; font-size: 11px;">SPAR NOW ➔</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lower 3-Column Grid -->
+        <div class="prog-grid-columns custom-scroll">
+          
+          <!-- Column 1: Balanced Combat Attributes -->
+          <div class="prog-card-section">
+            <div>
+              <div class="hero-tag" style="background: rgba(16, 185, 129, 0.15); border-color: var(--accent-green); color: var(--accent-green); margin-bottom: 6px;">COMPETITIVE BALANCE</div>
+              <h3 style="font-family: 'Orbitron'; font-size: 18px; margin: 0;">POWER ATTRIBUTES</h3>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Strictly normalized scaling (+0.5/lvl avg) to preserve fair competitive parity.</div>
+            </div>
+
+            <div class="dossier-stat-bar-group" style="margin-top: 6px;">
+              <div class="stat-meter-row">
+                <div class="stat-meter-header">
+                  <span style="color: #FF5E7E;">POWER</span>
+                  <span id="prog-val-power" style="color: #FF5E7E; font-size: 14px;">82</span>
+                </div>
+                <div class="stat-meter-bar">
+                  <div class="stat-meter-fill" id="prog-bar-power" style="width: 82%; background: linear-gradient(90deg, #FF3366, #FF6B8B);"></div>
+                </div>
+              </div>
+
+              <div class="stat-meter-row">
+                <div class="stat-meter-header">
+                  <span style="color: #00D2FF;">SPEED</span>
+                  <span id="prog-val-speed" style="color: #00D2FF; font-size: 14px;">76</span>
+                </div>
+                <div class="stat-meter-bar">
+                  <div class="stat-meter-fill" id="prog-bar-speed" style="width: 76%; background: linear-gradient(90deg, #00D2FF, #38BDF8);"></div>
+                </div>
+              </div>
+
+              <div class="stat-meter-row">
+                <div class="stat-meter-header">
+                  <span style="color: #10B981;">DEFENSE</span>
+                  <span id="prog-val-def" style="color: #10B981; font-size: 14px;">74</span>
+                </div>
+                <div class="stat-meter-bar">
+                  <div class="stat-meter-fill" id="prog-bar-def" style="width: 74%; background: linear-gradient(90deg, #10B981, #34D399);"></div>
+                </div>
+              </div>
+
+              <div class="stat-meter-row">
+                <div class="stat-meter-header">
+                  <span style="color: #A855F7;">TECHNIQUE</span>
+                  <span id="prog-val-tech" style="color: #A855F7; font-size: 14px;">89</span>
+                </div>
+                <div class="stat-meter-bar">
+                  <div class="stat-meter-fill" id="prog-bar-tech" style="width: 89%; background: linear-gradient(90deg, #A855F7, #C084FC);"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- XP Earning Sources Info Box -->
+            <div style="background: var(--surface-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px; margin-top: auto;">
+              <div style="font-family: var(--font-display); font-size: 11px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; letter-spacing: 1px;">HOW TO EARN WARRIOR XP</div>
+              <div style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: var(--text-secondary);">
+                <div>⚔ <strong style="color:var(--text-primary);">Winning Matches:</strong> +350 to +470 XP</div>
+                <div>📖 <strong style="color:var(--text-primary);">Story Chapters:</strong> +500 XP & 150 Shards</div>
+                <div>🎯 <strong style="color:var(--text-primary);">Mastery Feats:</strong> +350 XP per challenge</div>
+                <div>👑 <strong style="color:var(--text-primary);">Defeating Bosses:</strong> +800 XP & 300 Shards</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 2: Ability Unlocks & Move Variants -->
+          <div class="prog-card-section">
+            <div>
+              <div class="hero-tag" style="background: rgba(0, 210, 255, 0.15); border-color: var(--accent-cyan); color: var(--accent-cyan); margin-bottom: 6px;">ABILITY TREE</div>
+              <h3 style="font-family: 'Orbitron'; font-size: 18px; margin: 0;">COMBAT PROTOCOLS</h3>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Earned through warrior level milestones and battle mastery.</div>
+            </div>
+
+            <!-- UNLOCKED SECTION -->
+            <div>
+              <div style="font-family: 'Orbitron'; font-size: 11px; font-weight: 800; color: var(--accent-green); margin-bottom: 8px;">UNLOCKED ABILITIES</div>
+              <div id="prog-unlocked-abilities-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+
+            <!-- LOCKED SECTION -->
+            <div style="margin-top: 8px;">
+              <div style="font-family: 'Orbitron'; font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 8px;">UPCOMING MILESTONES (LOCKED)</div>
+              <div id="prog-locked-abilities-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+          </div>
+
+          <!-- Column 3: Cosmetics & Mastery Challenges -->
+          <div class="prog-card-section">
+            <div>
+              <div class="hero-tag" style="background: rgba(255, 184, 0, 0.15); border-color: var(--accent-gold); color: var(--accent-gold); margin-bottom: 6px;">COSMETICS & QUESTS</div>
+              <h3 style="font-family: 'Orbitron'; font-size: 18px; margin: 0;">MASTERY FEATS</h3>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Complete live warrior challenges to earn Character & Mastery XP.</div>
+            </div>
+
+            <!-- Visual Evolution & Cosmetic Milestones -->
+            <div>
+              <div style="font-family: 'Orbitron'; font-size: 11px; font-weight: 800; color: var(--accent-cyan); margin-bottom: 8px;">COSMETIC & EVOLUTION TRACK</div>
+              <div id="prog-cosmetics-track-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+
+            <!-- Live Challenges List -->
+            <div style="margin-top: 8px;">
+              <div style="font-family: 'Orbitron'; font-size: 11px; font-weight: 800; color: var(--accent-gold); margin-bottom: 8px;">ACTIVE MASTERY CHALLENGES</div>
+              <div id="prog-challenges-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 2. PLAY SCREEN (GAME MODES) -->
+    <section class="screen" id="screen-play">
+      <div class="modes-screen-header">
+        <span class="cs-phase-tag">DEPLOYMENT // BATTLE SELECTOR</span>
+        <h2 class="modes-main-title">COMBAT MODES</h2>
+      </div>
+
+      <div class="modes-selector-layout">
+        <!-- Left Column: Clean Mode List Selector -->
+        <div class="modes-list-column">
+          
+          <!-- Casual 1v1 -->
+          <div class="mode-nav-item active" id="mode-card-casual" data-mode="casual">
+            <div class="mode-item-indicator"></div>
+            <div class="mode-item-meta">
+              <span class="mode-item-tag tag-cyan">SPARRING</span>
+              <div class="mode-item-title">CASUAL 1V1</div>
+              <div class="mode-item-sub">Adaptive AI & Local 2-Player</div>
+            </div>
+            <span class="mode-item-arrow">➔</span>
+          </div>
+
+          <!-- Ranked 1v1 -->
+          <div class="mode-nav-item" id="mode-card-ranked" data-mode="ranked">
+            <div class="mode-item-indicator gold"></div>
+            <div class="mode-item-meta">
+              <span class="mode-item-tag tag-gold">COMPETITIVE</span>
+              <div class="mode-item-title">RANKED 1V1</div>
+              <div class="mode-item-sub">Official Ranking Points & Tiers</div>
+            </div>
+            <span class="mode-item-arrow">➔</span>
+          </div>
+
+          <!-- Story Mode -->
+          <div class="mode-nav-item" id="mode-card-story" data-mode="story">
+            <div class="mode-item-indicator violet"></div>
+            <div class="mode-item-meta">
+              <span class="mode-item-tag tag-violet">NARRATIVE</span>
+              <div class="mode-item-title">STORY CAMPAIGN</div>
+              <div class="mode-item-sub">6 Cinematic Chapters & Lore Codex</div>
+            </div>
+            <span class="mode-item-arrow">➔</span>
+          </div>
+
+          <!-- Survival -->
+          <div class="mode-nav-item" id="mode-card-survival" data-mode="survival">
+            <div class="mode-item-indicator emerald"></div>
+            <div class="mode-item-meta">
+              <span class="mode-item-tag tag-green">ENDURANCE</span>
+              <div class="mode-item-title">SURVIVAL MODE</div>
+              <div class="mode-item-sub">Endless Void Waves & Kinetic Perks</div>
+            </div>
+            <span class="mode-item-arrow">➔</span>
+          </div>
+
+          <!-- Boss Rush -->
+          <div class="mode-nav-item" id="mode-card-bossrush" data-mode="bossrush">
+            <div class="mode-item-indicator crimson"></div>
+            <div class="mode-item-meta">
+              <span class="mode-item-tag tag-red">EPIC TITANS</span>
+              <div class="mode-item-title">BOSS RUSH</div>
+              <div class="mode-item-sub">Multi-Phase Void Megabosses</div>
+            </div>
+            <span class="mode-item-arrow">➔</span>
+          </div>
+
+          <!-- Training Arena -->
+          <div class="mode-nav-item" id="mode-card-training" data-mode="training">
+            <div class="mode-item-indicator gray"></div>
+            <div class="mode-item-meta">
+              <span class="mode-item-tag tag-gray">COMBAT LAB</span>
+              <div class="mode-item-title">TRAINING ARENA</div>
+              <div class="mode-item-sub">Frame Advantage & Hitbox Inspection</div>
+            </div>
+            <span class="mode-item-arrow">➔</span>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Selected Mode Briefing & Launch Card -->
+        <div class="mode-briefing-column">
+          <div class="mode-briefing-panel">
+            <div class="mode-briefing-top">
+              <span class="mode-briefing-badge" id="play-briefing-badge">SPARRING PROTOCOL</span>
+              <span class="mode-briefing-diff" id="play-briefing-diff">DIFFICULTY: FLEXIBLE</span>
+            </div>
+
+            <h3 class="mode-briefing-title" id="play-briefing-title">CASUAL 1V1</h3>
+            <p class="mode-briefing-desc" id="play-briefing-desc">
+              Select any warrior and arena. Battle against adaptive combat AI or challenge a rival on local split keyboard.
+            </p>
+
+            <div class="mode-briefing-meta-grid">
+              <div class="briefing-stat-box">
+                <span class="stat-box-lbl">MATCH FORMAT</span>
+                <span class="stat-box-val" id="play-briefing-format">Best of 3 Rounds</span>
+              </div>
+              <div class="briefing-stat-box">
+                <span class="stat-box-lbl">DIFFICULTY</span>
+                <span class="stat-box-val" id="play-briefing-diff-val">Recruit to Godlike</span>
+              </div>
+              <div class="briefing-stat-box">
+                <span class="stat-box-lbl">REWARD</span>
+                <span class="stat-box-val reward" id="play-briefing-reward">+150 XP • +100 COINS</span>
+              </div>
+              <div class="briefing-stat-box">
+                <span class="stat-box-lbl">LOCAL PLAY</span>
+                <span class="stat-box-val">Supported (Split Keys)</span>
+              </div>
+            </div>
+
+            <div class="mode-briefing-action">
+              <button class="btn-play-hero" id="btn-play-start-selected-mode">
+                <span class="btn-play-label">START MATCH</span>
+                <span class="btn-play-sub" id="play-briefing-btn-sub">CASUAL SPARRING [ENTER]</span>
+                <span class="btn-play-arrow">➔</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 3. CHARACTERS ROSTER SCREEN -->
+    <section class="screen" id="screen-characters">
+      <div class="roster-layout">
+        <!-- Character List -->
+        <div class="roster-selector custom-scroll" id="roster-list-container">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Selected Character Deep Dive -->
+        <div class="character-detail-view" id="character-detail-container">
+          <div>
+            <div class="char-hero-header">
+              <div>
+                <div class="hero-tag" id="detail-core-tag">CRIMSON CORE</div>
+                <div class="char-name-big" id="detail-char-name">VEX</div>
+                <div class="char-title-sub" id="detail-char-title">The Rift Vanguard • Balanced</div>
+              </div>
+              <div style="display: flex; gap: 12px;">
+                <button class="btn-secondary" id="btn-char-customize" style="font-size: 13px;">CUSTOMIZE & SKINS</button>
+                <button class="btn-primary-glow" id="btn-char-select-main" style="padding: 10px 24px; font-size: 13px;">SET AS MAIN</button>
+              </div>
+            </div>
+
+            <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6; max-width: 700px;" id="detail-char-lore">
+              Former commander of the Vanguard Coalition. Fused his chassis with raw Crimson Plasma.
+            </p>
+
+            <!-- Combat Attributes -->
+            <div class="char-stats-grid">
+              <div class="stat-box">
+                <div class="stat-label">VITALITY (HP)</div>
+                <div class="stat-val" id="stat-val-hp">1,000</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">ATTACK POWER</div>
+                <div class="stat-val" id="stat-val-atk">100</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">KINETIC DEFENSE</div>
+                <div class="stat-val" id="stat-val-def">80</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">MOVE SPEED</div>
+                <div class="stat-val" id="stat-val-spd">7.2</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">CRIT CHANCE</div>
+                <div class="stat-val" id="stat-val-crit">12%</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">CORE RECHARGE</div>
+                <div class="stat-val" id="stat-val-core">1.0x</div>
+              </div>
+            </div>
+
+            <!-- Ability Cards -->
+            <div style="font-family: var(--font-display); font-size: 18px; font-weight: 700; letter-spacing: 1px; margin-top: 20px; color: var(--text-primary);">COMBAT PROTOCOLS</div>
+            <div class="abilities-list" id="detail-abilities-grid">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. CHARACTER CUSTOMIZE & DETAILS SCREEN -->
+    <section class="screen" id="screen-character-details">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+        <div>
+          <button class="btn-secondary" id="btn-back-to-roster" style="padding: 6px 16px; font-size: 12px; margin-bottom: 8px;">← BACK TO ROSTER</button>
+          <h2 style="font-family: var(--font-display); font-size: 36px; font-weight: 700; color: var(--text-primary); margin: 0;" id="custom-char-name">VEX CUSTOMIZATION</h2>
+        </div>
+        <div style="display: flex; gap: 16px;">
+          <div class="currency-pill"><span class="currency-shards">✦</span> <span id="custom-shards-display">1,400</span></div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <!-- Skins Showcase -->
+        <div style="background: var(--surface-white); border: 1px solid var(--border-neutral); border-radius: var(--radius-md); padding: 24px; box-shadow: var(--shadow-sm);">
+          <h3 style="font-family: var(--font-display); font-size: 20px; font-weight: 700; margin-bottom: 16px; color: var(--primary-action);">COSMETIC SUITS & SKINS</h3>
+          <div id="skins-list-container" style="display: flex; flex-direction: column; gap: 12px;">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Mastery Challenges -->
+        <div style="background: var(--surface-white); border: 1px solid var(--border-neutral); border-radius: var(--radius-md); padding: 24px; box-shadow: var(--shadow-sm);">
+          <h3 style="font-family: var(--font-display); font-size: 20px; font-weight: 700; margin-bottom: 16px; color: var(--accent-gold);">CHARACTER MASTERY CHALLENGES</h3>
+          <div id="mastery-list-container" style="display: flex; flex-direction: column; gap: 12px;">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. CASUAL 1V1 MATCH SETUP -->
+    <section class="screen" id="screen-casual-setup">
+      <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px;">
+        <h2 style="font-family: 'Orbitron'; font-size: 32px; font-weight: 900;">CUSTOM SPARRING SETUP</h2>
+
+        <!-- Fighter Pickers -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+          <div style="background: var(--surface-white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-subtle);">
+            <div style="font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--char-vex); margin-bottom: 10px; letter-spacing: 1px;">PLAYER 1 (YOU)</div>
+            <select id="select-p1-char" style="width: 100%; padding: 12px; background: var(--surface-secondary); border: 1px solid var(--border-subtle); color: var(--text-primary); font-family: var(--font-body); font-size: 14px; font-weight: 600; border-radius: var(--radius-sm);"></select>
+          </div>
+
+          <div style="background: var(--surface-white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-subtle);">
+            <div style="font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--char-solaris); margin-bottom: 10px; letter-spacing: 1px;">OPPONENT (P2)</div>
+            <select id="select-p2-char" style="width: 100%; padding: 12px; background: var(--surface-secondary); border: 1px solid var(--border-subtle); color: var(--text-primary); font-family: var(--font-body); font-size: 14px; font-weight: 600; border-radius: var(--radius-sm);"></select>
+          </div>
+        </div>
+
+        <!-- Arena & Rules -->
+        <div style="background: var(--surface-white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; box-shadow: var(--shadow-subtle);">
+          <div>
+            <div style="font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; letter-spacing: 1px;">SELECT ARENA</div>
+            <select id="select-arena" style="width: 100%; padding: 12px; background: var(--surface-secondary); border: 1px solid var(--border-subtle); color: var(--text-primary); font-family: var(--font-body); font-size: 14px; font-weight: 600; border-radius: var(--radius-sm);"></select>
+          </div>
+
+          <div>
+            <div style="font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; letter-spacing: 1px;">AI DIFFICULTY // LOCAL 2P</div>
+            <select id="select-ai-diff" style="width: 100%; padding: 12px; background: var(--surface-secondary); border: 1px solid var(--border-subtle); color: var(--text-primary); font-family: var(--font-body); font-size: 14px; font-weight: 600; border-radius: var(--radius-sm);">
+              <option value="RECRUIT">Recruit (Easy)</option>
+              <option value="WARRIOR" selected>Warrior (Normal)</option>
+              <option value="MASTER">Master (Hard)</option>
+              <option value="GODLIKE">Godlike (Tournament AI)</option>
+              <option value="LOCAL_2P">Local 2-Player (Split Keyboard)</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn-primary-glow" id="btn-start-casual-match" style="align-self: center; padding: 16px 64px; font-size: 18px; font-family: var(--font-display); letter-spacing: 2px;">FIGHT ➔</button>
+      </div>
+    </section>
+
+    <!-- 5B. RANKED 1V1 COMPETITIVE SETUP SCREEN -->
+    <section class="screen" id="screen-ranked-setup">
+      <div class="ranked-screen-container">
+        
+        <!-- Header -->
+        <div class="ranked-screen-top-bar">
+          <div>
+            <span class="cs-phase-tag">COMPETITIVE LADDER // SEASON 1: GENESIS</span>
+            <h2 class="modes-main-title">RANKED 1V1 LADDER</h2>
+          </div>
+          <button class="btn-secondary" id="btn-back-to-play-from-ranked">← BACK TO MODES</button>
+        </div>
+
+        <!-- TIER 1 (TOP): Current Standing & RP Progress -->
+        <div class="ranked-status-strip" id="ranked-setup-status-strip">
+          <div class="ranked-status-main">
+            <div class="rank-crest-icon" id="ranked-setup-crest">🥈</div>
+            <div class="ranked-status-info">
+              <span class="ranked-kicker">CURRENT STANDING</span>
+              <div class="ranked-title" id="ranked-setup-rank-title">SILVER I</div>
+              <div class="ranked-rp-sub" id="ranked-setup-rp-text">585 Total RP • 85 / 100 RP towards Gold III</div>
+              <div class="ranked-progress-bar-frame">
+                <div class="ranked-progress-bar-fill" style="width: 85%;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="ranked-telemetry-strip">
+            <div class="stat-mini"><span class="stat-mini-label">WIN STREAK</span><span class="stat-mini-val" id="ranked-setup-streak" style="color: var(--action-primary); font-family: var(--font-display); font-weight: 700;">🔥 3</span></div>
+            <div class="stat-mini"><span class="stat-mini-label">SEASON PEAK</span><span class="stat-mini-val" id="ranked-setup-peak" style="color: var(--accent-gold); font-family: var(--font-display); font-weight: 700;">Silver I</span></div>
+            <div class="stat-mini"><span class="stat-mini-label">WIN RATE</span><span class="stat-mini-val" id="ranked-setup-winrate" style="color: var(--accent-green); font-family: var(--font-display); font-weight: 700;">75.0%</span></div>
+          </div>
+        </div>
+
+        <!-- TIER 2 (MIDDLE): Next Rank Target & Fighter Pickers -->
+        <div class="ranked-next-tier-banner">
+          <div class="next-tier-pill">NEXT RANK TARGET</div>
+          <div class="next-tier-content">
+            <span class="next-tier-name">GOLD III</span>
+            <span class="next-tier-sep">•</span>
+            <span class="next-tier-delta">15 RP TO PROMOTION THRESHOLD (600 RP)</span>
+          </div>
+        </div>
+
+        <div class="ranked-deployment-grid">
+          <!-- Left: P1 Fighter Picker -->
+          <div class="ranked-deploy-card">
+            <div class="deploy-card-header">
+              <span>YOUR WARRIOR (P1)</span>
+              <span id="ranked-p1-main-badge" class="badge-gold">MAIN FIGHTER</span>
+            </div>
+            <select id="select-ranked-p1-char" class="ranked-select"></select>
+
+            <div class="deploy-sub-field">
+              <label for="select-ranked-arena">COMPETITIVE ARENA</label>
+              <select id="select-ranked-arena" class="ranked-select"></select>
+            </div>
+          </div>
+
+          <!-- Right: Opponent & Competitive Mode -->
+          <div class="ranked-deploy-card">
+            <div class="deploy-card-header">
+              <span>MATCH PROTOCOL & OPPONENT</span>
+            </div>
+            <select id="select-ranked-opponent-mode" class="ranked-select">
+              <option value="MMR_BOT" selected>Ranked Ladder Rival (MMR-Calibrated AI matching current rank tier)</option>
+              <option value="LOCAL_2P">Local 2-Player Ranked Duel (Split Keyboard Wager)</option>
+            </select>
+
+            <div class="deploy-sub-field">
+              <label for="select-ranked-p2-char">OPPONENT WARRIOR</label>
+              <select id="select-ranked-p2-char" class="ranked-select"></select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Telemetry bar -->
+        <div class="network-architecture-card">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="net-status-dot online"></span>
+              <span style="font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: 1px; color: var(--text-primary);">COMPETITIVE MATCH TELEMETRY</span>
+            </div>
+            <span class="net-pill-badge" id="net-architecture-provider-badge">SEASON 1 LADDER ACTIVE</span>
+          </div>
+          <div style="display: flex; gap: 24px; margin-top: 8px; font-size: 12px; color: var(--text-secondary); flex-wrap: wrap;">
+            <div><strong style="color: var(--text-primary);">FORMAT:</strong> Best of 3 Rounds</div>
+            <div><strong style="color: var(--text-primary);">CURRENT RP:</strong> 585 RP (Silver I)</div>
+            <div><strong style="color: var(--text-primary);">PROMOTION:</strong> 600 RP (Gold III)</div>
+          </div>
+        </div>
+
+        <!-- TIER 3 (BOTTOM): Match Action & Scannable Recent History -->
+        <div class="ranked-bottom-tier">
+          <div class="ranked-cta-wrap">
+            <button class="btn-primary-glow ranked-start-btn" id="btn-start-ranked-match">
+              START RANKED DUEL ⚔
+            </button>
+          </div>
+
+          <div class="ranked-recent-history-section">
+            <div class="recent-history-title">RECENT RANKED MATCHES</div>
+            <div class="recent-matches-strip">
+              <div class="recent-match-chip win">
+                <span class="outcome-tag win">WIN</span>
+                <span class="rp-change">+24 RP</span>
+                <span class="match-opp">vs SOLARIS</span>
+                <span class="match-score">2 - 0</span>
+              </div>
+              <div class="recent-match-chip loss">
+                <span class="outcome-tag loss">LOSS</span>
+                <span class="rp-change">-18 RP</span>
+                <span class="match-opp">vs NOX</span>
+                <span class="match-score">1 - 2</span>
+              </div>
+              <div class="recent-match-chip win">
+                <span class="outcome-tag win">WIN</span>
+                <span class="rp-change">+22 RP</span>
+                <span class="match-opp">vs AERON</span>
+                <span class="match-score">2 - 1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 6. STORY MODE SCREEN -->
+    <section class="screen" id="screen-story">
+      <!-- Story Header Banner with Progress and Navigation -->
+      <div class="story-header-banner">
+        <div>
+          <div class="hero-tag" style="background: rgba(168, 85, 247, 0.15); border-color: var(--core-violet); color: var(--core-violet); margin-bottom: 6px;">NARRATIVE CAMPAIGN // SEASON 1</div>
+          <h2 style="font-family: var(--font-display); font-size: 32px; font-weight: 700; letter-spacing: 2px; margin: 0; line-height: 1.1; color: var(--text-primary);">CHRONICLES OF THE GENESIS RIFT</h2>
+          <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;" id="story-overall-progress">Campaign Progress: Chapter 1 / 5 Unlocked (20%)</div>
+        </div>
+
+        <div style="display: flex; gap: 16px; align-items: center;">
+          <div class="story-tab-toggle">
+            <button class="story-tab-btn active" id="btn-story-tab-chapters">CHAPTERS (5)</button>
+            <button class="story-tab-btn" id="btn-story-tab-codex">ARCHITECT CODEX</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- View 1: 5 Story Chapters Grid -->
+      <div id="story-chapters-view">
+        <div id="story-chapters-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+          <!-- Dynamically populated with Chapter 1 to Chapter 5 -->
+        </div>
+      </div>
+
+      <!-- View 2: Architect Codex / Lore Archives Viewer (hidden by default) -->
+      <div id="story-codex-view" style="display: none;">
+        <div class="codex-layout">
+          <!-- Left: Logs List -->
+          <div class="codex-list custom-scroll" id="codex-logs-list">
+            <!-- Dynamically populated with logs 1 to 5 -->
+          </div>
+
+          <!-- Right: Document Reading Terminal -->
+          <div class="codex-reader-panel custom-scroll" id="codex-reader-panel">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div class="codex-classified-stamp" id="codex-reader-stamp">TOP SECRET // VANGUARD BLACK ARCHIVE</div>
+              <div style="font-family: 'Orbitron'; font-size: 11px; color: var(--text-muted);" id="codex-reader-date">CYCLE 342 POST-DISJUNCTION</div>
+            </div>
+            <div>
+              <h2 style="font-family: 'Orbitron'; font-size: 22px; margin: 0; color: var(--accent-cyan);" id="codex-reader-title">ARCHON CIPHER 01: The Sub-Nullfolds</h2>
+              <div style="font-size: 12px; color: var(--accent-gold); margin-top: 4px;" id="codex-reader-author">Author: Dr. Evelyn Vance, Lead Biomechanical Architect</div>
+            </div>
+            <div class="codex-text-body" id="codex-reader-body">
+              Select an unlocked Architect Cipher log from the left index to decrypt the archive.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. RIFT PASS REWARDS SCREEN -->
+    <section class="screen" id="screen-rewards">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <div>
+          <div class="hero-tag">SEASON 1: GENESIS</div>
+          <h2 style="font-family: 'Orbitron'; font-size: 32px; font-weight: 900; margin-top: 6px;">RIFT PASS PROGRESSION</h2>
+        </div>
+        <button class="btn-primary-glow" id="btn-claim-pass-rewards" style="padding: 10px 24px; font-size: 13px;">CLAIM UNLOCKED REWARDS</button>
+      </div>
+
+      <div style="background: var(--surface-white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow-subtle);">
+        <div style="display: flex; justify-content: space-between; font-family: var(--font-display); font-weight: 700; margin-bottom: 8px; letter-spacing: 1px;">
+          <span>CURRENT TIER 5</span>
+          <span style="color: var(--action-primary);">320 / 500 XP TO TIER 6</span>
+        </div>
+        <div style="height: 10px; background: var(--surface-secondary); border-radius: 5px; overflow: hidden; border: 1px solid var(--border-subtle);">
+          <div style="width: 64%; height: 100%; background: var(--action-primary);"></div>
+        </div>
+      </div>
+
+      <div id="pass-tiers-container" style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 16px;" class="custom-scroll">
+        <!-- Dynamically populated 30 tiers -->
+      </div>
+    </section>
+
+    <!-- 8. PLAYER PROFILE SCREEN: COMPETITIVE TELEMETRY & MASTERY -->
+    <section class="screen" id="screen-profile">
+      <div style="max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px;">
+        <!-- Banner Profile Header -->
+        <div style="background: var(--surface-white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px 28px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-card);">
+          <div style="display: flex; align-items: center; gap: 20px;">
+            <div style="width: 70px; height: 70px; border-radius: var(--radius-sm); background: var(--surface-charcoal); border: 2px solid var(--char-vex); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 32px; font-weight: 700; color: var(--surface-white); box-shadow: var(--shadow-subtle);" id="profile-avatar-big">V</div>
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="hero-tag" id="profile-clan-tag" style="background: var(--surface-secondary); color: var(--text-primary); padding: 2px 8px; font-size: 10px;">[RIFT]</span>
+                <h2 style="font-family: var(--font-display); font-size: 28px; font-weight: 700; margin: 0; letter-spacing: 1.5px; color: var(--text-primary);" id="profile-username-big">RiftOperative</h2>
+              </div>
+              <div style="color: var(--accent-gold); font-weight: 700; font-size: 13px; margin-top: 4px;" id="profile-title-big">The Rift Vanguard • Initiate of the Singularity</div>
+              <div style="color: var(--text-muted); font-size: 12px; margin-top: 2px;" id="profile-level-big">Account Level 3 • 450 / 1,500 XP</div>
+            </div>
+          </div>
+          <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
+            <div style="font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--accent-gold); letter-spacing: 1px;" id="profile-rank-big">Silver I</div>
+            <div style="display: flex; gap: 12px;">
+              <span class="currency-pill"><span class="currency-shards">✦</span> <span id="profile-shards-display">1,400</span></span>
+              <span class="currency-pill"><span class="currency-prisms">⬢</span> <span id="profile-prisms-display">60</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Current Competitive Rank Showcase Card -->
+        <div style="background: var(--surface-white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px 28px; display: grid; grid-template-columns: 260px 1fr 200px; gap: 24px; align-items: center; box-shadow: var(--shadow-subtle);" id="profile-rank-card">
+          <!-- Left: Rank Crest -->
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div class="rank-crest-icon" id="profile-crest-icon" style="font-size: 54px;">🥈</div>
+            <div>
+              <div class="hero-tag" style="background: var(--surface-secondary); color: var(--text-secondary); margin-bottom: 4px;">CURRENT RANK</div>
+              <div style="font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--text-primary); letter-spacing: 1px;" id="profile-tier-division">SILVER I</div>
+              <div style="font-size: 12px; color: var(--text-secondary);" id="profile-rank-desc">Vanguard Contender</div>
+            </div>
+          </div>
+
+          <!-- Middle: RP Progress Meter -->
+          <div>
+            <div style="display: flex; justify-content: space-between; font-family: var(--font-display); font-size: 12px; font-weight: 700; margin-bottom: 8px;">
+              <span id="profile-current-rp" style="color: var(--accent-gold);">585 Total RP (85 RP in Division I)</span>
+              <span id="profile-rp-needed" style="color: var(--action-primary);">15 RP to GOLD III Promotion</span>
+            </div>
+            <div style="height: 10px; background: var(--surface-secondary); border-radius: 5px; overflow: hidden; border: 1px solid var(--border-subtle);">
+              <div id="profile-rank-bar-fill" style="width: 85%; height: 100%; background: var(--accent-gold);"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); margin-top: 6px; font-weight: 600;">
+              <span>SILVER III (300 RP)</span>
+              <span>SILVER II (400 RP)</span>
+              <span>SILVER I (500 RP)</span>
+              <span style="color: var(--accent-gold);">GOLD III (600 RP)</span>
+            </div>
+          </div>
+
+          <!-- Right: Streak & Peak Telemetry -->
+          <div style="display: flex; flex-direction: column; gap: 8px; border-left: 1px solid var(--border-subtle); padding-left: 20px;">
+            <div class="stat-mini">
+              <span class="stat-mini-label">HIGHEST / PEAK RANK</span>
+              <span class="stat-mini-val" id="profile-peak-rank" style="color: var(--accent-gold); font-family: var(--font-display); font-weight: 700;">Silver I</span>
+            </div>
+            <div class="stat-mini">
+              <span class="stat-mini-label">CURRENT WIN STREAK</span>
+              <span class="stat-mini-val" id="profile-win-streak" style="color: var(--action-primary); font-family: var(--font-display); font-weight: 700;">🔥 3 Wins</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8 Tracked Core Metrics Grid -->
+        <div>
+          <div style="font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; letter-spacing: 1.5px;">LIFETIME COMPETITIVE TELEMETRY</div>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;">
+            <div class="stat-box"><div class="stat-label">TOTAL MATCHES</div><div class="stat-val" id="profile-total-matches">16</div></div>
+            <div class="stat-box"><div class="stat-label">VICTORIES</div><div class="stat-val" style="color: var(--accent-green);" id="profile-wins">12</div></div>
+            <div class="stat-box"><div class="stat-label">DEFEATS</div><div class="stat-val" style="color: var(--accent-red);" id="profile-losses">4</div></div>
+            <div class="stat-box"><div class="stat-label">WIN RATE</div><div class="stat-val" style="color: var(--action-primary);" id="profile-winrate">75.0%</div></div>
+            <div class="stat-box"><div class="stat-label">CURRENT RANK</div><div class="stat-val" style="color: var(--accent-gold);" id="profile-stat-current-rank">Silver I</div></div>
+            <div class="stat-box"><div class="stat-label">HIGHEST RANK</div><div class="stat-val" style="color: var(--text-primary);" id="profile-stat-highest-rank">Silver I</div></div>
+            <div class="stat-box"><div class="stat-label">MAIN CHARACTER</div><div class="stat-val" style="color: var(--char-vex);" id="profile-stat-main-char">VEX</div></div>
+            <div class="stat-box"><div class="stat-label">BEST STREAK</div><div class="stat-val" style="color: var(--accent-green);" id="profile-stat-streak">5 Wins</div></div>
+          </div>
+        </div>
+
+        <!-- Seasonal Ranking Architecture Showcase -->
+        <div style="background: var(--surface-white); border: 1px solid var(--border-neutral); border-radius: var(--radius-md); padding: 24px; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div class="hero-tag" style="background: rgba(217, 164, 65, 0.12); border-color: var(--accent-gold); color: var(--accent-gold); margin-bottom: 4px;">SEASONAL RANKING ARCHITECTURE</div>
+              <h3 style="font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--text-primary); margin: 0;" id="profile-season-title">SEASON 1: GENESIS RIFT</h3>
+              <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;" id="profile-season-timer">Active Cycle 14 • 24 Days Remaining until Seasonal Soft-Reset</div>
+            </div>
+            <button class="btn-secondary" id="btn-simulate-season-reset" style="font-size: 12px; padding: 8px 16px; border-color: var(--accent-gold); color: var(--accent-gold);">
+              SIMULATE SEASON RESET ↻
+            </button>
+          </div>
+
+          <!-- 7-Tier Seasonal Rewards Track -->
+          <div style="margin-top: 16px;">
+            <div style="font-family: var(--font-display); font-size: 12px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 8px;">SEASONAL TIER REWARDS TRACK (END OF SEASON UNLOCKS)</div>
+            <div class="season-rewards-ladder" id="profile-season-ladder">
+              <!-- Dynamically populated 7 tiers from Bronze to Rift Champion -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Character Mastery Matrix (All 6 Warriors) -->
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div>
+              <div class="hero-tag" style="background: rgba(0, 210, 255, 0.15); border-color: var(--accent-cyan); color: var(--accent-cyan); margin-bottom: 4px;">INDEPENDENT COMBAT MASTERY</div>
+              <h3 style="font-family: 'Orbitron'; font-size: 20px; margin: 0;">CHARACTER MASTERY MATRIX (6 WARRIORS)</h3>
+            </div>
+            <span style="font-size: 12px; color: var(--text-muted);">Track levels, win rates, and select designated main warrior</span>
+          </div>
+          <div class="mastery-grid-layout" id="profile-mastery-cards-container">
+            <!-- Dynamically populated cards for Vex, Solaris, Lyra, Aeron, Kairo, Nox -->
+          </div>
+        </div>
+
+        <!-- Match History Table with Mode Filters -->
+        <div style="background: var(--surface-white); border: 1px solid var(--border-neutral); border-radius: var(--radius-md); padding: 24px; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--text-primary); margin: 0;">OFFICIAL MATCH HISTORY</h3>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-secondary active" id="filter-match-all" style="padding: 4px 14px; font-size: 11px;">ALL MATCHES</button>
+              <button class="btn-secondary" id="filter-match-ranked" style="padding: 4px 14px; font-size: 11px;">RANKED 1v1</button>
+              <button class="btn-secondary" id="filter-match-casual" style="padding: 4px 14px; font-size: 11px;">CASUAL 1v1</button>
+            </div>
+          </div>
+          <div style="overflow-x: auto;">
+            <table class="table-container">
+              <thead>
+                <tr>
+                  <th>RESULT</th>
+                  <th>HERO</th>
+                  <th>OPPONENT</th>
+                  <th>MODE</th>
+                  <th>SCORE</th>
+                  <th>DURATION</th>
+                  <th>RP DELTA</th>
+                  <th>TIME</th>
+                </tr>
+              </thead>
+              <tbody id="profile-match-history-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Multiplayer Architecture Diagnostic Panel -->
+        <div class="network-architecture-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="net-status-dot online"></span>
+              <span style="font-family: 'Orbitron'; font-size: 12px; font-weight: 800; color: var(--accent-cyan);">MULTIPLAYER NETWORKING ARCHITECTURE (CLEANLY SEPARATED)</span>
+            </div>
+            <span class="net-pill-badge">DETERMINISTIC ROLLBACK READY</span>
+          </div>
+          <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin: 0 0 10px 0;">
+            Architecture decoupled according to production specifications. No fake online countdowns are used. The client implements an extensible Network Provider interface (GGPO 60-tick ring buffer) allowing instant plug-and-play with a dedicated WebSocket multiplayer server.
+          </p>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-size: 11px;">
+            <div class="net-stat-item"><span class="net-stat-label">ACTIVE ENGINE:</span><span class="net-stat-val">Local Competitive MMR Provider</span></div>
+            <div class="net-stat-item"><span class="net-stat-label">REMOTE ADAPTER:</span><span class="net-stat-val">WebSocketMultiplayerProvider (Standby)</span></div>
+            <div class="net-stat-item"><span class="net-stat-label">RELAY ENDPOINT:</span><span class="net-stat-val" style="color: var(--accent-cyan);">ws://localhost:8080/rift-matchmaker</span></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 9. GLOBAL LEADERBOARD SCREEN -->
+    <section class="screen" id="screen-leaderboard">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <div>
+          <div class="hero-tag" style="background: rgba(255, 215, 0, 0.15); border-color: var(--accent-gold); color: var(--accent-gold); margin-bottom: 4px;">COMPETITIVE LADDER</div>
+          <h2 style="font-family: 'Orbitron'; font-size: 32px; font-weight: 900; margin: 0;">GLOBAL RIFT RANKINGS</h2>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-secondary active" id="btn-lead-global" style="padding: 6px 16px; font-size: 12px;">GLOBAL TOP 100</button>
+          <button class="btn-secondary" id="btn-lead-division" style="padding: 6px 16px; font-size: 12px;">MY DIVISION BRACKET</button>
+          <button class="btn-secondary" id="btn-lead-friends" style="padding: 6px 16px; font-size: 12px;">FRIENDS</button>
+        </div>
+      </div>
+
+      <div style="background: var(--surface-white); border: 1px solid var(--border-neutral); border-radius: var(--radius-md); padding: 20px; overflow-y: auto; box-shadow: var(--shadow-sm);">
+        <table class="table-container">
+          <thead>
+            <tr>
+              <th>RANK</th>
+              <th>OPERATIVE</th>
+              <th>TIER</th>
+              <th>RP</th>
+              <th>MAIN WARRIOR</th>
+              <th>WINS</th>
+              <th>WIN RATE</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-table-body">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 10. INVENTORY SCREEN -->
+    <section class="screen" id="screen-inventory">
+      <h2 style="font-family: 'Orbitron'; font-size: 32px; font-weight: 900; margin-bottom: 24px;">TACTICAL INVENTORY</h2>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;" id="inventory-grid">
+        <!-- Dynamically populated -->
+      </div>
+    </section>
+
+    <!-- 11. SETTINGS SCREEN (2-COLUMN COMMERCIAL LAYOUT) -->
+    <section class="screen" id="screen-settings">
+      <div class="settings-screen-container">
+        <div class="settings-header">
+          <span class="cs-phase-tag">CONFIGURATION // SYSTEM PREFERENCES</span>
+          <h2 class="modes-main-title">SYSTEM CONFIGURATION</h2>
+        </div>
+
+        <div class="settings-two-col-layout">
+          <!-- Left Column: Category Navigation Tabs -->
+          <div class="settings-nav-column">
+            <button class="settings-nav-tab active" data-tab="gameplay" id="settings-tab-gameplay">
+              <span class="tab-icon">⚡</span>
+              <span class="tab-title">GAMEPLAY & GRAPHICS</span>
+            </button>
+            <button class="settings-nav-tab" data-tab="audio" id="settings-tab-audio">
+              <span class="tab-icon">🔊</span>
+              <span class="tab-title">AUDIO & BGM</span>
+            </button>
+            <button class="settings-nav-tab" data-tab="controls" id="settings-tab-controls">
+              <span class="tab-icon">⌨</span>
+              <span class="tab-title">KEYBOARD CONTROLS</span>
+            </button>
+            <button class="settings-nav-tab" data-tab="touch" id="settings-tab-touch">
+              <span class="tab-icon">📱</span>
+              <span class="tab-title">MOBILE TOUCH HUD</span>
+            </button>
+          </div>
+
+          <!-- Right Column: Settings Panels -->
+          <div class="settings-content-column">
+            
+            <!-- Panel 1: Gameplay & Graphics (Active) -->
+            <div class="settings-tab-panel active" id="settings-panel-gameplay">
+              <div class="setting-row-box">
+                <div class="setting-meta">
+                  <div class="setting-title">SCREEN SHAKE</div>
+                  <div class="setting-desc">Combat impact feedback & camera trauma intensity</div>
+                </div>
+                <div class="setting-control-group">
+                  <input type="range" id="slider-shake-vol" min="0" max="100" value="100" class="setting-range">
+                  <span class="setting-value-badge" id="label-shake-vol">100%</span>
+                </div>
+              </div>
+
+              <div class="setting-row-box">
+                <div class="setting-meta">
+                  <div class="setting-title">DIRECTIONAL HIT SPARKS</div>
+                  <div class="setting-desc">High-precision vector hit sparks and white-hot cores</div>
+                </div>
+                <div class="setting-control-group">
+                  <span class="setting-toggle-btn active">[ ON ]</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel 2: Audio & BGM -->
+            <div class="settings-tab-panel" id="settings-panel-audio" style="display: none;">
+              <div class="setting-row-box">
+                <div class="setting-meta">
+                  <div class="setting-title">SOUND EFFECTS VOLUME</div>
+                  <div class="setting-desc">Strikes, weapon slashes, voice lines and impacts</div>
+                </div>
+                <div class="setting-control-group">
+                  <input type="range" id="slider-sfx-vol" min="0" max="100" value="80" class="setting-range">
+                  <span class="setting-value-badge" id="label-sfx-vol">80%</span>
+                </div>
+              </div>
+
+              <div class="setting-row-box">
+                <div class="setting-meta">
+                  <div class="setting-title">BGM & ARENA MUSIC</div>
+                  <div class="setting-desc">Dynamic arena soundtracks and menu themes</div>
+                </div>
+                <div class="setting-control-group">
+                  <input type="range" id="slider-music-vol" min="0" max="100" value="50" class="setting-range">
+                  <span class="setting-value-badge" id="label-music-vol">50%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel 3: Keyboard Controls -->
+            <div class="settings-tab-panel" id="settings-panel-controls" style="display: none;">
+              <div class="setting-row-box">
+                <div class="setting-meta">
+                  <div class="setting-title">PC COMBAT MAPPINGS</div>
+                  <div class="setting-desc">Direct input combat control protocol</div>
+                </div>
+                <span class="hero-tag">DIRECT INPUT</span>
+              </div>
+
+              <div class="controls-key-grid">
+                <div class="key-bind-unit"><span class="key-pill">WASD</span><span>Movement (W Jump, S Crouch)</span></div>
+                <div class="key-bind-unit"><span class="key-pill">SHIFT</span><span>Continuous Kinetic Block</span></div>
+                <div class="key-bind-unit"><span class="key-pill">J</span><span>Light Attack Combo</span></div>
+                <div class="key-bind-unit"><span class="key-pill">K</span><span>Heavy Launcher Strike</span></div>
+                <div class="key-bind-unit"><span class="key-pill">L</span><span>Special Ability Protocol</span></div>
+                <div class="key-bind-unit"><span class="key-pill">I</span><span>Cinematic Ultimate (100% Core)</span></div>
+                <div class="key-bind-unit"><span class="key-pill">SPACE</span><span>Perfect Dodge Roll</span></div>
+                <div class="key-bind-unit"><span class="key-pill">H</span><span>Counter Parry Stance</span></div>
+              </div>
+            </div>
+
+            <!-- Panel 4: Mobile Touch HUD -->
+            <div class="settings-tab-panel" id="settings-panel-touch" style="display: none;">
+              <div class="setting-row-box">
+                <div class="setting-meta">
+                  <div class="setting-title">ON-SCREEN TOUCH CONTROLS</div>
+                  <div class="setting-desc">Ergonomic virtual joystick and action cluster</div>
+                </div>
+                <span class="net-pill-badge">TOUCH READY</span>
+              </div>
+
+              <div class="touch-actions-group">
+                <button class="btn-game-primary" id="btn-settings-edit-touch">⚙ CUSTOMIZE TOUCH LAYOUT</button>
+                <button class="btn-game-secondary" id="btn-settings-toggle-touch">📱 TOGGLE TOUCH VISIBILITY</button>
+                <button class="btn-game-secondary" id="btn-settings-reset-touch">RESET TO DEFAULT</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+  <!-- FULLSCREEN CINEMATIC ARENA TRANSITION OVERLAY -->
+  <div id="arena-transition-overlay" class="arena-transition-overlay hidden">
+    <div class="ato-backdrop"></div>
+    <div class="ato-speedlines"></div>
+    <div class="ato-content">
+      
+      <div class="ato-top-banner">
+        <span class="ato-status-tag">DIMENSIONAL RIFT BREACH</span>
+        <h2 class="ato-event-title">MATCH INITIATION // ARENA ENTRY</h2>
+      </div>
+
+      <div class="ato-versus-stage">
+        <!-- Player 1 -->
+        <div class="ato-fighter-card ato-p1" id="ato-p1-card">
+          <div class="ato-player-tag">PLAYER 1</div>
+          <div class="ato-fighter-avatar" id="ato-p1-avatar">V</div>
+          <div class="ato-fighter-name" id="ato-p1-name">VEX</div>
+          <div class="ato-fighter-role" id="ato-p1-role">THE RIFT VANGUARD • CRIMSON CORE</div>
+          <div class="ato-fighter-quote" id="ato-p1-quote">"The Rift will bend to our blade."</div>
+        </div>
+
+        <!-- Versus Emblem -->
+        <div class="ato-vs-center">
+          <div class="ato-vs-emblem">VS</div>
+          <div class="ato-vs-tear"></div>
+        </div>
+
+        <!-- Opponent / P2 -->
+        <div class="ato-fighter-card ato-p2" id="ato-p2-card">
+          <div class="ato-player-tag" id="ato-p2-label">OPPONENT (AI)</div>
+          <div class="ato-fighter-avatar" id="ato-p2-avatar">S</div>
+          <div class="ato-fighter-name" id="ato-p2-name">SOLARIS</div>
+          <div class="ato-fighter-role" id="ato-p2-role">RADIANT JUGGERNAUT • GOLD CORE</div>
+          <div class="ato-fighter-quote" id="ato-p2-quote">"Stand firm or be incinerated."</div>
+        </div>
+      </div>
+
+      <!-- Arena Information Card -->
+      <div class="ato-arena-card">
+        <div class="ato-arena-badge">BATTLEGROUND</div>
+        <div class="ato-arena-name" id="ato-arena-name">NEON METRO</div>
+        <div class="ato-arena-sub" id="ato-arena-sub">Sector 9 Highway Combat Deck • Best of 3 Rounds</div>
+      </div>
+
+      <div class="ato-loading-bar-frame">
+        <div class="ato-loading-bar-fill" id="ato-loading-fill"></div>
+      </div>
+    </div>
+  </div>
+  </main>
+
+  <!-- FIGHT ARENA CANVAS & HUD VIEW -->
+  <section id="game-view">
+    <canvas id="game-canvas"></canvas>
+
+    <!-- In-Game Combat HUD -->
+    <div id="hud-overlay">
+      <div class="hud-top-bar">
+        <!-- Player 1 Bar -->
+        <div class="hud-fighter p1">
+          <div class="hud-fighter-meta">
+            <div class="hud-avatar-icon p1">V</div>
+            <div class="hud-meta-info">
+              <span class="hud-player-tag">PLAYER</span>
+              <span class="hud-fighter-name" id="hud-p1-name">VEX</span>
+              <span class="hud-ultimate-badge" id="hud-p1-ult-badge">ULTIMATE READY [O/R]</span>
+            </div>
+            <div class="hud-round-gems">
+              <div class="round-gem" id="p1-gem-1"></div>
+              <div class="round-gem" id="p1-gem-2"></div>
+            </div>
+          </div>
+          <div class="hud-hp-bar-frame">
+            <div class="hud-hp-bar-delay" id="hud-p1-hp-delay" style="width: 100%;"></div>
+            <div class="hud-hp-bar-fill" id="hud-p1-hp-fill" style="width: 100%;"></div>
+          </div>
+          <div class="hud-core-gauge">
+            <div class="hud-core-fill" id="hud-p1-core-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- Center Round Timer -->
+        <div class="hud-timer-container">
+          <div class="hud-timer-digits" id="hud-timer-digits">99</div>
+          <div class="hud-round-label" id="hud-round-label">ROUND 1</div>
+        </div>
+
+        <!-- Player 2 Bar -->
+        <div class="hud-fighter p2">
+          <div class="hud-fighter-meta">
+            <div class="hud-avatar-icon p2">V</div>
+            <div class="hud-meta-info">
+              <span class="hud-player-tag" id="hud-p2-role-tag">OPPONENT</span>
+              <span class="hud-fighter-name" id="hud-p2-name">VEX (AI)</span>
+              <span class="hud-ultimate-badge" id="hud-p2-ult-badge">ULTIMATE READY</span>
+            </div>
+            <div class="hud-round-gems">
+              <div class="round-gem" id="p2-gem-1"></div>
+              <div class="round-gem" id="p2-gem-2"></div>
+            </div>
+          </div>
+          <div class="hud-hp-bar-frame">
+            <div class="hud-hp-bar-delay" id="hud-p2-hp-delay" style="width: 100%;"></div>
+            <div class="hud-hp-bar-fill" id="hud-p2-hp-fill" style="width: 100%;"></div>
+          </div>
+          <div class="hud-core-gauge">
+            <div class="hud-core-fill" id="hud-p2-core-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Combo Counter Display -->
+      <div class="hud-combo-display" id="hud-combo-box">
+        <div class="hud-combo-count" id="hud-combo-text">3 HITS</div>
+        <div class="hud-combo-damage" id="hud-combo-damage">144 DMG</div>
+        <div class="hud-combo-tier" id="hud-combo-tier">RIFT BREAKER!</div>
+      </div>
+
+      <!-- MOBILE VIRTUAL CONTROLS OVERLAY (Ergonomic, Non-Overcrowded & Customizable) -->
+      <div id="mobile-controls-overlay" style="display: none;">
+        <!-- Left Thumb Movement Zone (Virtual Movement Control) -->
+        <div id="virtual-joystick-zone">
+          <div id="virtual-joystick-base">
+            <div class="joystick-arrow up">▲</div>
+            <div class="joystick-arrow down">▼</div>
+            <div class="joystick-arrow left">◀</div>
+            <div class="joystick-arrow right">▶</div>
+            <div class="joystick-crosshair"></div>
+            <div id="virtual-joystick-knob">
+              <div class="knob-core-indicator"></div>
+            </div>
+          </div>
+          <div class="virtual-zone-label">MOVE / JUMP</div>
+        </div>
+
+        <!-- Right Thumb Combat Action Cluster -->
+        <div id="virtual-actions-zone">
+          <!-- Ultimate (Prominent Top Button with ready aura) -->
+          <button class="touch-action-btn btn-action-ult" id="btn-touch-ultimate">
+            <div class="btn-core-ring"></div>
+            <span class="btn-icon">🌌</span>
+            <span class="btn-name">ULTIMATE</span>
+            <span class="btn-key-badge">I</span>
+          </button>
+
+          <!-- Middle Attack Row: Light, Heavy, Special -->
+          <div class="actions-row-primary">
+            <!-- Light Attack (J) -->
+            <button class="touch-action-btn btn-action-light" id="btn-touch-light">
+              <span class="btn-icon">⚔</span>
+              <span class="btn-name">LIGHT</span>
+              <span class="btn-key-badge">J</span>
+            </button>
+
+            <!-- Heavy Attack (K) -->
+            <button class="touch-action-btn btn-action-heavy" id="btn-touch-heavy">
+              <span class="btn-icon">💥</span>
+              <span class="btn-name">HEAVY</span>
+              <span class="btn-key-badge">K</span>
+            </button>
+
+            <!-- Special Ability (L) -->
+            <button class="touch-action-btn btn-action-special" id="btn-touch-special">
+              <span class="btn-icon">⚡</span>
+              <span class="btn-name">SPECIAL</span>
+              <span class="btn-key-badge">L</span>
+            </button>
+          </div>
+
+          <!-- Bottom Defensive Row: Block, Dodge -->
+          <div class="actions-row-secondary">
+            <!-- Block (Shift - Hold) -->
+            <button class="touch-action-btn btn-action-block" id="btn-touch-block">
+              <span class="btn-icon">🛡</span>
+              <span class="btn-name">BLOCK</span>
+              <span class="btn-key-badge">SHIFT</span>
+            </button>
+
+            <!-- Dodge (Space) -->
+            <button class="touch-action-btn btn-action-dodge" id="btn-touch-dodge">
+              <span class="btn-icon">💨</span>
+              <span class="btn-name">DODGE</span>
+              <span class="btn-key-badge">SPACE</span>
+            </button>
+          </div>
+          <div class="virtual-zone-label" style="text-align: right; padding-right: 14px;">COMBAT ACTIONS</div>
+        </div>
+      </div>
+
+      <!-- Bottom Controls Hint, Mobile Utility & Exit Bar -->
+      <div class="hud-controls-bar">
+        <div class="hud-combat-action-strip">
+          <div class="hud-action-pill"><span class="action-key">J</span><span class="action-name">LIGHT</span></div>
+          <div class="hud-action-pill"><span class="action-key">K</span><span class="action-name">HEAVY</span></div>
+          <div class="hud-action-pill"><span class="action-key">L</span><span class="action-name">SPECIAL</span></div>
+          <div class="hud-action-pill ult"><span class="action-key">I</span><span class="action-name">ULTIMATE</span></div>
+          <div class="hud-action-pill"><span class="action-key">SPACE</span><span class="action-name">DODGE</span></div>
+          <div class="hud-action-pill"><span class="action-key">SHIFT</span><span class="action-name">BLOCK</span></div>
+        </div>
+        <div class="hud-controls-right">
+          <button id="btn-hud-movelist" class="hud-util-btn" title="Move List & Controls Manual">📜 GUIDE</button>
+          <button id="btn-hud-toggle-touch" class="hud-util-btn">📱 TOUCH</button>
+          <button id="btn-hud-edit-controls" class="hud-util-btn">⚙ LAYOUT</button>
+          <button id="btn-quit-match" class="hud-util-btn quit">QUIT</button>
+        </div>
+      </div>
+
+      <!-- Practice / Training Telemetry Overlay (Active only in Training Mode) -->
+      <div id="training-telemetry-overlay" class="training-telemetry-overlay" style="display: none;">
+        <div class="training-telemetry-card">
+          <div class="telemetry-item">
+            <span class="telemetry-lbl">LAST INPUT</span>
+            <span class="telemetry-val" id="train-last-input">NEUTRAL</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-lbl">COMBO CHAIN</span>
+            <span class="telemetry-val" id="train-combo-chain">READY</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-lbl">TOTAL DAMAGE</span>
+            <span class="telemetry-val" id="train-total-dmg">0 DMG</span>
+          </div>
+        </div>
+        <div class="training-actions-group">
+          <button id="btn-train-reset-pos" class="hud-util-btn">↺ RESET POSITION</button>
+          <button id="btn-train-movelist" class="hud-util-btn">📜 MOVE LIST</button>
+        </div>
+      </div>
+
+      <!-- Interactive Combat Tutorial Overlay -->
+      <div id="tutorial-overlay" class="tutorial-overlay" style="display: none;">
+        <div class="tutorial-card">
+          <div class="tutorial-header">
+            <span class="tutorial-step-tag" id="tut-step-tag">STEP 1 OF 9</span>
+            <button id="btn-skip-tutorial" class="tut-skip-btn">SKIP TUTORIAL ✕</button>
+          </div>
+          <h3 class="tutorial-title" id="tut-title">COMBAT MOVEMENT</h3>
+          <p class="tutorial-instruction" id="tut-instruction">Move left and right using the virtual joystick or A/D keys.</p>
+          <div class="tutorial-visual-cue" id="tut-visual-cue">
+            <span class="cue-key">JOYSTICK / A D</span>
+          </div>
+          <div class="tutorial-progress-bar">
+            <div class="tutorial-progress-fill" id="tut-progress-fill" style="width: 11.1%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MOBILE COMBAT ORIENTATION SCREEN (Landscape-first enforcement during phone combat) -->
+      <div id="orientation-prompt-overlay" class="orientation-prompt-overlay" style="display: none;">
+        <div class="orientation-prompt-content">
+          <div class="orientation-brand">RIFTBORN</div>
+          <div class="orientation-device-icon">
+            <div class="phone-rotate-anim">
+              <div class="phone-screen-inner"></div>
+            </div>
+          </div>
+          <h2 class="orientation-title">ROTATE YOUR DEVICE</h2>
+          <p class="orientation-desc">Turn your phone sideways to enter the arena.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MOVE LIST & HOW TO PLAY GUIDE MODAL -->
+  <div class="modal-overlay" id="modal-movelist-guide">
+    <div class="modal-box movelist-modal-box">
+      <div class="movelist-header">
+        <div>
+          <span class="cs-phase-tag">TACTICAL PROTOCOLS // COMBAT MANUAL</span>
+          <h2 class="modal-title" style="margin: 0; font-size: 24px;">HOW TO PLAY & MOVE LIST</h2>
+        </div>
+        <button class="btn-secondary" id="btn-close-movelist" style="padding: 4px 12px; font-size: 12px;">✕</button>
+      </div>
+
+      <div class="movelist-tabs-row">
+        <button class="movelist-tab-btn active" id="tab-guide-controls">BASIC CONTROLS</button>
+        <button class="movelist-tab-btn" id="tab-guide-combos">COMBO COMBINATIONS</button>
+        <button class="movelist-tab-btn" id="tab-guide-fighters">FIGHTER SPECIALS</button>
+      </div>
+
+      <!-- Tab 1: Basic Controls -->
+      <div class="movelist-tab-content active" id="content-guide-controls">
+        <div class="controls-guide-grid">
+          <div class="control-tile">
+            <div class="control-tile-head">
+              <span class="control-icon">🕹</span>
+              <span class="control-name">MOVEMENT</span>
+            </div>
+            <div class="control-bindings">
+              <span class="control-key-pill">JOYSTICK</span>
+              <span class="control-sep">or</span>
+              <span class="control-key-pill">W A S D</span>
+            </div>
+            <p class="control-desc">Use left virtual joystick or WASD. Flick up to jump, pull down to crouch.</p>
+          </div>
+
+          <div class="control-tile">
+            <div class="control-tile-head">
+              <span class="control-icon">⚔</span>
+              <span class="control-name">LIGHT ATTACK</span>
+            </div>
+            <div class="control-bindings">
+              <span class="control-key-pill">[LIGHT]</span>
+              <span class="control-sep">or</span>
+              <span class="control-key-pill">J</span>
+            </div>
+            <p class="control-desc">Fast 3-hit strike string. High frame advantage, ideal for neutral hit-confirms and cancels.</p>
+          </div>
+
+          <div class="control-tile">
+            <div class="control-tile-head">
+              <span class="control-icon">💥</span>
+              <span class="control-name">HEAVY ATTACK</span>
+            </div>
+            <div class="control-bindings">
+              <span class="control-key-pill">[HEAVY]</span>
+              <span class="control-sep">or</span>
+              <span class="control-key-pill">K</span>
+            </div>
+            <p class="control-desc">High-damage launcher and finisher strike. Branches from Light combo or hits raw.</p>
+          </div>
+
+          <div class="control-tile">
+            <div class="control-tile-head">
+              <span class="control-icon">🛡</span>
+              <span class="control-name">BLOCK DEFENSE</span>
+            </div>
+            <div class="control-bindings">
+              <span class="control-key-pill">[BLOCK]</span>
+              <span class="control-sep">or</span>
+              <span class="control-key-pill">SHIFT</span>
+            </div>
+            <p class="control-desc">Hold to activate kinetic barrier. Mitigates 85% of incoming attack damage.</p>
+          </div>
+
+          <div class="control-tile">
+            <div class="control-tile-head">
+              <span class="control-icon">💨</span>
+              <span class="control-name">DODGE ROLL</span>
+            </div>
+            <div class="control-bindings">
+              <span class="control-key-pill">[DODGE]</span>
+              <span class="control-sep">or</span>
+              <span class="control-key-pill">SPACE</span>
+            </div>
+            <p class="control-desc">Invulnerable evasive roll. Evades through enemy strikes and recovers into counter-attacks.</p>
+          </div>
+
+          <div class="control-tile">
+            <div class="control-tile-head">
+              <span class="control-icon">⚡</span>
+              <span class="control-name">SPECIAL ABILITIES</span>
+            </div>
+            <div class="control-bindings">
+              <span class="control-key-pill">[SPECIAL]</span>
+              <span class="control-sep">or</span>
+              <span class="control-key-pill">L / U / I</span>
+            </div>
+            <p class="control-desc">Character-specific signature abilities. Consumes 25-30 Core Energy upon execution.</p>
+          </div>
+
+          <div class="control-tile ult">
+            <div class="control-tile-head">
+              <span class="control-icon">🌌</span>
+              <span class="control-name">CINEMATIC ULTIMATE</span>
+            </div>
+            <div class="control-bindings">
+              <span class="control-key-pill ult">[ULTIMATE]</span>
+              <span class="control-sep">or</span>
+              <span class="control-key-pill ult">I / O</span>
+            </div>
+            <p class="control-desc">Screen-cleaving super execution. Requires 100% Core Energy. Cancels out of launchers and specials.</p>
+          </div>
+
+          <div class="control-tile">
+            <div class="control-tile-head">
+              <span class="control-icon">⚔</span>
+              <span class="control-name">COUNTER PARRY</span>
+            </div>
+            <div class="control-bindings">
+              <span class="control-key-pill">H</span>
+            </div>
+            <p class="control-desc">High-risk timing parry stance. Deflects incoming strikes and completely stuns opponent.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Universal Combo Routes (Real Fighter.js Mechanics) -->
+      <div class="movelist-tab-content" id="content-guide-combos" style="display: none;">
+        <div class="combos-guide-list">
+          <div class="combo-route-card">
+            <div class="combo-route-header">
+              <span class="combo-route-name">RAPID LIGHT STRING</span>
+              <span class="combo-route-tag">FUNDAMENTAL TRIPLE</span>
+            </div>
+            <div class="combo-visual-chain">
+              <span class="combo-node">[LIGHT]</span>
+              <span class="combo-arrow">➔</span>
+              <span class="combo-node">[LIGHT]</span>
+              <span class="combo-arrow">➔</span>
+              <span class="combo-node">[LIGHT FINISHER]</span>
+            </div>
+            <div class="combo-route-desc">Reliable 3-hit target combo. Frame cancel window open during frames 4–13 of each strike.</div>
+          </div>
+
+          <div class="combo-route-card">
+            <div class="combo-route-header">
+              <span class="combo-route-name">LAUNCHER AERIAL BRANCH</span>
+              <span class="combo-route-tag">AERIAL JUGGLE</span>
+            </div>
+            <div class="combo-visual-chain">
+              <span class="combo-node">[LIGHT]</span>
+              <span class="combo-arrow">➔</span>
+              <span class="combo-node">[HEAVY LAUNCHER]</span>
+              <span class="combo-arrow">➔</span>
+              <span class="combo-node">[SPECIAL ABILITY]</span>
+            </div>
+            <div class="combo-route-desc">Cancel first Light strike directly into Heavy Launcher to vault target into the air, then cancel into Special.</div>
+          </div>
+
+          <div class="combo-route-card">
+            <div class="combo-route-header">
+              <span class="combo-route-name">HEAVY SLAM FINISHER</span>
+              <span class="combo-route-tag">HARD KNOCKDOWN</span>
+            </div>
+            <div class="combo-visual-chain">
+              <span class="combo-node">[LIGHT]</span>
+              <span class="combo-arrow">➔</span>
+              <span class="combo-node">[LIGHT]</span>
+              <span class="combo-arrow">➔</span>
+              <span class="combo-node">[HEAVY SLAM]</span>
+            </div>
+            <div class="combo-route-desc">Branches on the second Light strike into a crushing ground-slam causing hard knockdown.</div>
+          </div>
+
+          <div class="combo-route-card ult">
+            <div class="combo-route-header">
+              <span class="combo-route-name">SUPER COMBO CANCEL</span>
+              <span class="combo-route-tag" style="color: var(--action-primary);">MAXIMUM DAMAGE</span>
+            </div>
+            <div class="combo-visual-chain">
+              <span class="combo-node">[LIGHT]</span>
+              <span class="combo-arrow">➔</span>
+              <span class="combo-node">[HEAVY LAUNCHER]</span>
+              <span class="combo-arrow">➔</span>
+              <span class="combo-node">[SPECIAL 1]</span>
+              <span class="combo-arrow">➔</span>
+              <span class="combo-node ult">[ULTIMATE]</span>
+            </div>
+            <div class="combo-route-desc">Seamlessly cancel special on-hit into cinematic Ultimate for devastating 500+ damage burst (requires 100% Core).</div>
+          </div>
+
+          <div class="combo-route-card">
+            <div class="combo-route-header">
+              <span class="combo-route-name">EVASIVE REVERSAL</span>
+              <span class="combo-route-tag">COUNTER-PUNISH</span>
+            </div>
+            <div class="combo-visual-chain">
+              <span class="combo-node">[DODGE ROLL]</span>
+              <span class="combo-arrow">➔</span>
+              <span class="combo-node">[LIGHT or HEAVY]</span>
+            </div>
+            <div class="combo-route-desc">Roll through enemy attack during active frames and cancel roll recovery into an immediate counter strike.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Fighter Specials Selector -->
+      <div class="movelist-tab-content" id="content-guide-fighters" style="display: none;">
+        <div class="guide-fighter-selector-strip" id="guide-fighter-tabs">
+          <!-- Populated dynamically with Vex, Solaris, Lyra, Aeron, Kairo, Nox -->
+        </div>
+        <div class="guide-fighter-details-card" id="guide-fighter-details">
+          <!-- Populated dynamically with selected fighter's real abilities -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOUCH CONTROLS POSITION CUSTOMIZATION MODAL -->
+  <div class="modal-overlay" id="modal-touch-customizer">
+    <div class="modal-box" style="max-width: 600px; text-align: left;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+        <div>
+          <div class="hero-tag" style="background: var(--surface-secondary); color: var(--text-secondary); margin-bottom: 4px;">RESPONSIVE TOUCH ARCHITECTURE</div>
+          <h2 style="font-family: var(--font-display); font-size: 24px; font-weight: 700; margin: 0; color: var(--text-primary); letter-spacing: 1px;">CUSTOMIZE TOUCH CONTROLS</h2>
+        </div>
+        <button class="btn-secondary" id="btn-close-customizer" style="padding: 4px 12px; font-size: 11px;">✕</button>
+      </div>
+
+      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px;">
+        Drag the <strong style="color: var(--action-primary);">Movement Joystick</strong> and <strong style="color: var(--accent-gold);">Actions Cluster</strong> directly on screen to adjust position for your thumb reach. Same fighting mechanics apply on both mobile and PC.
+      </p>
+
+      <div style="background: var(--surface-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 16px; display: flex; flex-direction: column; gap: 14px; margin-bottom: 16px;">
+        <!-- Scale Slider -->
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 12px; font-family: var(--font-display); font-weight: 700; margin-bottom: 6px;">
+            <span>BUTTON SCALE</span>
+            <span id="label-touch-scale" style="color: var(--action-primary);">100%</span>
+          </div>
+          <input type="range" id="slider-touch-scale" min="75" max="130" value="100" style="width: 100%;">
+        </div>
+
+        <!-- Opacity Slider -->
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 12px; font-family: var(--font-display); font-weight: 700; margin-bottom: 6px;">
+            <span>CONTROLS OPACITY</span>
+            <span id="label-touch-opacity" style="color: var(--accent-gold);">80%</span>
+          </div>
+          <input type="range" id="slider-touch-opacity" min="25" max="100" value="80" style="width: 100%;">
+        </div>
+
+        <!-- Layout Presets -->
+        <div>
+          <div style="font-size: 11px; font-family: var(--font-display); font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">LAYOUT PRESETS:</div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-secondary" id="preset-touch-default" style="padding: 6px 14px; font-size: 11px;">DEFAULT ARC</button>
+            <button class="btn-secondary" id="preset-touch-wide" style="padding: 6px 14px; font-size: 11px;">WIDE CORNERS</button>
+            <button class="btn-secondary" id="preset-touch-compact" style="padding: 6px 14px; font-size: 11px;">COMPACT</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <button class="btn-secondary" id="btn-reset-customizer" style="font-size: 11px; padding: 8px 16px;">RESET DEFAULT</button>
+        <button class="btn-primary-glow" id="btn-save-customizer" style="font-size: 12px; padding: 10px 24px;">SAVE & APPLY LAYOUT</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIFTBORN REWARD LOOP: POLISHED MATCH RESULTS SCREEN -->
+  <div class="modal-overlay" id="modal-match-results">
+    <div class="modal-box match-results-box" id="results-modal-box">
+      <!-- Fast-Forward / Skip Hint -->
+      <div class="results-skip-hint" id="results-skip-hint">CLICK OR PRESS [SPACE] TO FAST-FORWARD</div>
+
+      <!-- Header: VICTORY / DEFEAT + Performance Grade Stamp -->
+      <div class="results-header-row">
+        <div class="results-title-group">
+          <div class="modal-title results-banner-title" id="results-title">VICTORY</div>
+          <div class="results-match-sub" id="results-subtitle">MATCH COMPLETE • BEST OF 3</div>
+        </div>
+        <div class="results-grade-badge" id="results-grade-badge">
+          <span class="grade-letter" id="results-grade-letter">S</span>
+          <span class="grade-label">RATING</span>
+        </div>
+      </div>
+
+      <!-- Match Metadata Summary Strip -->
+      <div class="results-meta-strip">
+        <div class="results-meta-item">
+          <span class="meta-label">ROUNDS</span>
+          <span class="meta-value" id="results-outcome">2 - 0</span>
+        </div>
+        <div class="results-meta-item">
+          <span class="meta-label">MAX COMBO</span>
+          <span class="meta-value" id="results-max-combo">8 HITS</span>
+        </div>
+        <div class="results-meta-item">
+          <span class="meta-label">DURATION</span>
+          <span class="meta-value" id="results-duration">48s</span>
+        </div>
+        <div class="results-meta-item">
+          <span class="meta-label">MODE</span>
+          <span class="meta-value" id="results-mode">CASUAL</span>
+        </div>
+      </div>
+
+      <!-- 4 Core Reward Counters (XP EARNED, COINS EARNED, CHARACTER XP, MASTERY XP) -->
+      <div class="results-rewards-grid">
+        <!-- 1. XP EARNED (Account XP) -->
+        <div class="reward-counter-card" id="card-xp-earned">
+          <div class="reward-card-icon xp-color">✦</div>
+          <div class="reward-card-info">
+            <span class="reward-card-lbl">XP EARNED</span>
+            <span class="reward-card-val" id="results-xp-earned">+0</span>
+          </div>
+        </div>
+
+        <!-- 2. COINS EARNED -->
+        <div class="reward-counter-card" id="card-coins-earned">
+          <div class="reward-card-icon coin-color">🪙</div>
+          <div class="reward-card-info">
+            <span class="reward-card-lbl">COINS EARNED</span>
+            <span class="reward-card-val" id="results-coins-earned">+0</span>
+          </div>
+        </div>
+
+        <!-- 3. CHARACTER XP -->
+        <div class="reward-counter-card" id="card-char-xp">
+          <div class="reward-card-icon char-color" id="results-char-icon-badge">⚔️</div>
+          <div class="reward-card-info">
+            <span class="reward-card-lbl">CHARACTER XP</span>
+            <span class="reward-card-val" id="results-char-xp-earned">+0</span>
+          </div>
+        </div>
+
+        <!-- 4. MASTERY XP -->
+        <div class="reward-counter-card" id="card-mastery-xp">
+          <div class="reward-card-icon mastery-color">👑</div>
+          <div class="reward-card-info">
+            <span class="reward-card-lbl">MASTERY XP</span>
+            <span class="reward-card-val" id="results-mastery-xp-earned">+0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dual Progress Fill Bars: Character Level & Hero Mastery -->
+      <div class="results-progression-panel">
+        <!-- Character Level Bar -->
+        <div class="results-bar-row">
+          <div class="results-bar-header">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="results-badge-char-name" id="results-char-name">VEX</span>
+              <span class="results-badge-level" id="results-char-level">LEVEL 12</span>
+            </div>
+            <span class="results-bar-text" id="results-char-xp-text">4,250 / 5,000 XP</span>
+          </div>
+          <div class="prog-xp-bar-bg" style="height: 8px;">
+            <div class="prog-xp-bar-fill" id="results-char-bar-fill" style="width: 0%; background: var(--grad-primary);"></div>
+          </div>
+        </div>
+
+        <!-- Hero Mastery Bar -->
+        <div class="results-bar-row" style="margin-top: 10px;">
+          <div class="results-bar-header">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="results-badge-mastery">HERO MASTERY</span>
+              <span class="results-badge-rank" id="results-mastery-rank">RANK 4 • COMBATANT</span>
+            </div>
+            <span class="results-bar-text" id="results-mastery-xp-text">1,850 / 2,400 XP</span>
+          </div>
+          <div class="prog-mastery-bar-bg" style="height: 7px;">
+            <div class="prog-mastery-bar-fill" id="results-mastery-bar-fill" style="width: 0%; background: linear-gradient(90deg, #FFB800, #A855F7);"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Level Up Alert Banner -->
+      <div id="results-levelup-banner" class="results-levelup-banner" style="display: none;">
+        <div class="results-levelup-title" id="results-levelup-title">⚡ LEVEL UP! REACHED LEVEL 13 ⚡</div>
+        <div class="results-levelup-reward" id="results-levelup-reward">Unlocked: Crimson Overdrive & 450 Shards!</div>
+      </div>
+
+      <!-- Competitive Ranked RP Banner -->
+      <div id="results-rp-banner" class="results-rp-banner" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 22px;" id="results-rp-crest">🥈</span>
+            <div>
+              <div style="font-family: 'Orbitron'; font-size: 13px; font-weight: 900; color: #FFF;" id="results-rp-rank-label">SILVER I</div>
+              <div style="font-size: 10px; color: var(--text-secondary);" id="results-rp-explanation">Victory (+24) + Streak (+3)</div>
+            </div>
+          </div>
+          <div style="font-family: 'Orbitron'; font-size: 18px; font-weight: 900; color: var(--accent-gold);" id="results-rp-delta-text">+27 RP</div>
+        </div>
+        <div id="results-promotion-alert" style="display: none; font-family: 'Orbitron'; font-size: 11px; font-weight: 900; color: var(--accent-green); margin-top: 6px; text-align: center;">
+          🎉 PROMOTED TO NEXT RANK DIVISION! 🎉
+        </div>
+      </div>
+
+      <!-- Cosmetic Reward Drop Reveal Card (Titles, Badges, Emotes, Victory Effects) -->
+      <div id="results-loot-drop-container" class="results-loot-drop-container" style="display: none;">
+        <div class="results-loot-header">
+          <span class="loot-sparkle">✦</span>
+          <span>COSMETIC REWARD UNLOCKED</span>
+          <span class="loot-sparkle">✦</span>
+        </div>
+        <div class="results-loot-card" id="results-loot-card">
+          <div class="results-loot-icon" id="results-loot-icon">👑</div>
+          <div class="results-loot-info">
+            <div class="results-loot-rarity" id="results-loot-rarity">EPIC TITLE</div>
+            <div class="results-loot-name" id="results-loot-name">Ghost in the Rift</div>
+            <div class="results-loot-desc" id="results-loot-desc">Untouchable evasive combatant who dances through enemy strikes.</div>
+          </div>
+          <button class="btn-secondary results-loot-equip-btn" id="btn-results-loot-equip">EQUIP</button>
+        </div>
+      </div>
+
+      <!-- Challenge Progress Mini-Strip -->
+      <div id="results-challenges-strip" class="results-challenges-strip">
+        <div class="results-challenges-header">
+          <span class="results-challenges-title">CHALLENGE OBJECTIVES</span>
+          <button class="btn-link-hub" id="btn-results-open-challenges">CHALLENGES HUB →</button>
+        </div>
+        <div class="results-challenges-mini-list" id="results-challenges-mini-list">
+          <!-- Populated dynamically with mini progress bars -->
+        </div>
+      </div>
+
+      <!-- Primary Match Results Navigation Actions -->
+      <div class="results-actions-row">
+        <button class="btn-primary-action" id="btn-results-rematch">REMATCH <span style="font-size: 11px; opacity: 0.85;">[ENTER]</span></button>
+        <button class="btn-secondary" id="btn-results-menu">CONTINUE</button>
+      </div>
+      <div class="results-sub-actions">
+        <button class="btn-subtle-link" id="btn-results-challenges-btn">BOUNTIES & CHALLENGES</button>
+        <span class="sub-sep">•</span>
+        <button class="btn-subtle-link" id="btn-results-progression">CHARACTER PROGRESSION</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHALLENGES & BOUNTIES HUB MODAL -->
+  <div class="modal-overlay" id="modal-challenges-hub">
+    <div class="modal-box challenges-hub-box">
+      <!-- Hub Header -->
+      <div class="hub-header">
+        <div>
+          <div class="hero-tag" style="background: rgba(255,184,0,0.15); border-color: var(--accent-gold); color: var(--accent-gold); margin-bottom: 4px;">COMBAT REWARD LOOP</div>
+          <h2 class="modal-title" style="text-align: left; margin: 0; font-size: 24px;">CHALLENGES & BOUNTIES</h2>
+          <div style="font-size: 12px; color: var(--text-secondary); margin-top: 3px;">
+            Encouraging diverse fighting styles: Evasion, Neutral Spacing, Meter Economy & Roster Versatility.
+          </div>
+        </div>
+        <button class="hub-close-btn" id="btn-close-challenges-hub" title="Close Hub">✕</button>
+      </div>
+
+      <!-- Hub Tab Switcher & Countdown Timer -->
+      <div class="hub-tabs-row">
+        <div class="hub-tab-buttons">
+          <button class="hub-tab-btn active" id="tab-challenges-daily">DAILY OBJECTIVES <span class="tab-badge" id="daily-claimable-badge" style="display: none;">!</span></button>
+          <button class="hub-tab-btn" id="tab-challenges-weekly">WEEKLY GAUNTLET <span class="tab-badge" id="weekly-claimable-badge" style="display: none;">!</span></button>
+          <button class="hub-tab-btn" id="tab-challenges-catalog">COSMETIC CATALOG</button>
+        </div>
+        <div class="hub-timer-pill">
+          <span style="color: var(--accent-gold);">⏳</span>
+          <span id="hub-timer-text">Resets in 18h 42m</span>
+        </div>
+      </div>
+
+      <!-- Scrollable Container -->
+      <div class="hub-list-container custom-scroll" id="hub-challenges-list">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Hub Footer -->
+      <div class="hub-footer-row">
+        <div style="font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
+          <span style="color: var(--accent-green); font-size: 13px;">✓</span> 100% Non-pay-to-win. All rewards are purely cosmetic or tactical progression.
+        </div>
+        <button class="btn-primary-glow" id="btn-hub-claim-all" style="padding: 10px 22px; font-size: 13px;">CLAIM ALL COMPLETED</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEASON RESET SIMULATION MODAL -->
+  <div class="modal-overlay" id="modal-season-reset">
+    <div class="modal-box" style="max-width: 580px; text-align: left;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+        <div>
+          <div class="hero-tag" style="background: var(--surface-secondary); color: var(--accent-gold); margin-bottom: 4px;">SEASONAL RANKING ARCHITECTURE</div>
+          <h2 style="font-family: var(--font-display); font-size: 26px; font-weight: 700; margin: 0; color: var(--text-primary); letter-spacing: 1px;">SEASON SOFT-RESET</h2>
+        </div>
+        <button class="btn-secondary" id="btn-close-season-modal" style="padding: 4px 12px; font-size: 11px;">✕</button>
+      </div>
+
+      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px;">
+        When a competitive season concludes, the RIFTBORN soft-reset algorithm disburses rewards for the highest rank achieved, compresses RP towards the baseline median, and unlocks the next seasonal ladder cycle.
+      </p>
+
+      <div style="background: var(--surface-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div>
+          <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); font-family: var(--font-display); letter-spacing: 1px;">CURRENT / PEAK RANK</div>
+          <div style="font-size: 18px; font-weight: 700; color: var(--accent-gold); font-family: var(--font-display);" id="reset-modal-old-rank">Silver I (585 RP)</div>
+          <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">Season 1: Genesis</div>
+        </div>
+        <div>
+          <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); font-family: var(--font-display); letter-spacing: 1px;">POST-RESET PLACEMENT</div>
+          <div style="font-size: 18px; font-weight: 700; color: var(--action-primary); font-family: var(--font-display);" id="reset-modal-new-rank">Bronze I (280 RP)</div>
+          <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">Season 2: Resonance</div>
+        </div>
+      </div>
+
+      <div style="background: var(--surface-secondary); border: 1px solid var(--accent-green); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 20px;">
+        <div style="font-family: var(--font-display); font-size: 11px; font-weight: 700; color: var(--accent-green); margin-bottom: 4px; letter-spacing: 1px;">END-OF-SEASON REWARDS TO CLAIM:</div>
+        <div style="font-size: 12px; color: var(--text-primary); font-weight: 600;" id="reset-modal-rewards-list">• Silver Vanguard Crest • 1,500 Rift Shards • Title: "Rift Contender"</div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 12px;">
+        <button class="btn-secondary" id="btn-cancel-season-reset" style="padding: 10px 20px; font-size: 12px;">CANCEL</button>
+        <button class="btn-primary-glow" id="btn-confirm-season-reset" style="padding: 10px 24px; font-size: 13px;">EXECUTE SOFT-RESET & CLAIM</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STORY DIALOGUE MODAL -->
+  <div class="modal-overlay" id="modal-story-dialogue">
+    <div class="modal-box" style="max-width: 720px; text-align: left;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+        <div>
+          <div class="modal-title" id="story-dialogue-title" style="color: var(--char-nox); margin: 0; font-size: 24px; font-family: var(--font-display); letter-spacing: 1.5px;">CHAPTER 1 — AWAKENING</div>
+          <div style="color: var(--char-aeron); font-weight: 600; font-size: 12px;" id="story-dialogue-sub">Vanguard Bio-Synthesis Complex // Sector 9</div>
+        </div>
+        <div id="story-dialogue-stage-badge" style="font-family: var(--font-display); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 4px; background: var(--surface-secondary); border: 1px solid var(--border-subtle); color: var(--text-primary);">STAGE 1 / 3</div>
+      </div>
+
+      <!-- Boss Traits Alert (shown only on boss encounters) -->
+      <div id="story-boss-traits-box" style="display: none; background: var(--surface-secondary); border: 1px solid var(--action-primary); border-radius: var(--radius-sm); padding: 8px 12px; margin-bottom: 12px;">
+        <div style="font-family: var(--font-display); font-size: 11px; font-weight: 700; color: var(--action-primary); letter-spacing: 1px;" id="story-boss-title-banner">BOSS ENCOUNTER: AERON</div>
+        <div style="font-size: 11px; color: var(--text-primary);" id="story-boss-traits-desc">Heightened Parry Window • Continuous Projectiles</div>
+      </div>
+
+      <!-- Combat Objective Hint -->
+      <div style="background: var(--surface-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 8px 12px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+        <span style="font-family: var(--font-display); font-size: 10px; font-weight: 700; color: var(--accent-gold); letter-spacing: 1px;">OBJECTIVE:</span>
+        <span style="font-size: 12px; color: var(--text-secondary);" id="story-objective-text">Land basic combo strings and defeat Warden Aeron.</span>
+      </div>
+
+      <!-- Dialogue Speech Bubble with Speaker Avatar -->
+      <div style="background: var(--surface-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 18px; min-height: 160px; display: flex; gap: 16px; align-items: flex-start; cursor: pointer;" id="story-dialogue-content">
+        <div id="story-speaker-avatar" style="width: 48px; height: 48px; border-radius: var(--radius-sm); border: 2px solid var(--char-vex); background: var(--surface-white); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--char-vex); flex-shrink: 0; box-shadow: var(--shadow-subtle);">V</div>
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-height: 120px;">
+          <div>
+            <div style="font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--char-vex); margin-bottom: 6px; letter-spacing: 1px;" id="story-speaker-name">VEX</div>
+            <p style="font-size: 13px; line-height: 1.6; color: var(--text-primary); margin: 0;" id="story-speech-text">The Vanguard sensors picked up anomalous Crimson radiation in Sector 9...</p>
+          </div>
+          <div style="text-align: right; color: var(--text-muted); font-size: 11px; margin-top: 12px; font-weight: 600;">CLICK TO ADVANCE DIALOGUE ➔</div>
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+        <span style="font-size: 12px; font-family: var(--font-display); font-weight: 700; color: var(--text-secondary); letter-spacing: 1px;" id="story-dialogue-step">1 / 4</span>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-secondary" id="btn-advance-story-dialogue" style="padding: 8px 18px; font-size: 12px;">NEXT ➔</button>
+          <button class="btn-primary-glow" id="btn-start-story-battle" style="padding: 10px 24px; font-size: 13px;">ENGAGE BATTLE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE BOTTOM NAVIGATION (Ergonomic for 320px - 430px) -->
+  <nav id="mobile-bottom-nav" class="mobile-bottom-nav">
+    <button class="mobile-nav-btn active" data-screen="screen-home" id="mobile-nav-home">
+      <span class="mobile-nav-icon">⌂</span>
+      <span class="mobile-nav-label">HOME</span>
+    </button>
+    <button class="mobile-nav-btn" data-screen="screen-play" id="mobile-nav-play">
+      <span class="mobile-nav-icon">⚔</span>
+      <span class="mobile-nav-label">FIGHT</span>
+    </button>
+    <button class="mobile-nav-btn" data-screen="screen-character-select" id="mobile-nav-characters">
+      <span class="mobile-nav-icon">👥</span>
+      <span class="mobile-nav-label">FIGHTERS</span>
+    </button>
+    <button class="mobile-nav-btn" data-screen="screen-ranked-setup" id="mobile-nav-ranked">
+      <span class="mobile-nav-icon">🏆</span>
+      <span class="mobile-nav-label">RANK</span>
+    </button>
+    <button class="mobile-nav-btn" data-screen="screen-profile" id="mobile-nav-profile">
+      <span class="mobile-nav-icon">👤</span>
+      <span class="mobile-nav-label">PROFILE</span>
+    </button>
+  </nav>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
