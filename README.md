@@ -1,11 +1,12 @@
 # ⚡ RIFTBORN — Original Competitive 2D Fighting Game
 
-[![Version](https://img.shields.io/badge/version-1.0.0-crimson.svg)](https://github.com/)
+[![Version](https://img.shields.io/badge/version-1.0.0-crimson.svg)](https://github.com/siddhantpandey2306-gif/RiftBorn-Combat)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Web%20%7C%20Mobile%20%7C%20PWA-00D2FF.svg)]()
 [![Built With](https://img.shields.io/badge/built%20with-Canvas2D%20%2B%20WebAudio-FBBF24.svg)]()
+[![Build & Tests](https://img.shields.io/badge/tests-66%20passed%20%7C%200%20failed-brightgreen.svg)]()
 
-> **RIFTBORN** is an original futuristic, hero-based 2D browser fighting game built with high-performance Canvas rendering, procedural particle FX, responsive multi-touch controls, and deep competitive combat mechanics.
+> **RIFTBORN** is an original futuristic, hero-based 2D browser fighting game built with high-performance Canvas rendering, procedural Web Audio synthesis, responsive multi-touch controls, and deep competitive combat mechanics.
 
 ---
 
@@ -72,11 +73,25 @@
 
 ## 🛠️ Tech Stack & Architecture
 
+- **Client-Side SPA**: Zero external backend services or databases needed.
 - **Rendering**: HTML5 Canvas 2D engine with procedural particle simulation, hitstop, screenshake, and custom lighting.
 - **Audio**: Web Audio API Sound Synthesizer with spatial combat hits, parry chimes, and adaptive combat themes.
 - **Styling**: Vanilla CSS3 design system with CSS custom properties, dark glassmorphism, and responsive safe-area mobile insets.
-- **Typography**: Google Fonts (*Orbitron*, *Bebas Neue*, *Inter*, *Oswald*).
-- **Build Tool**: [Vite](https://vitejs.dev/) for lightning-fast HMR and optimized production bundles.
+- **Build Tool**: [Vite](https://vitejs.dev/) v8.3.2 for lightning-fast HMR and optimized production bundles.
+
+---
+
+## 📚 Technical Documentation Suite
+
+For comprehensive technical, deployment, and security details, consult the `docs/` directory:
+
+- [Architecture Design & System Flow](docs/ARCHITECTURE.md)
+- [Quality Assurance & Test Plan](docs/TEST_PLAN.md)
+- [Threat Model & Security Boundary Analysis](docs/THREAT_MODEL.md)
+- [Security Policy & Vulnerability Disclosure](docs/SECURITY.md)
+- [Production Deployment Runbook](docs/DEPLOYMENT_RUNBOOK.md)
+- [Incident Response & Disaster Recovery](docs/INCIDENT_RESPONSE.md)
+- [Project Changelog](CHANGELOG.md)
 
 ---
 
@@ -87,12 +102,12 @@
 - Node.js (v18 or higher recommended)
 - npm or yarn
 
-### Installation
+### Installation & Run
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/rift-born.git
-   cd rift-born
+   git clone https://github.com/siddhantpandey2306-gif/RiftBorn-Combat.git
+   cd RiftBorn-Combat
    ```
 
 2. **Install dependencies**:
@@ -100,18 +115,25 @@
    npm install
    ```
 
-3. **Start the development server**:
+3. **Run automated test suite**:
+   ```bash
+   npm test
+   ```
+   *Runs 39 combat prototype tests and 27 round system tests (66 total tests).*
+
+4. **Start local development server**:
    ```bash
    npm run dev
    ```
    Open your browser at `http://localhost:5173/`.
 
-4. **Build for production**:
+5. **Build for production**:
    ```bash
    npm run build
    ```
+   Compiles and minifies assets into `dist/`.
 
-5. **Preview production build**:
+6. **Preview production build**:
    ```bash
    npm run preview
    ```
@@ -121,29 +143,33 @@
 ## 📁 Project Structure
 
 ```
-rift-born/
+Rift Born/
 ├── index.html                   # Core HTML entry & modal templates
 ├── style.css                    # Design system, responsive layouts & HUD styles
 ├── public/
-│   └── manifest.webmanifest    # PWA configuration for mobile standalone fullscreen
+│   └── manifest.webmanifest     # PWA configuration for mobile standalone fullscreen
 ├── src/
-│   ├── main.js                  # Main application controller, routing & lifecycle
-│   ├── characters/
-│   │   └── characterData.js     # Character stats, move lists & ability definitions
+│   ├── main.js                  # RiftbornApp application controller, UI routing & state
+│   ├── config.js                # Character stats, move lists & ability definitions
 │   ├── engine/
-│   │   ├── ArenaRenderer.js     # Multi-layered parallax arenas & particle effects
-│   │   ├── CombatEngine.js      # Frame physics, hitboxes, combat state & AI
+│   │   ├── GameEngine.js        # 60 FPS fixed-timestep loop, state machine & inputs
+│   │   ├── CombatSystem.js      # Frame physics, hitboxes, combat state & combos
 │   │   ├── SoundEngine.js       # Procedural Web Audio FX & combat audio
+│   │   ├── ParticleSystem.js    # Object-pooled particle effects & visual feedback
 │   │   └── TouchControls.js     # Mobile virtual joystick & touch buttons
-│   ├── modes/
-│   │   ├── CasualMode.js        # Casual match configuration
-│   │   ├── RankedMode.js        # Competitive division & RP matchmaking logic
-│   │   └── StoryMode.js         # Campaign chapters, dialogs & boss fights
-│   └── progression/
-│       ├── progressionManager.js # XP, account levels & persistent storage
-│       └── progressionTracks.js # Hero mastery curves, unlocks & reward tiers
-├── package.json                 # Project scripts and dependencies
-└── README.md                    # Project documentation
+│   ├── fighters/
+│   │   ├── Fighter.js           # Base physics entity, state machine, and action dispatcher
+│   │   ├── FighterAI.js         # Reactive AI controller with difficulty handicaps
+│   │   └── CharacterRenderer.js # Procedural Canvas 2D vector animation pipeline
+│   └── systems/
+│       ├── CompetitiveSystem.js # Rank tiers, MMR calculations, and matchmaking simulator
+│       ├── QuestSystem.js       # Daily/weekly objectives and progression tracking
+│       ├── ProgressionManager.js# Local profile, currency, unlock persistence (localStorage)
+│       └── StorySystem.js       # Narrative campaign dialogues and progression
+├── test_combat_prototype.js     # Headless unit test suite for combat state & damage
+├── test_round_system.js         # Headless integration test suite for round flow & scoring
+├── docs/                        # Complete technical documentation suite
+└── package.json                 # Project scripts and dependencies
 ```
 
 ---

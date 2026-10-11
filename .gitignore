@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production build artifacts
+dist/
+dist-ssr/
+*.local
+
+# Editor & OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Logs & scratch test scripts
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+scratch/
+scratch_*.mjs
+scratch_*.js
+
+# Antigravity temporary directories
+.agent/
+.agents/
+.gemini/
+.gsd/
