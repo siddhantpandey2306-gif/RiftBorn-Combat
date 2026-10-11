@@ -2,13 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>RIFTBORN - Original Competitive Fighting Game</title>
   <meta name="description" content="RIFTBORN is an original competitive futuristic hero-based fighting game. Channel unique energy cores, master fast-paced combat, unlock progression, and climb the Rift Champion ranks.">
-  <meta name="theme-color" content="#F4F6F8">
+  <meta name="theme-color" content="#0A0D14">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="/manifest.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
   <link rel="stylesheet" href="./style.css">
 </head>
@@ -55,6 +59,11 @@
         <span class="nav-icon-glyph">⚙</span>
       </button>
 
+      <button class="nav-icon-btn" id="btn-toggle-fullscreen" title="Toggle Fullscreen">
+        <span class="nav-icon-glyph">⛶</span>
+        <span class="nav-icon-label">FULLSCREEN</span>
+      </button>
+
       <div class="nav-currency-group">
         <div class="currency-pill">
           <span class="currency-icon">✦</span>
@@ -85,49 +94,71 @@
         
         <!-- Left: Major Hero Presentation -->
         <div class="home-hero-presentation">
-          <div class="home-hero-eyebrow">
-            <span class="home-eyebrow-tag">YOUR FIGHTER</span>
-            <div class="home-fighter-switcher">
-              <button class="btn-fighter-cycle" id="btn-home-prev-fighter" title="Previous Fighter">◄</button>
-              <span class="home-fighter-counter" id="home-fighter-index">1 / 6</span>
-              <button class="btn-fighter-cycle" id="btn-home-next-fighter" title="Next Fighter">►</button>
+          
+          <!-- 1. Game Identity & Masthead (Top Priority) -->
+          <div class="home-brand-masthead">
+            <div class="home-brand-badge-row">
+              <span class="home-brand-badge">ORIGINAL 2D COMBAT</span>
+              <span class="home-brand-subtag">SEASON 1 • GENESIS</span>
             </div>
+            <h1 class="home-brand-title">RIFTBORN</h1>
+            <p class="home-brand-tagline">Channel unique energy cores • Fast-paced competitive fighting</p>
           </div>
 
-          <!-- Large Character Interactive Stage Canvas / Artwork -->
-          <div class="home-hero-stage" id="home-hero-stage">
-            <canvas id="home-hero-canvas" width="480" height="320"></canvas>
-            <div class="home-hero-badge-overlay" id="home-hero-core-pill">CRIMSON CORE</div>
-          </div>
-
-          <!-- Large Editorial Fighter Identity -->
-          <div class="home-hero-meta">
-            <h1 class="home-fighter-name" id="home-hero-title">VEX</h1>
-            <div class="home-fighter-sub" id="home-hero-sub">CRIMSON CORE // BALANCED</div>
-            <div class="home-fighter-progression">
-              <div class="home-fighter-level-tag" id="home-hero-level">LEVEL 18</div>
-              <div class="home-fighter-xp-meter">
-                <div class="home-fighter-xp-fill" id="home-hero-xp-fill" style="width: 85%;"></div>
+          <!-- 2. Primary Play Action Hub (Prominent, Visible Immediately Without Scrolling) -->
+          <div class="home-hero-actions home-primary-actions">
+            <button class="btn-play-hero btn-home-primary-play" id="btn-quick-start-fight" title="Start Playing Now">
+              <span class="btn-play-icon">⚔</span>
+              <div class="btn-play-text-group">
+                <span class="btn-play-label">PLAY NOW</span>
+                <span class="btn-play-sub">INSTANT MATCH VS RANDOM RIVAL</span>
               </div>
-              <span class="home-fighter-xp-digits" id="home-hero-xp-text">4,250 / 5,000 XP</span>
-            </div>
-            <!-- Short Scannable Combat Traits -->
-            <div class="home-fighter-traits-strip" id="home-hero-traits">
-              <span class="fighter-trait-pill"><span class="trait-icon">⚔</span> Versatile Offense</span>
-              <span class="fighter-trait-pill"><span class="trait-icon">🛡</span> Reliable Defense</span>
-              <span class="fighter-trait-pill"><span class="trait-icon">⚡</span> Fast Counters</span>
-            </div>
-            <div id="home-hero-quote" style="display: none;"></div>
-          </div>
-
-          <!-- Major Action: [ FIGHT NOW ] -->
-          <div class="home-hero-actions">
-            <button class="btn-play-hero" id="btn-quick-start-fight">
-              <span class="btn-play-label">FIGHT NOW</span>
-              <span class="btn-play-sub">ENTER COMBAT</span>
               <span class="btn-play-arrow">➔</span>
             </button>
-            <button class="btn-hero-secondary" id="btn-home-view-fighter">FIGHTERS ROSTER</button>
+            <button class="btn-hero-secondary" id="btn-home-view-fighter" title="Choose Fighter">
+              <span class="btn-secondary-icon">🥋</span>
+              <span>SELECT FIGHTER</span>
+            </button>
+          </div>
+
+          <!-- 3. Featured Character Showcase Stage (Interactive Canvas & Meta) -->
+          <div class="home-showcase-container">
+            <div class="home-hero-eyebrow">
+              <span class="home-eyebrow-tag">FEATURED FIGHTER</span>
+              <div class="home-fighter-switcher">
+                <button class="btn-fighter-cycle" id="btn-home-prev-fighter" title="Previous Fighter">◄</button>
+                <span class="home-fighter-counter" id="home-fighter-index">1 / 6</span>
+                <button class="btn-fighter-cycle" id="btn-home-next-fighter" title="Next Fighter">►</button>
+              </div>
+            </div>
+
+            <!-- Character Interactive Stage Canvas / Artwork -->
+            <div class="home-hero-stage" id="home-hero-stage">
+              <canvas id="home-hero-canvas" width="480" height="320"></canvas>
+              <div class="home-hero-badge-overlay" id="home-hero-core-pill">CRIMSON CORE</div>
+            </div>
+
+            <!-- Editorial Fighter Identity -->
+            <div class="home-hero-meta">
+              <div class="home-fighter-title-row">
+                <h2 class="home-fighter-name" id="home-hero-title">VEX</h2>
+                <div class="home-fighter-sub" id="home-hero-sub">CRIMSON CORE // BALANCED</div>
+              </div>
+              <div class="home-fighter-progression">
+                <div class="home-fighter-level-tag" id="home-hero-level">LEVEL 18</div>
+                <div class="home-fighter-xp-meter">
+                  <div class="home-fighter-xp-fill" id="home-hero-xp-fill" style="width: 85%;"></div>
+                </div>
+                <span class="home-fighter-xp-digits" id="home-hero-xp-text">4,250 / 5,000 XP</span>
+              </div>
+              <!-- Short Scannable Combat Traits -->
+              <div class="home-fighter-traits-strip" id="home-hero-traits">
+                <span class="fighter-trait-pill"><span class="trait-icon">⚔</span> Versatile Offense</span>
+                <span class="fighter-trait-pill"><span class="trait-icon">🛡</span> Reliable Defense</span>
+                <span class="fighter-trait-pill"><span class="trait-icon">⚡</span> Fast Counters</span>
+              </div>
+              <div id="home-hero-quote" style="display: none;"></div>
+            </div>
           </div>
         </div>
 
@@ -427,9 +458,15 @@
               </div>
 
               <div class="cs-config-grid-row">
-                <div class="cs-config-field">
+                <div class="cs-config-field" style="display: none;">
                   <label for="select-select-opponent">OPPONENT FIGHTER</label>
                   <select id="select-select-opponent"></select>
+                </div>
+                <div class="cs-config-field">
+                  <label>OPPONENT FIGHTER</label>
+                  <div class="cs-config-static-val" style="padding: 10px 12px; background: rgba(0,0,0,0.25); border: 1px solid var(--border-neutral); border-radius: 6px; font-size: 13px; font-weight: 700; color: var(--accent-gold); display: flex; align-items: center; gap: 8px;">
+                    <span>🎲</span> RANDOM RIVAL (AUTO-MATCH)
+                  </div>
                 </div>
                 <div class="cs-config-field">
                   <label for="select-select-arena">COMBAT ARENA</label>
@@ -518,11 +555,11 @@
           <div>
             <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 6px;">
               <div class="fighter-card-core-pill" id="prog-core-pill" style="margin: 0;">CRIMSON CORE // BALANCED</div>
-              <div id="prog-evo-badge" style="font-family: 'Orbitron'; font-size: 11px; font-weight: 800; color: var(--accent-cyan); padding: 2px 8px; border-radius: 4px; background: rgba(0,210,255,0.12); border: 1px solid var(--accent-cyan);">TIER 1: AWAKENED</div>
+              <div id="prog-evo-badge" style="font-family: var(--font-display); font-size: 11px; font-weight: 800; color: var(--accent-cyan); padding: 2px 8px; border-radius: 4px; background: rgba(0,210,255,0.12); border: 1px solid var(--accent-cyan);">TIER 1: AWAKENED</div>
             </div>
             
             <h1 style="font-size: 44px; margin: 0; line-height: 1.1;" id="prog-char-name">VEX</h1>
-            <div style="font-family: 'Orbitron'; font-size: 13px; color: var(--accent-cyan); font-weight: 700; margin-bottom: 12px;" id="prog-char-title">THE RIFT VANGUARD • BALANCED</div>
+            <div style="font-family: var(--font-display); font-size: 13px; color: var(--accent-cyan); font-weight: 700; margin-bottom: 12px;" id="prog-char-title">THE RIFT VANGUARD • BALANCED</div>
 
             <!-- Level & Level XP -->
             <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 14px;">
@@ -569,7 +606,7 @@
           <div class="prog-card-section">
             <div>
               <div class="hero-tag" style="background: rgba(16, 185, 129, 0.15); border-color: var(--accent-green); color: var(--accent-green); margin-bottom: 6px;">COMPETITIVE BALANCE</div>
-              <h3 style="font-family: 'Orbitron'; font-size: 18px; margin: 0;">POWER ATTRIBUTES</h3>
+              <h3 style="font-family: var(--font-display); font-size: 18px; margin: 0;">POWER ATTRIBUTES</h3>
               <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Strictly normalized scaling (+0.5/lvl avg) to preserve fair competitive parity.</div>
             </div>
 
@@ -631,19 +668,19 @@
           <div class="prog-card-section">
             <div>
               <div class="hero-tag" style="background: rgba(0, 210, 255, 0.15); border-color: var(--accent-cyan); color: var(--accent-cyan); margin-bottom: 6px;">ABILITY TREE</div>
-              <h3 style="font-family: 'Orbitron'; font-size: 18px; margin: 0;">COMBAT PROTOCOLS</h3>
+              <h3 style="font-family: var(--font-display); font-size: 18px; margin: 0;">COMBAT PROTOCOLS</h3>
               <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Earned through warrior level milestones and battle mastery.</div>
             </div>
 
             <!-- UNLOCKED SECTION -->
             <div>
-              <div style="font-family: 'Orbitron'; font-size: 11px; font-weight: 800; color: var(--accent-green); margin-bottom: 8px;">UNLOCKED ABILITIES</div>
+              <div style="font-family: var(--font-display); font-size: 11px; font-weight: 800; color: var(--accent-green); margin-bottom: 8px;">UNLOCKED ABILITIES</div>
               <div id="prog-unlocked-abilities-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
             </div>
 
             <!-- LOCKED SECTION -->
             <div style="margin-top: 8px;">
-              <div style="font-family: 'Orbitron'; font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 8px;">UPCOMING MILESTONES (LOCKED)</div>
+              <div style="font-family: var(--font-display); font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 8px;">UPCOMING MILESTONES (LOCKED)</div>
               <div id="prog-locked-abilities-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
             </div>
           </div>
@@ -652,19 +689,19 @@
           <div class="prog-card-section">
             <div>
               <div class="hero-tag" style="background: rgba(255, 184, 0, 0.15); border-color: var(--accent-gold); color: var(--accent-gold); margin-bottom: 6px;">COSMETICS & QUESTS</div>
-              <h3 style="font-family: 'Orbitron'; font-size: 18px; margin: 0;">MASTERY FEATS</h3>
+              <h3 style="font-family: var(--font-display); font-size: 18px; margin: 0;">MASTERY FEATS</h3>
               <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Complete live warrior challenges to earn Character & Mastery XP.</div>
             </div>
 
             <!-- Visual Evolution & Cosmetic Milestones -->
             <div>
-              <div style="font-family: 'Orbitron'; font-size: 11px; font-weight: 800; color: var(--accent-cyan); margin-bottom: 8px;">COSMETIC & EVOLUTION TRACK</div>
+              <div style="font-family: var(--font-display); font-size: 11px; font-weight: 800; color: var(--accent-cyan); margin-bottom: 8px;">COSMETIC & EVOLUTION TRACK</div>
               <div id="prog-cosmetics-track-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
             </div>
 
             <!-- Live Challenges List -->
             <div style="margin-top: 8px;">
-              <div style="font-family: 'Orbitron'; font-size: 11px; font-weight: 800; color: var(--accent-gold); margin-bottom: 8px;">ACTIVE MASTERY CHALLENGES</div>
+              <div style="font-family: var(--font-display); font-size: 11px; font-weight: 800; color: var(--accent-gold); margin-bottom: 8px;">ACTIVE MASTERY CHALLENGES</div>
               <div id="prog-challenges-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
             </div>
           </div>
@@ -687,31 +724,34 @@
           
           <!-- Casual 1v1 -->
           <div class="mode-nav-item active" id="mode-card-casual" data-mode="casual">
+            <div class="mode-item-icon-badge cyan">⚔️</div>
             <div class="mode-item-indicator"></div>
             <div class="mode-item-meta">
-              <span class="mode-item-tag tag-cyan">SPARRING</span>
+              <span class="mode-item-tag tag-cyan">SPARRING PROTOCOL</span>
               <div class="mode-item-title">CASUAL 1V1</div>
-              <div class="mode-item-sub">Adaptive AI & Local 2-Player</div>
+              <div class="mode-item-sub">Adaptive AI & Local 2-Player Sparring</div>
             </div>
             <span class="mode-item-arrow">➔</span>
           </div>
 
           <!-- Ranked 1v1 -->
           <div class="mode-nav-item" id="mode-card-ranked" data-mode="ranked">
+            <div class="mode-item-icon-badge gold">🏆</div>
             <div class="mode-item-indicator gold"></div>
             <div class="mode-item-meta">
-              <span class="mode-item-tag tag-gold">COMPETITIVE</span>
+              <span class="mode-item-tag tag-gold">COMPETITIVE LADDER</span>
               <div class="mode-item-title">RANKED 1V1</div>
-              <div class="mode-item-sub">Official Ranking Points & Tiers</div>
+              <div class="mode-item-sub">Official Season 1 Ranking Points & Tiers</div>
             </div>
             <span class="mode-item-arrow">➔</span>
           </div>
 
           <!-- Story Mode -->
           <div class="mode-nav-item" id="mode-card-story" data-mode="story">
+            <div class="mode-item-icon-badge violet">🌌</div>
             <div class="mode-item-indicator violet"></div>
             <div class="mode-item-meta">
-              <span class="mode-item-tag tag-violet">NARRATIVE</span>
+              <span class="mode-item-tag tag-violet">LORE CAMPAIGN</span>
               <div class="mode-item-title">STORY CAMPAIGN</div>
               <div class="mode-item-sub">6 Cinematic Chapters & Lore Codex</div>
             </div>
@@ -720,33 +760,36 @@
 
           <!-- Survival -->
           <div class="mode-nav-item" id="mode-card-survival" data-mode="survival">
+            <div class="mode-item-icon-badge green">⚡</div>
             <div class="mode-item-indicator emerald"></div>
             <div class="mode-item-meta">
-              <span class="mode-item-tag tag-green">ENDURANCE</span>
+              <span class="mode-item-tag tag-green">ENDLESS VOID</span>
               <div class="mode-item-title">SURVIVAL MODE</div>
-              <div class="mode-item-sub">Endless Void Waves & Kinetic Perks</div>
+              <div class="mode-item-sub">Endless Waves, Kinetic Perks & High Scores</div>
             </div>
             <span class="mode-item-arrow">➔</span>
           </div>
 
           <!-- Boss Rush -->
           <div class="mode-nav-item" id="mode-card-bossrush" data-mode="bossrush">
+            <div class="mode-item-icon-badge red">👑</div>
             <div class="mode-item-indicator crimson"></div>
             <div class="mode-item-meta">
-              <span class="mode-item-tag tag-red">EPIC TITANS</span>
+              <span class="mode-item-tag tag-red">TITAN ASSAULT</span>
               <div class="mode-item-title">BOSS RUSH</div>
-              <div class="mode-item-sub">Multi-Phase Void Megabosses</div>
+              <div class="mode-item-sub">Multi-Phase Colossal Void Megabosses</div>
             </div>
             <span class="mode-item-arrow">➔</span>
           </div>
 
           <!-- Training Arena -->
           <div class="mode-nav-item" id="mode-card-training" data-mode="training">
+            <div class="mode-item-icon-badge gray">🎯</div>
             <div class="mode-item-indicator gray"></div>
             <div class="mode-item-meta">
-              <span class="mode-item-tag tag-gray">COMBAT LAB</span>
+              <span class="mode-item-tag tag-gray">COMBAT DOJO</span>
               <div class="mode-item-title">TRAINING ARENA</div>
-              <div class="mode-item-sub">Frame Advantage & Hitbox Inspection</div>
+              <div class="mode-item-sub">Frame Telemetry, Combo Routes & Hitboxes</div>
             </div>
             <span class="mode-item-arrow">➔</span>
           </div>
@@ -896,32 +939,38 @@
 
     <!-- 5. CASUAL 1V1 MATCH SETUP -->
     <section class="screen" id="screen-casual-setup">
-      <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px;">
-        <h2 style="font-family: 'Orbitron'; font-size: 32px; font-weight: 900;">CUSTOM SPARRING SETUP</h2>
+      <div class="casual-setup-container">
+        <div class="casual-setup-top-bar">
+          <div>
+            <span class="cs-phase-tag">CUSTOM SPARRING // VERSUS AI & 2P</span>
+            <h2 class="modes-main-title">CUSTOM SPARRING SETUP</h2>
+          </div>
+          <button class="btn-secondary" id="btn-back-to-play-from-casual">← BACK TO MODES</button>
+        </div>
 
         <!-- Fighter Pickers -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-          <div style="background: var(--surface-white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-subtle);">
-            <div style="font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--char-vex); margin-bottom: 10px; letter-spacing: 1px;">PLAYER 1 (YOU)</div>
-            <select id="select-p1-char" style="width: 100%; padding: 12px; background: var(--surface-secondary); border: 1px solid var(--border-subtle); color: var(--text-primary); font-family: var(--font-body); font-size: 14px; font-weight: 600; border-radius: var(--radius-sm);"></select>
+        <div class="casual-pickers-grid">
+          <div class="casual-card">
+            <div class="casual-card-header vex-color">PLAYER 1 (YOU)</div>
+            <select id="select-p1-char" class="casual-select"></select>
           </div>
 
-          <div style="background: var(--surface-white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-subtle);">
-            <div style="font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--char-solaris); margin-bottom: 10px; letter-spacing: 1px;">OPPONENT (P2)</div>
-            <select id="select-p2-char" style="width: 100%; padding: 12px; background: var(--surface-secondary); border: 1px solid var(--border-subtle); color: var(--text-primary); font-family: var(--font-body); font-size: 14px; font-weight: 600; border-radius: var(--radius-sm);"></select>
+          <div class="casual-card">
+            <div class="casual-card-header solaris-color">OPPONENT (P2 / AI)</div>
+            <select id="select-p2-char" class="casual-select"></select>
           </div>
         </div>
 
         <!-- Arena & Rules -->
-        <div style="background: var(--surface-white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; box-shadow: var(--shadow-subtle);">
-          <div>
-            <div style="font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; letter-spacing: 1px;">SELECT ARENA</div>
-            <select id="select-arena" style="width: 100%; padding: 12px; background: var(--surface-secondary); border: 1px solid var(--border-subtle); color: var(--text-primary); font-family: var(--font-body); font-size: 14px; font-weight: 600; border-radius: var(--radius-sm);"></select>
+        <div class="casual-rules-grid">
+          <div class="casual-card">
+            <div class="casual-card-header">SELECT ARENA</div>
+            <select id="select-arena" class="casual-select"></select>
           </div>
 
-          <div>
-            <div style="font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; letter-spacing: 1px;">AI DIFFICULTY // LOCAL 2P</div>
-            <select id="select-ai-diff" style="width: 100%; padding: 12px; background: var(--surface-secondary); border: 1px solid var(--border-subtle); color: var(--text-primary); font-family: var(--font-body); font-size: 14px; font-weight: 600; border-radius: var(--radius-sm);">
+          <div class="casual-card">
+            <div class="casual-card-header">AI DIFFICULTY // LOCAL 2P</div>
+            <select id="select-ai-diff" class="casual-select">
               <option value="RECRUIT">Recruit (Easy)</option>
               <option value="WARRIOR" selected>Warrior (Normal)</option>
               <option value="MASTER">Master (Hard)</option>
@@ -931,7 +980,13 @@
           </div>
         </div>
 
-        <button class="btn-primary-glow" id="btn-start-casual-match" style="align-self: center; padding: 16px 64px; font-size: 18px; font-family: var(--font-display); letter-spacing: 2px;">FIGHT ➔</button>
+        <div class="casual-cta-wrap">
+          <button class="btn-play-hero casual-start-btn" id="btn-start-casual-match">
+            <span class="btn-play-label">START SPARRING</span>
+            <span class="btn-play-sub">CASUAL MATCH [ENTER]</span>
+            <span class="btn-play-arrow">➔</span>
+          </button>
+        </div>
       </div>
     </section>
 
@@ -1011,18 +1066,18 @@
         </div>
 
         <!-- Telemetry bar -->
-        <div class="network-architecture-card">
+        <div class="network-architecture-card ranked-telemetry-bar">
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <div style="display: flex; align-items: center; gap: 8px;">
               <span class="net-status-dot online"></span>
-              <span style="font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: 1px; color: var(--text-primary);">COMPETITIVE MATCH TELEMETRY</span>
+              <span style="font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: 1px; color: var(--accent-cyan);">COMPETITIVE MATCH TELEMETRY</span>
             </div>
             <span class="net-pill-badge" id="net-architecture-provider-badge">SEASON 1 LADDER ACTIVE</span>
           </div>
-          <div style="display: flex; gap: 24px; margin-top: 8px; font-size: 12px; color: var(--text-secondary); flex-wrap: wrap;">
-            <div><strong style="color: var(--text-primary);">FORMAT:</strong> Best of 3 Rounds</div>
-            <div><strong style="color: var(--text-primary);">CURRENT RP:</strong> 585 RP (Silver I)</div>
-            <div><strong style="color: var(--text-primary);">PROMOTION:</strong> 600 RP (Gold III)</div>
+          <div style="display: flex; gap: 20px; margin-top: 8px; font-size: 12px; color: #CBD5E1; flex-wrap: wrap;">
+            <div><strong style="color: #FFFFFF;">FORMAT:</strong> Best of 3 Rounds</div>
+            <div><strong style="color: #FFFFFF;">CURRENT RP:</strong> <span style="color: var(--accent-gold); font-weight: 700;">585 RP (Silver I)</span></div>
+            <div><strong style="color: #FFFFFF;">PROMOTION:</strong> <span style="color: #F87171; font-weight: 700;">600 RP (Gold III)</span></div>
           </div>
         </div>
 
@@ -1099,10 +1154,10 @@
           <div class="codex-reader-panel custom-scroll" id="codex-reader-panel">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <div class="codex-classified-stamp" id="codex-reader-stamp">TOP SECRET // VANGUARD BLACK ARCHIVE</div>
-              <div style="font-family: 'Orbitron'; font-size: 11px; color: var(--text-muted);" id="codex-reader-date">CYCLE 342 POST-DISJUNCTION</div>
+              <div style="font-family: var(--font-display); font-size: 11px; color: var(--text-muted);" id="codex-reader-date">CYCLE 342 POST-DISJUNCTION</div>
             </div>
             <div>
-              <h2 style="font-family: 'Orbitron'; font-size: 22px; margin: 0; color: var(--accent-cyan);" id="codex-reader-title">ARCHON CIPHER 01: The Sub-Nullfolds</h2>
+              <h2 style="font-family: var(--font-display); font-size: 22px; margin: 0; color: var(--accent-cyan);" id="codex-reader-title">ARCHON CIPHER 01: The Sub-Nullfolds</h2>
               <div style="font-size: 12px; color: var(--accent-gold); margin-top: 4px;" id="codex-reader-author">Author: Dr. Evelyn Vance, Lead Biomechanical Architect</div>
             </div>
             <div class="codex-text-body" id="codex-reader-body">
@@ -1118,7 +1173,7 @@
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
         <div>
           <div class="hero-tag">SEASON 1: GENESIS</div>
-          <h2 style="font-family: 'Orbitron'; font-size: 32px; font-weight: 900; margin-top: 6px;">RIFT PASS PROGRESSION</h2>
+          <h2 style="font-family: var(--font-display); font-size: 32px; font-weight: 900; margin-top: 6px;">RIFT PASS PROGRESSION</h2>
         </div>
         <button class="btn-primary-glow" id="btn-claim-pass-rewards" style="padding: 10px 24px; font-size: 13px;">CLAIM UNLOCKED REWARDS</button>
       </div>
@@ -1139,135 +1194,136 @@
     </section>
 
     <!-- 8. PLAYER PROFILE SCREEN: COMPETITIVE TELEMETRY & MASTERY -->
+    <!-- 8. PLAYER PROFILE SCREEN: COMPETITIVE TELEMETRY & MASTERY -->
     <section class="screen" id="screen-profile">
-      <div style="max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px;">
-        <!-- Banner Profile Header -->
-        <div style="background: var(--surface-white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px 28px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-card);">
-          <div style="display: flex; align-items: center; gap: 20px;">
-            <div style="width: 70px; height: 70px; border-radius: var(--radius-sm); background: var(--surface-charcoal); border: 2px solid var(--char-vex); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 32px; font-weight: 700; color: var(--surface-white); box-shadow: var(--shadow-subtle);" id="profile-avatar-big">V</div>
-            <div>
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <span class="hero-tag" id="profile-clan-tag" style="background: var(--surface-secondary); color: var(--text-primary); padding: 2px 8px; font-size: 10px;">[RIFT]</span>
-                <h2 style="font-family: var(--font-display); font-size: 28px; font-weight: 700; margin: 0; letter-spacing: 1.5px; color: var(--text-primary);" id="profile-username-big">RiftOperative</h2>
+      <div class="profile-container">
+        
+        <!-- 1. Player Identity Header Card -->
+        <div class="profile-banner-card">
+          <div class="profile-user-group">
+            <div class="profile-avatar-box" id="profile-avatar-big">V</div>
+            <div class="profile-user-info">
+              <div class="profile-name-row">
+                <span class="profile-clan-badge" id="profile-clan-tag">[RIFT]</span>
+                <h2 class="profile-username" id="profile-username-big">RiftOperative</h2>
               </div>
-              <div style="color: var(--accent-gold); font-weight: 700; font-size: 13px; margin-top: 4px;" id="profile-title-big">The Rift Vanguard • Initiate of the Singularity</div>
-              <div style="color: var(--text-muted); font-size: 12px; margin-top: 2px;" id="profile-level-big">Account Level 3 • 450 / 1,500 XP</div>
+              <div class="profile-title" id="profile-title-big">The Rift Vanguard • Initiate of the Singularity</div>
+              <div class="profile-level" id="profile-level-big">Account Level 3 • 450 / 1,500 XP</div>
             </div>
           </div>
-          <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
-            <div style="font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--accent-gold); letter-spacing: 1px;" id="profile-rank-big">Silver I</div>
-            <div style="display: flex; gap: 12px;">
+          <div class="profile-badges-group">
+            <div class="profile-rank-badge" id="profile-rank-big">Silver I</div>
+            <div class="profile-currency-row">
               <span class="currency-pill"><span class="currency-shards">✦</span> <span id="profile-shards-display">1,400</span></span>
               <span class="currency-pill"><span class="currency-prisms">⬢</span> <span id="profile-prisms-display">60</span></span>
             </div>
           </div>
         </div>
 
-        <!-- Current Competitive Rank Showcase Card -->
-        <div style="background: var(--surface-white); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px 28px; display: grid; grid-template-columns: 260px 1fr 200px; gap: 24px; align-items: center; box-shadow: var(--shadow-subtle);" id="profile-rank-card">
+        <!-- 2. Current Competitive Rank Showcase Card -->
+        <div class="profile-rank-card" id="profile-rank-card">
           <!-- Left: Rank Crest -->
-          <div style="display: flex; align-items: center; gap: 16px;">
-            <div class="rank-crest-icon" id="profile-crest-icon" style="font-size: 54px;">🥈</div>
-            <div>
-              <div class="hero-tag" style="background: var(--surface-secondary); color: var(--text-secondary); margin-bottom: 4px;">CURRENT RANK</div>
-              <div style="font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--text-primary); letter-spacing: 1px;" id="profile-tier-division">SILVER I</div>
-              <div style="font-size: 12px; color: var(--text-secondary);" id="profile-rank-desc">Vanguard Contender</div>
+          <div class="profile-crest-col">
+            <div class="rank-crest-icon" id="profile-crest-icon">🥈</div>
+            <div class="profile-tier-info">
+              <span class="profile-field-kicker">CURRENT RANK</span>
+              <div class="profile-tier-division" id="profile-tier-division">SILVER I</div>
+              <div class="profile-rank-desc" id="profile-rank-desc">Vanguard Contender</div>
             </div>
           </div>
 
           <!-- Middle: RP Progress Meter -->
-          <div>
-            <div style="display: flex; justify-content: space-between; font-family: var(--font-display); font-size: 12px; font-weight: 700; margin-bottom: 8px;">
-              <span id="profile-current-rp" style="color: var(--accent-gold);">585 Total RP (85 RP in Division I)</span>
-              <span id="profile-rp-needed" style="color: var(--action-primary);">15 RP to GOLD III Promotion</span>
+          <div class="profile-rp-meter-col">
+            <div class="profile-rp-header">
+              <span id="profile-current-rp" class="profile-rp-val">585 Total RP (85 RP in Division I)</span>
+              <span id="profile-rp-needed" class="profile-rp-target">15 RP to GOLD III Promotion</span>
             </div>
-            <div style="height: 10px; background: var(--surface-secondary); border-radius: 5px; overflow: hidden; border: 1px solid var(--border-subtle);">
-              <div id="profile-rank-bar-fill" style="width: 85%; height: 100%; background: var(--accent-gold);"></div>
+            <div class="profile-meter-track">
+              <div id="profile-rank-bar-fill" class="profile-meter-fill" style="width: 85%;"></div>
             </div>
-            <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); margin-top: 6px; font-weight: 600;">
+            <div class="profile-tier-milestones">
               <span>SILVER III (300 RP)</span>
               <span>SILVER II (400 RP)</span>
               <span>SILVER I (500 RP)</span>
-              <span style="color: var(--accent-gold);">GOLD III (600 RP)</span>
+              <span class="next-gold">GOLD III (600 RP)</span>
             </div>
           </div>
 
           <!-- Right: Streak & Peak Telemetry -->
-          <div style="display: flex; flex-direction: column; gap: 8px; border-left: 1px solid var(--border-subtle); padding-left: 20px;">
+          <div class="profile-rank-side-stats">
             <div class="stat-mini">
-              <span class="stat-mini-label">HIGHEST / PEAK RANK</span>
-              <span class="stat-mini-val" id="profile-peak-rank" style="color: var(--accent-gold); font-family: var(--font-display); font-weight: 700;">Silver I</span>
+              <span class="stat-mini-label">PEAK RANK</span>
+              <span class="stat-mini-val" id="profile-peak-rank">Silver I</span>
             </div>
             <div class="stat-mini">
-              <span class="stat-mini-label">CURRENT WIN STREAK</span>
-              <span class="stat-mini-val" id="profile-win-streak" style="color: var(--action-primary); font-family: var(--font-display); font-weight: 700;">🔥 3 Wins</span>
+              <span class="stat-mini-label">WIN STREAK</span>
+              <span class="stat-mini-val" id="profile-win-streak">🔥 3 Wins</span>
             </div>
           </div>
         </div>
 
-        <!-- 8 Tracked Core Metrics Grid -->
-        <div>
-          <div style="font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; letter-spacing: 1.5px;">LIFETIME COMPETITIVE TELEMETRY</div>
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;">
+        <!-- 3. Lifetime Competitive Telemetry (8 Cards) -->
+        <div class="profile-section-block">
+          <div class="profile-section-heading">LIFETIME COMPETITIVE TELEMETRY</div>
+          <div class="profile-telemetry-grid">
             <div class="stat-box"><div class="stat-label">TOTAL MATCHES</div><div class="stat-val" id="profile-total-matches">16</div></div>
-            <div class="stat-box"><div class="stat-label">VICTORIES</div><div class="stat-val" style="color: var(--accent-green);" id="profile-wins">12</div></div>
-            <div class="stat-box"><div class="stat-label">DEFEATS</div><div class="stat-val" style="color: var(--accent-red);" id="profile-losses">4</div></div>
-            <div class="stat-box"><div class="stat-label">WIN RATE</div><div class="stat-val" style="color: var(--action-primary);" id="profile-winrate">75.0%</div></div>
-            <div class="stat-box"><div class="stat-label">CURRENT RANK</div><div class="stat-val" style="color: var(--accent-gold);" id="profile-stat-current-rank">Silver I</div></div>
-            <div class="stat-box"><div class="stat-label">HIGHEST RANK</div><div class="stat-val" style="color: var(--text-primary);" id="profile-stat-highest-rank">Silver I</div></div>
-            <div class="stat-box"><div class="stat-label">MAIN CHARACTER</div><div class="stat-val" style="color: var(--char-vex);" id="profile-stat-main-char">VEX</div></div>
-            <div class="stat-box"><div class="stat-label">BEST STREAK</div><div class="stat-val" style="color: var(--accent-green);" id="profile-stat-streak">5 Wins</div></div>
+            <div class="stat-box"><div class="stat-label">VICTORIES</div><div class="stat-val win" id="profile-wins">12</div></div>
+            <div class="stat-box"><div class="stat-label">DEFEATS</div><div class="stat-val loss" id="profile-losses">4</div></div>
+            <div class="stat-box"><div class="stat-label">WIN RATE</div><div class="stat-val winrate" id="profile-winrate">75.0%</div></div>
+            <div class="stat-box"><div class="stat-label">CURRENT RANK</div><div class="stat-val rank" id="profile-stat-current-rank">Silver I</div></div>
+            <div class="stat-box"><div class="stat-label">HIGHEST RANK</div><div class="stat-val" id="profile-stat-highest-rank">Silver I</div></div>
+            <div class="stat-box"><div class="stat-label">MAIN WARRIOR</div><div class="stat-val main-char" id="profile-stat-main-char">VEX</div></div>
+            <div class="stat-box"><div class="stat-label">BEST STREAK</div><div class="stat-val streak" id="profile-stat-streak">5 Wins</div></div>
           </div>
         </div>
 
-        <!-- Seasonal Ranking Architecture Showcase -->
-        <div style="background: var(--surface-white); border: 1px solid var(--border-neutral); border-radius: var(--radius-md); padding: 24px; box-shadow: var(--shadow-sm);">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <div class="hero-tag" style="background: rgba(217, 164, 65, 0.12); border-color: var(--accent-gold); color: var(--accent-gold); margin-bottom: 4px;">SEASONAL RANKING ARCHITECTURE</div>
-              <h3 style="font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--text-primary); margin: 0;" id="profile-season-title">SEASON 1: GENESIS RIFT</h3>
-              <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;" id="profile-season-timer">Active Cycle 14 • 24 Days Remaining until Seasonal Soft-Reset</div>
+        <!-- 4. Seasonal Ranking Architecture Showcase -->
+        <div class="profile-season-card">
+          <div class="profile-season-header">
+            <div class="profile-season-info">
+              <span class="profile-field-kicker season-kicker">SEASONAL RANKING ARCHITECTURE</span>
+              <h3 class="profile-season-title" id="profile-season-title">SEASON 1: GENESIS RIFT</h3>
+              <div class="profile-season-timer" id="profile-season-timer">Active Cycle 14 • 24 Days Remaining until Seasonal Soft-Reset</div>
             </div>
-            <button class="btn-secondary" id="btn-simulate-season-reset" style="font-size: 12px; padding: 8px 16px; border-color: var(--accent-gold); color: var(--accent-gold);">
+            <button class="btn-secondary btn-season-reset" id="btn-simulate-season-reset">
               SIMULATE SEASON RESET ↻
             </button>
           </div>
 
-          <!-- 7-Tier Seasonal Rewards Track -->
-          <div style="margin-top: 16px;">
-            <div style="font-family: var(--font-display); font-size: 12px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 8px;">SEASONAL TIER REWARDS TRACK (END OF SEASON UNLOCKS)</div>
-            <div class="season-rewards-ladder" id="profile-season-ladder">
+          <div class="season-ladder-wrap">
+            <div class="season-ladder-sub">SEASONAL TIER REWARDS TRACK (END OF SEASON UNLOCKS)</div>
+            <div class="season-rewards-ladder custom-scroll" id="profile-season-ladder">
               <!-- Dynamically populated 7 tiers from Bronze to Rift Champion -->
             </div>
           </div>
         </div>
 
-        <!-- Character Mastery Matrix (All 6 Warriors) -->
-        <div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <!-- 5. Character Mastery Matrix (All 6 Warriors) -->
+        <div class="profile-section-block">
+          <div class="profile-mastery-header">
             <div>
-              <div class="hero-tag" style="background: rgba(0, 210, 255, 0.15); border-color: var(--accent-cyan); color: var(--accent-cyan); margin-bottom: 4px;">INDEPENDENT COMBAT MASTERY</div>
-              <h3 style="font-family: 'Orbitron'; font-size: 20px; margin: 0;">CHARACTER MASTERY MATRIX (6 WARRIORS)</h3>
+              <span class="profile-field-kicker mastery-kicker">INDEPENDENT COMBAT MASTERY</span>
+              <h3 class="profile-mastery-title">CHARACTER MASTERY MATRIX (6 WARRIORS)</h3>
             </div>
-            <span style="font-size: 12px; color: var(--text-muted);">Track levels, win rates, and select designated main warrior</span>
+            <span class="profile-mastery-sub">Track individual fighter levels, win records, and select active main</span>
           </div>
           <div class="mastery-grid-layout" id="profile-mastery-cards-container">
             <!-- Dynamically populated cards for Vex, Solaris, Lyra, Aeron, Kairo, Nox -->
           </div>
         </div>
 
-        <!-- Match History Table with Mode Filters -->
-        <div style="background: var(--surface-white); border: 1px solid var(--border-neutral); border-radius: var(--radius-md); padding: 24px; box-shadow: var(--shadow-sm);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-            <h3 style="font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--text-primary); margin: 0;">OFFICIAL MATCH HISTORY</h3>
-            <div style="display: flex; gap: 8px;">
-              <button class="btn-secondary active" id="filter-match-all" style="padding: 4px 14px; font-size: 11px;">ALL MATCHES</button>
-              <button class="btn-secondary" id="filter-match-ranked" style="padding: 4px 14px; font-size: 11px;">RANKED 1v1</button>
-              <button class="btn-secondary" id="filter-match-casual" style="padding: 4px 14px; font-size: 11px;">CASUAL 1v1</button>
+        <!-- 6. Match History Table with Mode Filters -->
+        <div class="profile-history-card">
+          <div class="profile-history-header">
+            <h3 class="profile-history-title">OFFICIAL MATCH HISTORY</h3>
+            <div class="profile-history-filters">
+              <button class="btn-secondary active" id="filter-match-all">ALL MATCHES</button>
+              <button class="btn-secondary" id="filter-match-ranked">RANKED 1v1</button>
+              <button class="btn-secondary" id="filter-match-casual">CASUAL 1v1</button>
             </div>
           </div>
-          <div style="overflow-x: auto;">
-            <table class="table-container">
+          <div class="table-scroll-frame custom-scroll">
+            <table class="table-container match-history-table">
               <thead>
                 <tr>
                   <th>RESULT</th>
@@ -1287,22 +1343,22 @@
           </div>
         </div>
 
-        <!-- Multiplayer Architecture Diagnostic Panel -->
+        <!-- 7. Multiplayer Architecture Diagnostic Console -->
         <div class="network-architecture-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
+          <div class="net-card-top">
+            <div class="net-status-left">
               <span class="net-status-dot online"></span>
-              <span style="font-family: 'Orbitron'; font-size: 12px; font-weight: 800; color: var(--accent-cyan);">MULTIPLAYER NETWORKING ARCHITECTURE (CLEANLY SEPARATED)</span>
+              <span class="net-title">MULTIPLAYER NETWORK TELEMETRY</span>
             </div>
-            <span class="net-pill-badge">DETERMINISTIC ROLLBACK READY</span>
+            <span class="net-pill-badge">ROLLBACK READY (GGPO 60-TICK)</span>
           </div>
-          <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin: 0 0 10px 0;">
-            Architecture decoupled according to production specifications. No fake online countdowns are used. The client implements an extensible Network Provider interface (GGPO 60-tick ring buffer) allowing instant plug-and-play with a dedicated WebSocket multiplayer server.
+          <p class="net-desc">
+            Production-grade decoupled networking stack. Extensible Network Provider interface with a 60-tick ring buffer, ready for dedicated WebSocket multiplayer relays.
           </p>
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-size: 11px;">
-            <div class="net-stat-item"><span class="net-stat-label">ACTIVE ENGINE:</span><span class="net-stat-val">Local Competitive MMR Provider</span></div>
-            <div class="net-stat-item"><span class="net-stat-label">REMOTE ADAPTER:</span><span class="net-stat-val">WebSocketMultiplayerProvider (Standby)</span></div>
-            <div class="net-stat-item"><span class="net-stat-label">RELAY ENDPOINT:</span><span class="net-stat-val" style="color: var(--accent-cyan);">ws://localhost:8080/rift-matchmaker</span></div>
+          <div class="net-stats-grid">
+            <div class="net-stat-item"><span class="net-stat-label">ACTIVE ENGINE</span><span class="net-stat-val">Local Competitive MMR Provider</span></div>
+            <div class="net-stat-item"><span class="net-stat-label">REMOTE ADAPTER</span><span class="net-stat-val">WebSocketMultiplayerProvider (Standby)</span></div>
+            <div class="net-stat-item"><span class="net-stat-label">RELAY ENDPOINT</span><span class="net-stat-val accent">ws://localhost:8080/rift-matchmaker</span></div>
           </div>
         </div>
 
@@ -1314,7 +1370,7 @@
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
         <div>
           <div class="hero-tag" style="background: rgba(255, 215, 0, 0.15); border-color: var(--accent-gold); color: var(--accent-gold); margin-bottom: 4px;">COMPETITIVE LADDER</div>
-          <h2 style="font-family: 'Orbitron'; font-size: 32px; font-weight: 900; margin: 0;">GLOBAL RIFT RANKINGS</h2>
+          <h2 style="font-family: var(--font-display); font-size: 32px; font-weight: 900; margin: 0;">GLOBAL RIFT RANKINGS</h2>
         </div>
         <div style="display: flex; gap: 8px;">
           <button class="btn-secondary active" id="btn-lead-global" style="padding: 6px 16px; font-size: 12px;">GLOBAL TOP 100</button>
@@ -1345,7 +1401,7 @@
 
     <!-- 10. INVENTORY SCREEN -->
     <section class="screen" id="screen-inventory">
-      <h2 style="font-family: 'Orbitron'; font-size: 32px; font-weight: 900; margin-bottom: 24px;">TACTICAL INVENTORY</h2>
+      <h2 style="font-family: var(--font-display); font-size: 32px; font-weight: 900; margin-bottom: 24px;">TACTICAL INVENTORY</h2>
       <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;" id="inventory-grid">
         <!-- Dynamically populated -->
       </div>
@@ -1677,6 +1733,8 @@
           <div class="hud-action-pill"><span class="action-key">SHIFT</span><span class="action-name">BLOCK</span></div>
         </div>
         <div class="hud-controls-right">
+          <button id="btn-hud-fullscreen" class="hud-util-btn" title="Toggle Fullscreen">⛶ FULL</button>
+          <button id="btn-hud-pause" class="hud-util-btn pause" title="Pause Match [ESC / P]">⏸ PAUSE</button>
           <button id="btn-hud-movelist" class="hud-util-btn" title="Move List & Controls Manual">📜 GUIDE</button>
           <button id="btn-hud-toggle-touch" class="hud-util-btn">📱 TOUCH</button>
           <button id="btn-hud-edit-controls" class="hud-util-btn">⚙ LAYOUT</button>
@@ -1735,6 +1793,23 @@
           </div>
           <h2 class="orientation-title">ROTATE YOUR DEVICE</h2>
           <p class="orientation-desc">Turn your phone sideways to enter the arena.</p>
+        </div>
+      </div>
+
+      <!-- IN-GAME COMBAT PAUSE MODAL -->
+      <div id="modal-combat-pause" class="combat-pause-overlay" style="display: none;">
+        <div class="combat-pause-card">
+          <div class="combat-pause-header">
+            <span class="pause-icon">⏸</span>
+            <h2 class="pause-title">MATCH PAUSED</h2>
+            <span class="pause-sub">PRESS ESC / P TO RESUME</span>
+          </div>
+          <div class="combat-pause-body">
+            <button id="btn-pause-resume" class="btn-pause-primary">▶ RESUME COMBAT</button>
+            <button id="btn-pause-fullscreen" class="btn-pause-secondary">⛶ TOGGLE FULLSCREEN</button>
+            <button id="btn-pause-restart" class="btn-pause-secondary">↺ RESTART MATCH</button>
+            <button id="btn-pause-quit" class="btn-pause-secondary danger">🚪 QUIT TO HOME</button>
+          </div>
         </div>
       </div>
 
@@ -2015,169 +2090,177 @@
       <!-- Fast-Forward / Skip Hint -->
       <div class="results-skip-hint" id="results-skip-hint">CLICK OR PRESS [SPACE] TO FAST-FORWARD</div>
 
-      <!-- Header: VICTORY / DEFEAT + Performance Grade Stamp -->
-      <div class="results-header-row">
-        <div class="results-title-group">
-          <div class="modal-title results-banner-title" id="results-title">VICTORY</div>
-          <div class="results-match-sub" id="results-subtitle">MATCH COMPLETE • BEST OF 3</div>
-        </div>
-        <div class="results-grade-badge" id="results-grade-badge">
-          <span class="grade-letter" id="results-grade-letter">S</span>
-          <span class="grade-label">RATING</span>
-        </div>
-      </div>
-
-      <!-- Match Metadata Summary Strip -->
-      <div class="results-meta-strip">
-        <div class="results-meta-item">
-          <span class="meta-label">ROUNDS</span>
-          <span class="meta-value" id="results-outcome">2 - 0</span>
-        </div>
-        <div class="results-meta-item">
-          <span class="meta-label">MAX COMBO</span>
-          <span class="meta-value" id="results-max-combo">8 HITS</span>
-        </div>
-        <div class="results-meta-item">
-          <span class="meta-label">DURATION</span>
-          <span class="meta-value" id="results-duration">48s</span>
-        </div>
-        <div class="results-meta-item">
-          <span class="meta-label">MODE</span>
-          <span class="meta-value" id="results-mode">CASUAL</span>
-        </div>
-      </div>
-
-      <!-- 4 Core Reward Counters (XP EARNED, COINS EARNED, CHARACTER XP, MASTERY XP) -->
-      <div class="results-rewards-grid">
-        <!-- 1. XP EARNED (Account XP) -->
-        <div class="reward-counter-card" id="card-xp-earned">
-          <div class="reward-card-icon xp-color">✦</div>
-          <div class="reward-card-info">
-            <span class="reward-card-lbl">XP EARNED</span>
-            <span class="reward-card-val" id="results-xp-earned">+0</span>
-          </div>
-        </div>
-
-        <!-- 2. COINS EARNED -->
-        <div class="reward-counter-card" id="card-coins-earned">
-          <div class="reward-card-icon coin-color">🪙</div>
-          <div class="reward-card-info">
-            <span class="reward-card-lbl">COINS EARNED</span>
-            <span class="reward-card-val" id="results-coins-earned">+0</span>
-          </div>
-        </div>
-
-        <!-- 3. CHARACTER XP -->
-        <div class="reward-counter-card" id="card-char-xp">
-          <div class="reward-card-icon char-color" id="results-char-icon-badge">⚔️</div>
-          <div class="reward-card-info">
-            <span class="reward-card-lbl">CHARACTER XP</span>
-            <span class="reward-card-val" id="results-char-xp-earned">+0</span>
-          </div>
-        </div>
-
-        <!-- 4. MASTERY XP -->
-        <div class="reward-counter-card" id="card-mastery-xp">
-          <div class="reward-card-icon mastery-color">👑</div>
-          <div class="reward-card-info">
-            <span class="reward-card-lbl">MASTERY XP</span>
-            <span class="reward-card-val" id="results-mastery-xp-earned">+0</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Dual Progress Fill Bars: Character Level & Hero Mastery -->
-      <div class="results-progression-panel">
-        <!-- Character Level Bar -->
-        <div class="results-bar-row">
-          <div class="results-bar-header">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="results-badge-char-name" id="results-char-name">VEX</span>
-              <span class="results-badge-level" id="results-char-level">LEVEL 12</span>
+      <div class="results-content-columns">
+        <!-- Primary Left Column: Title, Rating, Match Telemetry & Immediate Navigation -->
+        <div class="results-col-primary">
+          <!-- Header: VICTORY / DEFEAT + Performance Grade Stamp -->
+          <div class="results-header-row">
+            <div class="results-title-group">
+              <div class="modal-title results-banner-title" id="results-title">VICTORY</div>
+              <div class="results-match-sub" id="results-subtitle">MATCH COMPLETE • BEST OF 3</div>
             </div>
-            <span class="results-bar-text" id="results-char-xp-text">4,250 / 5,000 XP</span>
-          </div>
-          <div class="prog-xp-bar-bg" style="height: 8px;">
-            <div class="prog-xp-bar-fill" id="results-char-bar-fill" style="width: 0%; background: var(--grad-primary);"></div>
-          </div>
-        </div>
-
-        <!-- Hero Mastery Bar -->
-        <div class="results-bar-row" style="margin-top: 10px;">
-          <div class="results-bar-header">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="results-badge-mastery">HERO MASTERY</span>
-              <span class="results-badge-rank" id="results-mastery-rank">RANK 4 • COMBATANT</span>
-            </div>
-            <span class="results-bar-text" id="results-mastery-xp-text">1,850 / 2,400 XP</span>
-          </div>
-          <div class="prog-mastery-bar-bg" style="height: 7px;">
-            <div class="prog-mastery-bar-fill" id="results-mastery-bar-fill" style="width: 0%; background: linear-gradient(90deg, #FFB800, #A855F7);"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Level Up Alert Banner -->
-      <div id="results-levelup-banner" class="results-levelup-banner" style="display: none;">
-        <div class="results-levelup-title" id="results-levelup-title">⚡ LEVEL UP! REACHED LEVEL 13 ⚡</div>
-        <div class="results-levelup-reward" id="results-levelup-reward">Unlocked: Crimson Overdrive & 450 Shards!</div>
-      </div>
-
-      <!-- Competitive Ranked RP Banner -->
-      <div id="results-rp-banner" class="results-rp-banner" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 22px;" id="results-rp-crest">🥈</span>
-            <div>
-              <div style="font-family: 'Orbitron'; font-size: 13px; font-weight: 900; color: #FFF;" id="results-rp-rank-label">SILVER I</div>
-              <div style="font-size: 10px; color: var(--text-secondary);" id="results-rp-explanation">Victory (+24) + Streak (+3)</div>
+            <div class="results-grade-badge" id="results-grade-badge">
+              <span class="grade-letter" id="results-grade-letter">S</span>
+              <span class="grade-label">RATING</span>
             </div>
           </div>
-          <div style="font-family: 'Orbitron'; font-size: 18px; font-weight: 900; color: var(--accent-gold);" id="results-rp-delta-text">+27 RP</div>
-        </div>
-        <div id="results-promotion-alert" style="display: none; font-family: 'Orbitron'; font-size: 11px; font-weight: 900; color: var(--accent-green); margin-top: 6px; text-align: center;">
-          🎉 PROMOTED TO NEXT RANK DIVISION! 🎉
-        </div>
-      </div>
 
-      <!-- Cosmetic Reward Drop Reveal Card (Titles, Badges, Emotes, Victory Effects) -->
-      <div id="results-loot-drop-container" class="results-loot-drop-container" style="display: none;">
-        <div class="results-loot-header">
-          <span class="loot-sparkle">✦</span>
-          <span>COSMETIC REWARD UNLOCKED</span>
-          <span class="loot-sparkle">✦</span>
-        </div>
-        <div class="results-loot-card" id="results-loot-card">
-          <div class="results-loot-icon" id="results-loot-icon">👑</div>
-          <div class="results-loot-info">
-            <div class="results-loot-rarity" id="results-loot-rarity">EPIC TITLE</div>
-            <div class="results-loot-name" id="results-loot-name">Ghost in the Rift</div>
-            <div class="results-loot-desc" id="results-loot-desc">Untouchable evasive combatant who dances through enemy strikes.</div>
+          <!-- Match Metadata Summary Strip -->
+          <div class="results-meta-strip">
+            <div class="results-meta-item">
+              <span class="meta-label">ROUNDS</span>
+              <span class="meta-value" id="results-outcome">2 - 0</span>
+            </div>
+            <div class="results-meta-item">
+              <span class="meta-label">MAX COMBO</span>
+              <span class="meta-value" id="results-max-combo">8 HITS</span>
+            </div>
+            <div class="results-meta-item">
+              <span class="meta-label">DURATION</span>
+              <span class="meta-value" id="results-duration">48s</span>
+            </div>
+            <div class="results-meta-item">
+              <span class="meta-label">MODE</span>
+              <span class="meta-value" id="results-mode">CASUAL</span>
+            </div>
           </div>
-          <button class="btn-secondary results-loot-equip-btn" id="btn-results-loot-equip">EQUIP</button>
-        </div>
-      </div>
 
-      <!-- Challenge Progress Mini-Strip -->
-      <div id="results-challenges-strip" class="results-challenges-strip">
-        <div class="results-challenges-header">
-          <span class="results-challenges-title">CHALLENGE OBJECTIVES</span>
-          <button class="btn-link-hub" id="btn-results-open-challenges">CHALLENGES HUB →</button>
+          <!-- Primary Match Results Navigation Actions (REMATCH & CONTINUE) -->
+          <div class="results-actions-row">
+            <button class="btn-primary-action" id="btn-results-rematch">REMATCH <span style="font-size: 11px; opacity: 0.85;">[ENTER]</span></button>
+            <button class="btn-secondary" id="btn-results-menu">CONTINUE</button>
+          </div>
+          <div class="results-sub-actions">
+            <button class="btn-subtle-link" id="btn-results-challenges-btn">BOUNTIES & CHALLENGES</button>
+            <span class="sub-sep">•</span>
+            <button class="btn-subtle-link" id="btn-results-progression">CHARACTER PROGRESSION</button>
+          </div>
         </div>
-        <div class="results-challenges-mini-list" id="results-challenges-mini-list">
-          <!-- Populated dynamically with mini progress bars -->
-        </div>
-      </div>
 
-      <!-- Primary Match Results Navigation Actions -->
-      <div class="results-actions-row">
-        <button class="btn-primary-action" id="btn-results-rematch">REMATCH <span style="font-size: 11px; opacity: 0.85;">[ENTER]</span></button>
-        <button class="btn-secondary" id="btn-results-menu">CONTINUE</button>
-      </div>
-      <div class="results-sub-actions">
-        <button class="btn-subtle-link" id="btn-results-challenges-btn">BOUNTIES & CHALLENGES</button>
-        <span class="sub-sep">•</span>
-        <button class="btn-subtle-link" id="btn-results-progression">CHARACTER PROGRESSION</button>
+        <!-- Telemetry Right Column: Rewards, XP Progression, Levelups & Challenges -->
+        <div class="results-col-telemetry">
+          <!-- 4 Core Reward Counters (XP EARNED, COINS EARNED, CHARACTER XP, MASTERY XP) -->
+          <div class="results-rewards-grid">
+            <!-- 1. XP EARNED (Account XP) -->
+            <div class="reward-counter-card" id="card-xp-earned">
+              <div class="reward-card-icon xp-color">✦</div>
+              <div class="reward-card-info">
+                <span class="reward-card-lbl">XP EARNED</span>
+                <span class="reward-card-val" id="results-xp-earned">+0</span>
+              </div>
+            </div>
+
+            <!-- 2. COINS EARNED -->
+            <div class="reward-counter-card" id="card-coins-earned">
+              <div class="reward-card-icon coin-color">🪙</div>
+              <div class="reward-card-info">
+                <span class="reward-card-lbl">COINS EARNED</span>
+                <span class="reward-card-val" id="results-coins-earned">+0</span>
+              </div>
+            </div>
+
+            <!-- 3. CHARACTER XP -->
+            <div class="reward-counter-card" id="card-char-xp">
+              <div class="reward-card-icon char-color" id="results-char-icon-badge">⚔️</div>
+              <div class="reward-card-info">
+                <span class="reward-card-lbl">CHARACTER XP</span>
+                <span class="reward-card-val" id="results-char-xp-earned">+0</span>
+              </div>
+            </div>
+
+            <!-- 4. MASTERY XP -->
+            <div class="reward-counter-card" id="card-mastery-xp">
+              <div class="reward-card-icon mastery-color">👑</div>
+              <div class="reward-card-info">
+                <span class="reward-card-lbl">MASTERY XP</span>
+                <span class="reward-card-val" id="results-mastery-xp-earned">+0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dual Progress Fill Bars: Character Level & Hero Mastery -->
+          <div class="results-progression-panel">
+            <!-- Character Level Bar -->
+            <div class="results-bar-row">
+              <div class="results-bar-header">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="results-badge-char-name" id="results-char-name">VEX</span>
+                  <span class="results-badge-level" id="results-char-level">LEVEL 12</span>
+                </div>
+                <span class="results-bar-text" id="results-char-xp-text">4,250 / 5,000 XP</span>
+              </div>
+              <div class="prog-xp-bar-bg" style="height: 8px;">
+                <div class="prog-xp-bar-fill" id="results-char-bar-fill" style="width: 0%; background: var(--grad-primary);"></div>
+              </div>
+            </div>
+
+            <!-- Hero Mastery Bar -->
+            <div class="results-bar-row" style="margin-top: 10px;">
+              <div class="results-bar-header">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="results-badge-mastery">HERO MASTERY</span>
+                  <span class="results-badge-rank" id="results-mastery-rank">RANK 4 • COMBATANT</span>
+                </div>
+                <span class="results-bar-text" id="results-mastery-xp-text">1,850 / 2,400 XP</span>
+              </div>
+              <div class="prog-mastery-bar-bg" style="height: 7px;">
+                <div class="prog-mastery-bar-fill" id="results-mastery-bar-fill" style="width: 0%; background: linear-gradient(90deg, #FFB800, #A855F7);"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Level Up Alert Banner -->
+          <div id="results-levelup-banner" class="results-levelup-banner" style="display: none;">
+            <div class="results-levelup-title" id="results-levelup-title">⚡ LEVEL UP! REACHED LEVEL 13 ⚡</div>
+            <div class="results-levelup-reward" id="results-levelup-reward">Unlocked: Crimson Overdrive & 450 Shards!</div>
+          </div>
+
+          <!-- Competitive Ranked RP Banner -->
+          <div id="results-rp-banner" class="results-rp-banner" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 22px;" id="results-rp-crest">🥈</span>
+                <div>
+                  <div style="font-family: var(--font-display); font-size: 13px; font-weight: 900; color: #FFF;" id="results-rp-rank-label">SILVER I</div>
+                  <div style="font-size: 10px; color: var(--text-secondary);" id="results-rp-explanation">Victory (+24) + Streak (+3)</div>
+                </div>
+              </div>
+              <div style="font-family: var(--font-display); font-size: 18px; font-weight: 900; color: var(--accent-gold);" id="results-rp-delta-text">+27 RP</div>
+            </div>
+            <div id="results-promotion-alert" style="display: none; font-family: var(--font-display); font-size: 11px; font-weight: 900; color: var(--accent-green); margin-top: 6px; text-align: center;">
+              🎉 PROMOTED TO NEXT RANK DIVISION! 🎉
+            </div>
+          </div>
+
+          <!-- Cosmetic Reward Drop Reveal Card (Titles, Badges, Emotes, Victory Effects) -->
+          <div id="results-loot-drop-container" class="results-loot-drop-container" style="display: none;">
+            <div class="results-loot-header">
+              <span class="loot-sparkle">✦</span>
+              <span>COSMETIC REWARD UNLOCKED</span>
+              <span class="loot-sparkle">✦</span>
+            </div>
+            <div class="results-loot-card" id="results-loot-card">
+              <div class="results-loot-icon" id="results-loot-icon">👑</div>
+              <div class="results-loot-info">
+                <div class="results-loot-rarity" id="results-loot-rarity">EPIC TITLE</div>
+                <div class="results-loot-name" id="results-loot-name">Ghost in the Rift</div>
+                <div class="results-loot-desc" id="results-loot-desc">Untouchable evasive combatant who dances through enemy strikes.</div>
+              </div>
+              <button class="btn-secondary results-loot-equip-btn" id="btn-results-loot-equip">EQUIP</button>
+            </div>
+          </div>
+
+          <!-- Challenge Progress Mini-Strip -->
+          <div id="results-challenges-strip" class="results-challenges-strip">
+            <div class="results-challenges-header">
+              <span class="results-challenges-title">CHALLENGE OBJECTIVES</span>
+              <button class="btn-link-hub" id="btn-results-open-challenges">CHALLENGES HUB →</button>
+            </div>
+            <div class="results-challenges-mini-list" id="results-challenges-mini-list">
+              <!-- Populated dynamically with mini progress bars -->
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
