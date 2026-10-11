@@ -1410,9 +1410,12 @@
     <!-- 11. SETTINGS SCREEN (2-COLUMN COMMERCIAL LAYOUT) -->
     <section class="screen" id="screen-settings">
       <div class="settings-screen-container">
-        <div class="settings-header">
-          <span class="cs-phase-tag">CONFIGURATION // SYSTEM PREFERENCES</span>
-          <h2 class="modes-main-title">SYSTEM CONFIGURATION</h2>
+        <div class="settings-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <span class="cs-phase-tag">CONFIGURATION // SYSTEM PREFERENCES</span>
+            <h2 class="modes-main-title" style="margin: 0;">SYSTEM CONFIGURATION</h2>
+          </div>
+          <button class="btn-secondary" id="btn-settings-back" style="padding: 8px 18px; font-size: 13px; font-weight: 700; letter-spacing: 1px;">← RETURN TO HOME</button>
         </div>
 
         <div class="settings-two-col-layout">
@@ -1806,6 +1809,7 @@
           </div>
           <div class="combat-pause-body">
             <button id="btn-pause-resume" class="btn-pause-primary">▶ RESUME COMBAT</button>
+            <button id="btn-pause-settings" class="btn-pause-secondary">⚙ AUDIO & SETTINGS</button>
             <button id="btn-pause-fullscreen" class="btn-pause-secondary">⛶ TOGGLE FULLSCREEN</button>
             <button id="btn-pause-restart" class="btn-pause-secondary">↺ RESTART MATCH</button>
             <button id="btn-pause-quit" class="btn-pause-secondary danger">🚪 QUIT TO HOME</button>

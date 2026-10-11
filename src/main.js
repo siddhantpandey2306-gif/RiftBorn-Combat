@@ -76,14 +76,14 @@ class RiftbornApp {
 
   showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.nav-btn, .nav-icon-btn').forEach(b => b.classList.remove('active'));
 
     const target = document.getElementById(screenId);
     if (target) {
       target.classList.add('active');
     }
 
-    const navBtn = document.querySelector(`.nav-btn[data-screen="${screenId}"]`);
+    const navBtn = document.querySelector(`.nav-btn[data-screen="${screenId}"], .nav-icon-btn[data-screen="${screenId}"]`);
     if (navBtn) {
       navBtn.classList.add('active');
     }
@@ -171,6 +171,36 @@ class RiftbornApp {
       this.showScreen('screen-profile');
       this.renderProfile();
     });
+
+    // Top Navigation Settings button (Gear Icon)
+    const navSettings = document.getElementById('nav-settings');
+    if (navSettings) {
+      navSettings.addEventListener('click', () => {
+        this.showScreen('screen-settings');
+        soundEngine.playUiClick();
+      });
+    }
+
+    // Settings Screen Back Button
+    const btnSettingsBack = document.getElementById('btn-settings-back');
+    if (btnSettingsBack) {
+      btnSettingsBack.addEventListener('click', () => {
+        this.showScreen('screen-home');
+        soundEngine.playUiClick();
+      });
+    }
+
+    // Pause Modal Settings Button
+    const btnPauseSettings = document.getElementById('btn-pause-settings');
+    if (btnPauseSettings) {
+      btnPauseSettings.addEventListener('click', () => {
+        const pauseModal = document.getElementById('modal-combat-pause');
+        if (pauseModal) pauseModal.style.display = 'none';
+        document.getElementById('game-view').style.display = 'none';
+        this.showScreen('screen-settings');
+        soundEngine.playUiClick();
+      });
+    }
 
     // Home Screen PLAY NOW: Instant Match with Current Featured Fighter vs Random Rival
     const quickStartBtn = document.getElementById('btn-quick-start-fight');
@@ -4098,21 +4128,30 @@ class RiftbornApp {
     const musicSlider = document.getElementById('slider-music-vol');
     const shakeSlider = document.getElementById('slider-shake-vol');
 
-    sfxSlider.addEventListener('input', (e) => {
-      const v = e.target.value / 100;
-      soundEngine.setSfxVolume(v);
-      document.getElementById('label-sfx-vol').textContent = `${e.target.value}%`;
-    });
+    if (sfxSlider) {
+      sfxSlider.addEventListener('input', (e) => {
+        const v = e.target.value / 100;
+        soundEngine.setSfxVolume(v);
+        const lbl = document.getElementById('label-sfx-vol');
+        if (lbl) lbl.textContent = `${e.target.value}%`;
+      });
+    }
 
-    musicSlider.addEventListener('input', (e) => {
-      const v = e.target.value / 100;
-      soundEngine.setMusicVolume(v);
-      document.getElementById('label-music-vol').textContent = `${e.target.value}%`;
-    });
+    if (musicSlider) {
+      musicSlider.addEventListener('input', (e) => {
+        const v = e.target.value / 100;
+        soundEngine.setMusicVolume(v);
+        const lbl = document.getElementById('label-music-vol');
+        if (lbl) lbl.textContent = `${e.target.value}%`;
+      });
+    }
 
-    shakeSlider.addEventListener('input', (e) => {
-      document.getElementById('label-shake-vol').textContent = `${e.target.value}%`;
-    });
+    if (shakeSlider) {
+      shakeSlider.addEventListener('input', (e) => {
+        const lbl = document.getElementById('label-shake-vol');
+        if (lbl) lbl.textContent = `${e.target.value}%`;
+      });
+    }
 
     // --- SETTINGS CATEGORY TABS (2-COLUMN) ---
     const settingsTabs = document.querySelectorAll('.settings-nav-tab');
