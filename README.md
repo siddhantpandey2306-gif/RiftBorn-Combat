@@ -1,135 +1,153 @@
-# ⚔️ RIFTBORN — Combat
+# ⚡ RIFTBORN — Original Competitive 2D Fighting Game
 
-**Enter the arena. Master your fighter. Own the fight.**
+[![Version](https://img.shields.io/badge/version-1.0.0-crimson.svg)](https://github.com/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Web%20%7C%20Mobile%20%7C%20PWA-00D2FF.svg)]()
+[![Built With](https://img.shields.io/badge/built%20with-Canvas2D%20%2B%20WebAudio-FBBF24.svg)]()
 
-RIFTBORN is a browser-based combat game project focused on responsive gameplay, character-based fighting mechanics, and an engaging combat experience. The project is being developed with web technologies, with an emphasis on gameplay feel, interface design, and performance.
+> **RIFTBORN** is an original futuristic, hero-based 2D browser fighting game built with high-performance Canvas rendering, procedural particle FX, responsive multi-touch controls, and deep competitive combat mechanics.
 
-## 🎮 About the Project
+---
 
-RIFTBORN — Combat is an independent fighting-game project built to explore the design and development of an interactive browser game. The goal is to create a smooth, accessible, and visually engaging combat experience across desktop and mobile devices.
+## 🎮 Play Modes
 
-## ✨ Features
+- **⚔️ Casual 1v1 (Sparring Protocol)**: Battle against adaptive combat AI with customizable difficulty (Recruit, Warrior, Master, Godlike) or challenge a friend locally.
+- **🏆 Ranked Competitive Ladder**: Climb 7 competitive tiers from Bronze I up to Rift Champion with real-time RP rating calculations, division promotions, and streak bonuses.
+- **📖 Cinematic Story Campaign**: Play episodic narrative chapters exploring Terra-Nova, the Monolith Anomaly, and rogue Void operatives.
+- **🥋 Training Lab / Dojo**: Practice combo routes with interactive frame telemetry, real-time input logging, hitbox visualizers, and damage counters.
+- **👑 Boss Rush**: High-stakes boss gauntlet pitting your fighter against elite Rift commanders.
 
-- **Browser-Based Gameplay** — Play directly in a compatible web browser.
-- **Combat Mechanics** — Development and testing of fighting interactions and round-based gameplay.
-- **Responsive Interface** — UI styling for different screen sizes.
-- **Combat Testing** — Dedicated test files for combat behavior and round systems.
-- **Continuous Development** — Gameplay, controls, performance, and UI improvements as the project evolves.
+---
 
-*Note: Features and compatibility may change as development continues.*
+## 🥋 The Fighter Roster
 
-## 🛠️ Tech Stack
+| Fighter | Archetype | Energy Core | Playstyle |
+| :--- | :--- | :--- | :--- |
+| **VEX** | Balanced Vanguard | Crimson | Balanced mid-range strikes, versatile blade counters |
+| **SOLARIS** | Radiant Juggernaut | Gold | Super-armor swings, heavy damage, ground-pound shockwaves |
+| **LYRA** | Crystalline Duelist | Cyan | Lightning-fast rushdown, prism dashes, evasive traps |
+| **AERON** | Zephyr Strider | Emerald | High-mobility aerial combat, gale projectiles, spacing |
+| **NOX** | Shadow Stalker | Violet | Teleportation, illusions, counter-strikes |
+| **IGNIS** | Pyroclastic Brawler | Amber | Close-quarters explosions, incinerating combo loops |
 
-- **HTML5** — Game structure and interface
-- **CSS3** — Styling and responsive layouts
-- **JavaScript (ES Modules)** — Game logic and interactions
-- **Vite** — Local development server and production build
-- **Puppeteer Core** — Browser automation tooling used by the project
+---
+
+## 🕹️ Controls Guide
+
+### 💻 Desktop Keyboard (Player 1)
+
+| Input | Action |
+| :--- | :--- |
+| **A / D** | Walk Left / Right |
+| **W** | Jump |
+| **S** | Crouch / Duck |
+| **J** | Light Attack |
+| **K** | Heavy Attack |
+| **L** | Special Ability 1 |
+| **U** | Special Ability 2 |
+| **I** | Ultimate Move *(Requires full Core Meter)* |
+| **SHIFT** | Block *(Absorbs incoming damage)* |
+| **SPACE** | Evasive Dodge *(Invulnerability frames)* |
+| **H** | Tactical Parry |
+| **ESC / P** | Pause Match |
+| **F11 / ⛶** | Toggle Fullscreen |
+
+### 📱 Mobile & Touch Controls
+
+- **Left Thumb Virtual Joystick**: Smooth 360° directional movement, crouch, and jump flick.
+- **Right Thumb Action Cluster**: Ergonomically placed arcade buttons (`LIGHT`, `HEAVY`, `SPECIAL`, `BLOCK`, `DODGE`, and glowing `ULTIMATE`).
+- **Interactive Fullscreen**: Tap **`⛶ FULL`** in the bottom HUD pill or **`⛶ FULLSCREEN`** in the top navbar to hide browser address bars and play in full-screen landscape.
+- **PWA Ready**: Tap Chrome's menu (`⋮`) -> **Add to Home Screen** to install RIFTBORN as a standalone native app with zero browser tabs.
+
+---
+
+## 💎 Progression & Reward Loop
+
+- **Account Level & Mastery XP**: Level up individual fighters to unlock unique stat augments, prestige titles, and cosmetic badges.
+- **Daily & Weekly Bounties**: Complete tactical objectives (Evasions, Parries, High Combos) to earn Coins and Prisms.
+- **Cosmetics Drops**: Equip epic titles, badges, victory banners, and profile crests earned through performance grades (**S**, **A**, **B**, **C**).
+- **Match Results Summary**: Sleek post-match board displaying rounds, damage, max combo, and immediate 1-tap rematch.
+
+---
+
+## 🛠️ Tech Stack & Architecture
+
+- **Rendering**: HTML5 Canvas 2D engine with procedural particle simulation, hitstop, screenshake, and custom lighting.
+- **Audio**: Web Audio API Sound Synthesizer with spatial combat hits, parry chimes, and adaptive combat themes.
+- **Styling**: Vanilla CSS3 design system with CSS custom properties, dark glassmorphism, and responsive safe-area mobile insets.
+- **Typography**: Google Fonts (*Orbitron*, *Bebas Neue*, *Inter*, *Oswald*).
+- **Build Tool**: [Vite](https://vitejs.dev/) for lightning-fast HMR and optimized production bundles.
+
+---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-Install [Node.js](https://nodejs.org/) and npm before starting.
+- Node.js (v18 or higher recommended)
+- npm or yarn
 
-### 1. Clone the repository
+### Installation
 
-```bash
-git clone https://github.com/siddhantpandey2306-gif/RiftBorn-Combat.git
-```
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/your-username/rift-born.git
+   cd rift-born
+   ```
 
-### 2. Open the project folder
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-```bash
-cd RiftBorn-Combat
-```
+3. **Start the development server**:
+   ```bash
+   npm run dev
+   ```
+   Open your browser at `http://localhost:5173/`.
 
-### 3. Install dependencies
+4. **Build for production**:
+   ```bash
+   npm run build
+   ```
 
-```bash
-npm install
-```
-
-### 4. Start the development server
-
-```bash
-npm run dev
-```
-
-Open the local URL printed in your terminal to access the game.
-
-### 5. Create a production build
-
-```bash
-npm run build
-```
-
-To preview the production build locally, run:
-
-```bash
-npm run preview
-```
-
-## 🕹️ Gameplay
-
-RIFTBORN is being developed around the core idea of character-based combat. The intended experience emphasizes responsive controls, readable combat feedback, and a straightforward path from starting a match to completing a fight.
-
-For the latest playable behavior and controls, refer to the current game implementation.
-
-## 📁 Project Structure
-
-```text
-RiftBorn-Combat/
-├── index.html
-├── style.css
-├── package.json
-├── package-lock.json
-├── GSD-STYLE.md
-├── PROJECT_RULES.md
-├── VERSION
-├── model_capabilities.yaml
-├── scratch_combat_feel_test.mjs
-├── scratch_full_gameplay_pass.mjs
-├── test_combat_prototype.js
-└── test_round_system.js
-```
-
-## 🔧 Development Goals
-
-- Improve combat responsiveness and hit detection.
-- Refine keyboard and touch controls.
-- Improve performance on mobile devices.
-- Polish the user interface and combat feedback.
-- Strengthen gameplay reliability through testing.
-- Continue improving the overall player experience.
-
-## 🧪 Testing
-
-The repository includes test files related to combat behavior and round systems. Test commands should be added here once they are configured and verified.
-
-## 🗺️ Roadmap
-
-- [ ] Refine combat mechanics and responsiveness
-- [ ] Improve mobile controls and performance
-- [ ] Polish the interface across screen sizes
-- [ ] Expand gameplay testing
-- [ ] Improve the overall combat experience
-
-## 🤝 Contributions
-
-Suggestions, bug reports, and constructive feedback are welcome. If you find an issue, please describe the steps to reproduce it and include your browser and device details when relevant.
-
-## 📄 License
-
-No license has been specified yet. Until a license is added to this repository, please contact the repository owner before redistributing or reusing the project's code.
-
-## 👨‍💻 Developer
-
-**Siddhant Pandey**
-
-- GitHub: [@siddhantpandey2306-gif](https://github.com/siddhantpandey2306-gif)
-- Repository: [RiftBorn-Combat](https://github.com/siddhantpandey2306-gif/RiftBorn-Combat)
+5. **Preview production build**:
+   ```bash
+   npm run preview
+   ```
 
 ---
 
-*RIFTBORN — Combat is an actively evolving project. More improvements are planned as development continues.*
+## 📁 Project Structure
+
+```
+rift-born/
+├── index.html                   # Core HTML entry & modal templates
+├── style.css                    # Design system, responsive layouts & HUD styles
+├── public/
+│   └── manifest.webmanifest    # PWA configuration for mobile standalone fullscreen
+├── src/
+│   ├── main.js                  # Main application controller, routing & lifecycle
+│   ├── characters/
+│   │   └── characterData.js     # Character stats, move lists & ability definitions
+│   ├── engine/
+│   │   ├── ArenaRenderer.js     # Multi-layered parallax arenas & particle effects
+│   │   ├── CombatEngine.js      # Frame physics, hitboxes, combat state & AI
+│   │   ├── SoundEngine.js       # Procedural Web Audio FX & combat audio
+│   │   └── TouchControls.js     # Mobile virtual joystick & touch buttons
+│   ├── modes/
+│   │   ├── CasualMode.js        # Casual match configuration
+│   │   ├── RankedMode.js        # Competitive division & RP matchmaking logic
+│   │   └── StoryMode.js         # Campaign chapters, dialogs & boss fights
+│   └── progression/
+│       ├── progressionManager.js # XP, account levels & persistent storage
+│       └── progressionTracks.js # Hero mastery curves, unlocks & reward tiers
+├── package.json                 # Project scripts and dependencies
+└── README.md                    # Project documentation
+```
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
