@@ -4107,8 +4107,11 @@ body::before {
     height: 280px;
   }
   #select-preview-canvas {
+    width: 100%;
+    height: 100%;
     max-width: 100%;
-    height: auto;
+    max-height: 100%;
+    object-fit: contain;
   }
   .cs-roster-cards-container {
     grid-template-columns: repeat(3, 1fr);
@@ -4328,36 +4331,45 @@ body::before {
 
 /* ==========================================================================
    MOBILE LANDSCAPE & SHORT VIEWPORT OPTIMIZATIONS
-   Ensures PLAY NOW and Fighter Preview are visible without scrolling
+   Complete native widescreen landscape styling across all game screens
    ========================================================================== */
-@media (max-height: 500px) and (orientation: landscape) {
+@media (orientation: landscape) {
+  #orientation-prompt-overlay {
+    display: none !important;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 620px) {
   #navbar {
-    height: 42px;
-    padding: 0 max(14px, env(safe-area-inset-right)) 0 max(14px, env(safe-area-inset-left));
+    height: 38px;
+    padding: 0 max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left));
   }
   .brand-text {
-    font-size: 16px;
+    font-size: 15px;
   }
   .brand-tag {
     display: none;
   }
-  .screen {
-    min-height: calc(100vh - 42px);
-    padding: 8px max(14px, env(safe-area-inset-right)) 8px max(14px, env(safe-area-inset-left));
+  .nav-links {
+    display: flex !important;
+    gap: 3px;
   }
-  #screen-container {
-    padding-bottom: max(46px, calc(36px + env(safe-area-inset-bottom)));
+  .nav-btn {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+  .nav-icon-btn {
+    padding: 3px 7px;
   }
   .mobile-bottom-nav {
-    height: 44px;
-    padding: 2px 10px;
+    display: none !important;
   }
-  .mobile-nav-btn {
-    font-size: 9px;
-    gap: 1px;
+  #screen-container {
+    padding-bottom: 0 !important;
   }
-  .mobile-nav-btn .mobile-nav-icon {
-    font-size: 13px;
+  .screen {
+    min-height: calc(100vh - 38px);
+    padding: 6px max(12px, env(safe-area-inset-right)) 6px max(12px, env(safe-area-inset-left));
   }
 
   /* Home screen 2-column landscape layout */
@@ -4369,8 +4381,8 @@ body::before {
     display: grid;
     grid-template-columns: 1.15fr 0.85fr;
     grid-template-rows: auto auto;
-    gap: 6px 16px;
-    padding: 10px 14px;
+    gap: 6px 14px;
+    padding: 8px 12px;
     align-items: center;
   }
   .home-brand-masthead {
@@ -4382,11 +4394,11 @@ body::before {
     display: none;
   }
   .home-brand-title {
-    font-size: 22px;
+    font-size: 20px;
     letter-spacing: 1.5px;
   }
   .home-brand-tagline {
-    font-size: 11px;
+    font-size: 10px;
     line-height: 1.2;
     white-space: nowrap;
     overflow: hidden;
@@ -4400,19 +4412,19 @@ body::before {
     margin-bottom: 0;
   }
   .btn-play-hero {
-    height: 44px;
+    height: 40px;
     padding: 0 12px;
     flex: 1;
   }
   .btn-play-label {
-    font-size: 17px;
+    font-size: 16px;
   }
   .btn-play-sub {
     font-size: 9px;
   }
   .btn-hero-secondary {
-    height: 44px;
-    padding: 0 12px;
+    height: 40px;
+    padding: 0 10px;
     font-size: 11px;
     flex: 0 0 auto;
   }
@@ -4432,12 +4444,19 @@ body::before {
     height: 120px;
     margin-bottom: 4px;
   }
+  #home-hero-canvas {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
   .home-hero-eyebrow {
-    margin-bottom: 4px;
+    margin-bottom: 2px;
   }
   .home-eyebrow-tag {
-    font-size: 10px;
-    padding: 1px 6px;
+    font-size: 9px;
+    padding: 1px 5px;
   }
   .home-hero-meta {
     margin-bottom: 0;
@@ -4445,10 +4464,10 @@ body::before {
   .home-fighter-title-row {
     display: flex;
     align-items: baseline;
-    gap: 8px;
+    gap: 6px;
   }
   .home-fighter-name {
-    font-size: 20px;
+    font-size: 18px;
     margin-bottom: 0;
   }
   .home-fighter-sub {
@@ -4458,6 +4477,287 @@ body::before {
   .home-fighter-progression,
   .home-fighter-traits-strip {
     display: none;
+  }
+
+  /* Character Selection Screen: 2-Column Responsive Landscape */
+  .cs-premium-container {
+    gap: 6px;
+    max-width: 100%;
+  }
+  .cs-top-bar {
+    padding: 3px 12px;
+    gap: 6px;
+  }
+  .cs-phase-tag {
+    font-size: 8px;
+    letter-spacing: 1px;
+  }
+  .cs-top-title {
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+  .cs-key-shortcuts-pill {
+    display: none;
+  }
+  .cs-match-format-pill {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+  #btn-cs-movelist {
+    padding: 2px 6px !important;
+    font-size: 9px !important;
+  }
+
+  .cs-main-viewport, .cs-two-column-layout {
+    display: grid !important;
+    grid-template-columns: 1.15fr 0.85fr !important;
+    gap: 8px !important;
+    align-items: stretch !important;
+    flex-direction: row !important;
+  }
+
+  .cs-stage-column {
+    min-height: auto !important;
+    padding: 6px 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+
+  .cs-watermark-name {
+    font-size: 36px;
+    opacity: 0.04;
+  }
+
+  .cs-stage-floating-meta {
+    gap: 6px;
+    margin-bottom: 2px;
+  }
+  .cs-float-pill {
+    padding: 2px 6px;
+    font-size: 9px;
+  }
+  .cs-float-lbl {
+    font-size: 8px;
+  }
+
+  .cs-canvas-wrapper, .cs-preview-canvas-wrapper {
+    height: 148px !important;
+    min-height: 135px !important;
+    max-height: 160px !important;
+    margin: 0 !important;
+  }
+
+  #select-preview-canvas, #cs-preview-canvas {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+    display: block !important;
+  }
+
+  .cs-action-strip {
+    margin-top: 3px;
+    gap: 2px;
+  }
+  .cs-action-strip-lbl {
+    font-size: 8px;
+    letter-spacing: 1px;
+  }
+  .cs-action-buttons-group {
+    display: flex !important;
+    gap: 3px !important;
+    flex-wrap: nowrap !important;
+    justify-content: center !important;
+    width: 100% !important;
+  }
+  .preview-act-btn, .btn-cs-action {
+    padding: 2px 3px !important;
+    font-size: 8px !important;
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    gap: 0 !important;
+  }
+  .act-key {
+    display: none !important;
+  }
+  .act-name {
+    font-size: 8px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .cs-intel-column {
+    padding: 5px 8px !important;
+    gap: 5px !important;
+    max-height: 195px !important;
+    overflow-y: auto !important;
+  }
+  .cs-profile-card {
+    padding-bottom: 3px;
+  }
+  .cs-fighter-name-display {
+    font-size: 18px;
+    margin: 0;
+  }
+  .cs-fighter-title-display {
+    font-size: 9px;
+    margin-bottom: 1px;
+  }
+  .cs-fighter-quote-box {
+    display: none;
+  }
+  .cs-lore-snippet {
+    display: none;
+  }
+
+  .cs-ratings-card {
+    padding: 5px 6px;
+  }
+  .cs-section-header {
+    margin-bottom: 2px;
+  }
+  .cs-sec-title {
+    font-size: 8px;
+  }
+  .cs-mastery-xp-text {
+    font-size: 8px !important;
+  }
+  .cs-meter-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 6px;
+  }
+  .cs-stat-row {
+    gap: 1px;
+  }
+  .cs-stat-name, .cs-stat-val {
+    font-size: 8px;
+  }
+  .cs-stat-bar-frame {
+    height: 3px;
+  }
+  .cs-mastery-bar-frame {
+    height: 3px;
+    margin-top: 2px !important;
+  }
+
+  .cs-abilities-card {
+    padding: 5px 6px;
+  }
+  .cs-abilities-compact-row {
+    gap: 4px !important;
+  }
+  .cs-ability-item {
+    padding: 3px 4px;
+  }
+  .cs-ab-key, .cs-ab-cost {
+    font-size: 7px;
+  }
+  .cs-ab-name {
+    font-size: 8px;
+  }
+  .cs-ab-type {
+    font-size: 7px;
+  }
+
+  .cs-match-config-card {
+    padding: 5px 6px;
+  }
+  .cs-config-grid-row {
+    gap: 4px;
+  }
+  .cs-config-field label {
+    font-size: 7px;
+  }
+  .cs-config-field select {
+    padding: 2px 5px;
+    font-size: 10px;
+  }
+  .cs-config-static-val {
+    padding: 2px 5px !important;
+    font-size: 10px !important;
+  }
+
+  .cs-btn-lockin {
+    padding: 5px 8px;
+  }
+  .cs-lockin-inner {
+    gap: 4px;
+  }
+  .cs-lockin-title {
+    font-size: 11px;
+  }
+  .cs-lockin-sub {
+    font-size: 7px;
+  }
+
+  .cs-bottom-roster-tray {
+    margin-top: 2px;
+  }
+  .cs-roster-tray-header {
+    margin-bottom: 1px;
+  }
+  .cs-tray-title {
+    font-size: 8px;
+  }
+  .cs-tray-hint {
+    display: none;
+  }
+  .cs-roster-cards-container {
+    grid-template-columns: repeat(6, 1fr) !important;
+    gap: 4px !important;
+  }
+  .cs-roster-card {
+    padding: 2px 4px;
+    gap: 1px;
+    height: 32px;
+  }
+  .cs-rc-avatar {
+    width: 16px;
+    height: 16px;
+    font-size: 9px;
+  }
+  .cs-rc-name {
+    font-size: 9px;
+  }
+  .cs-rc-mastery {
+    font-size: 7px;
+  }
+  .cs-rc-core-pill, .cs-rc-role-diff, .cs-rc-stats-grid {
+    display: none !important;
+  }
+
+  /* Modes grid landscape */
+  .modes-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+  .mode-card {
+    padding: 8px 10px !important;
+  }
+  .mode-card-title {
+    font-size: 15px !important;
+  }
+
+  /* Ranked deployment landscape */
+  .ranked-deployment-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  /* Story mode landscape */
+  #story-chapters-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  /* Settings landscape */
+  .settings-two-col-layout {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
   }
 }
 

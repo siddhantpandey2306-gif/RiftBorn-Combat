@@ -1785,19 +1785,6 @@
         </div>
       </div>
 
-      <!-- MOBILE COMBAT ORIENTATION SCREEN (Landscape-first enforcement during phone combat) -->
-      <div id="orientation-prompt-overlay" class="orientation-prompt-overlay" style="display: none;">
-        <div class="orientation-prompt-content">
-          <div class="orientation-brand">RIFTBORN</div>
-          <div class="orientation-device-icon">
-            <div class="phone-rotate-anim">
-              <div class="phone-screen-inner"></div>
-            </div>
-          </div>
-          <h2 class="orientation-title">ROTATE YOUR DEVICE</h2>
-          <p class="orientation-desc">Turn your phone sideways to enter the arena.</p>
-        </div>
-      </div>
 
       <!-- IN-GAME COMBAT PAUSE MODAL -->
       <div id="modal-combat-pause" class="combat-pause-overlay" style="display: none;">
@@ -2395,6 +2382,23 @@
           <button class="btn-primary-glow" id="btn-start-story-battle" style="padding: 10px 24px; font-size: 13px;">ENGAGE BATTLE</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- MOBILE COMBAT ORIENTATION SCREEN (Landscape-first enforcement across entire game) -->
+  <div id="orientation-prompt-overlay" class="orientation-prompt-overlay" style="display: none;">
+    <div class="orientation-prompt-content">
+      <div class="orientation-brand">RIFTBORN</div>
+      <div class="orientation-device-icon">
+        <div class="phone-rotate-anim">
+          <div class="phone-screen-inner"></div>
+        </div>
+      </div>
+      <h2 class="orientation-title">ROTATE YOUR DEVICE</h2>
+      <p class="orientation-desc">Turn your phone sideways for the full cinematic widescreen arena experience.</p>
+      <button id="btn-enter-landscape-prompt" class="btn-primary-glow" style="margin-top: 10px; padding: 10px 20px; font-size: 13px; font-family: var(--font-display); letter-spacing: 1px; cursor: pointer;">
+        ⛶ ENTER LANDSCAPE FULLSCREEN
+      </button>
     </div>
   </div>
 

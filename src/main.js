@@ -64,6 +64,7 @@ class RiftbornApp {
     this.setupChallengesHub();
     this.setupLeaderboards();
     this.setupEngineCallbacks();
+    this.setupAutoFullscreen();
     this.setupOrientationHandler();
     this.setupMoveListGuide();
     this.setupTutorialAndTraining();
@@ -98,15 +99,13 @@ class RiftbornApp {
     document.getElementById('game-view').style.display = 'none';
 
     // Clear combat-only overlays when navigating menus
-    const orientOverlay = document.getElementById('orientation-prompt-overlay');
-    if (orientOverlay) orientOverlay.style.display = 'none';
     const tutOverlay = document.getElementById('tutorial-overlay');
     if (tutOverlay) tutOverlay.style.display = 'none';
     const trainOverlay = document.getElementById('training-telemetry-overlay');
     if (trainOverlay) trainOverlay.style.display = 'none';
-    if (window.screen?.orientation?.unlock) {
-      try { window.screen.orientation.unlock(); } catch (_) {}
-    }
+
+    // Maintain orientation checks for mobile landscape
+    this.checkOrientation();
 
     // Manage preview animation loop
     if (screenId === 'screen-character-select') {
@@ -962,7 +961,7 @@ class RiftbornApp {
 
       ctx.save();
       ctx.translate(floorX, floorY);
-      const scale = 1.8;
+      const scale = 1.25;
       ctx.scale(scale, scale);
       ctx.translate(-floorX, -floorY);
 
@@ -1633,19 +1632,19 @@ class RiftbornApp {
     }
 
     const floorX = w / 2;
-    const floorY = h - 75;
+    const floorY = h - 52;
 
     // 1. Draw Holo-Pedestal Stage
     ctx.save();
 
     // Outer stage glow
-    const grad = ctx.createRadialGradient(floorX, floorY, 15, floorX, floorY, 190);
+    const grad = ctx.createRadialGradient(floorX, floorY, 10, floorX, floorY, 130);
     grad.addColorStop(0, `${coreColor}3D`);
     grad.addColorStop(0.5, `${coreColor}15`);
     grad.addColorStop(1, 'transparent');
     ctx.fillStyle = grad;
     ctx.beginPath();
-    ctx.ellipse(floorX, floorY, 190, 48, 0, 0, Math.PI * 2);
+    ctx.ellipse(floorX, floorY, 130, 28, 0, 0, Math.PI * 2);
     ctx.fill();
 
     // Concentric Runic Pedestal Rings
@@ -1653,20 +1652,20 @@ class RiftbornApp {
     ctx.strokeStyle = `${coreColor}77`;
     ctx.lineWidth = 2.5;
     ctx.beginPath();
-    ctx.ellipse(floorX, floorY, 150, 36, 0, 0, Math.PI * 2);
+    ctx.ellipse(floorX, floorY, 102, 22, 0, 0, Math.PI * 2);
     ctx.stroke();
 
     ctx.strokeStyle = `${coreColor}CC`;
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.ellipse(floorX, floorY, 95, 22, 0, 0, Math.PI * 2);
+    ctx.ellipse(floorX, floorY, 65, 14, 0, 0, Math.PI * 2);
     ctx.stroke();
 
     // Rotating orbital energy ticks
     for (let i = 0; i < 6; i++) {
       const angle = now + (i * Math.PI / 3);
-      const px = floorX + Math.cos(angle) * 115;
-      const py = floorY + Math.sin(angle) * 27;
+      const px = floorX + Math.cos(angle) * 78;
+      const py = floorY + Math.sin(angle) * 16;
       ctx.fillStyle = coreColor;
       ctx.shadowColor = coreColor;
       ctx.shadowBlur = 8;
@@ -1678,8 +1677,8 @@ class RiftbornApp {
     // Rising ambient core embers
     for (let i = 0; i < 5; i++) {
       const emberTime = (now * 2 + i * 1.3) % 2; // 0 to 2
-      const ex = floorX - 70 + (i * 35) + Math.sin(now * 3 + i) * 12;
-      const ey = floorY - (emberTime * 95);
+      const ex = floorX - 45 + (i * 22) + Math.sin(now * 3 + i) * 8;
+      const ey = floorY - (emberTime * 80);
       const alpha = Math.max(0, 1 - (emberTime / 2));
       ctx.fillStyle = coreColor;
       ctx.globalAlpha = alpha * 0.7;
@@ -1693,7 +1692,7 @@ class RiftbornApp {
     if (this.selectionBurstTimer > 0) {
       ctx.save();
       const progress = Math.max(0, Math.min(1, 1 - (this.selectionBurstTimer / 0.55))); // 0 to 1
-      const burstRadius = Math.max(1, 40 + (progress * 220));
+      const burstRadius = Math.max(1, 25 + (progress * 135));
       const burstAlpha = Math.max(0, 1 - progress);
       ctx.strokeStyle = coreColor;
       ctx.lineWidth = 3.5 * burstAlpha;
@@ -1701,7 +1700,7 @@ class RiftbornApp {
       ctx.shadowBlur = 24;
       ctx.globalAlpha = burstAlpha;
       ctx.beginPath();
-      ctx.ellipse(floorX, floorY, burstRadius, Math.max(0.5, burstRadius * 0.3), 0, 0, Math.PI * 2);
+      ctx.ellipse(floorX, floorY, burstRadius, Math.max(0.5, burstRadius * 0.28), 0, 0, Math.PI * 2);
       ctx.stroke();
       ctx.restore();
     }
@@ -1766,11 +1765,11 @@ class RiftbornApp {
       this.previewParticleSystem.update(dt || 0.016);
     }
 
-    // 6. Render Fighter Scaled Up For Heroic Visual Presence!
+    // 6. Render Fighter Scaled For Balanced Heroic Visual Presence!
     ctx.save();
     ctx.translate(floorX, floorY);
-    const burstScale = this.selectionBurstTimer > 0 ? Math.sin((this.selectionBurstTimer / 0.55) * Math.PI) * 0.16 : 0;
-    const finalScale = 1.95 + burstScale;
+    const burstScale = this.selectionBurstTimer > 0 ? Math.sin((this.selectionBurstTimer / 0.55) * Math.PI) * 0.08 : 0;
+    const finalScale = 1.18 + burstScale;
     ctx.scale(finalScale, finalScale);
     ctx.translate(-floorX, -floorY);
 
@@ -2921,22 +2920,82 @@ class RiftbornApp {
   }
 
   // --- FULLSCREEN CONTROLLER ---
+  enterFullscreenLandscape() {
+    const doc = document;
+    const docEl = document.documentElement;
+    const isFullscreen = !!(doc.fullscreenElement || doc.webkitFullscreenElement || doc.mozFullScreenElement || doc.msFullscreenElement);
+
+    const lockLandscape = () => {
+      try {
+        if (window.screen?.orientation?.lock) {
+          window.screen.orientation.lock('landscape').catch(() => {});
+        } else if (window.screen?.lockOrientation) {
+          window.screen.lockOrientation('landscape');
+        } else if (window.screen?.webkitLockOrientation) {
+          window.screen.webkitLockOrientation('landscape');
+        } else if (window.screen?.mozLockOrientation) {
+          window.screen.mozLockOrientation('landscape');
+        }
+      } catch (_) {}
+    };
+
+    if (!isFullscreen) {
+      const req = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+      if (req) {
+        req.call(docEl).then(() => {
+          lockLandscape();
+        }).catch((err) => {
+          console.log('Fullscreen request bypassed / not allowed without user gesture:', err);
+          lockLandscape();
+        });
+      } else {
+        lockLandscape();
+      }
+    } else {
+      lockLandscape();
+    }
+  }
+
+  setupAutoFullscreen() {
+    // 1. Try on load (works in PWA standalone or pre-authorized contexts)
+    this.enterFullscreenLandscape();
+
+    // 2. Automatically enter fullscreen landscape on very first user interaction anywhere
+    const autoFsTrigger = () => {
+      this.enterFullscreenLandscape();
+    };
+
+    window.addEventListener('pointerdown', autoFsTrigger, { once: true, passive: true });
+    window.addEventListener('touchstart', autoFsTrigger, { once: true, passive: true });
+    window.addEventListener('click', autoFsTrigger, { once: true, passive: true });
+
+    // 3. Re-engage on core action buttons to guarantee seamless landscape during navigation
+    const autoFsSelectors = [
+      '#btn-play-hero',
+      '#btn-select-launch-match',
+      '#btn-casual-launch-match',
+      '#btn-ranked-launch-match',
+      '#nav-play',
+      '#nav-characters',
+      '#btn-enter-landscape-prompt'
+    ];
+    autoFsSelectors.forEach(sel => {
+      const el = document.querySelector(sel);
+      if (el) {
+        el.addEventListener('click', () => {
+          this.enterFullscreenLandscape();
+        }, { passive: true });
+      }
+    });
+  }
+
   toggleFullscreen() {
     const doc = document;
     const docEl = document.documentElement;
     const isFullscreen = doc.fullscreenElement || doc.webkitFullscreenElement || doc.mozFullScreenElement || doc.msFullscreenElement;
 
     if (!isFullscreen) {
-      const req = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
-      if (req) {
-        req.call(docEl).then(() => {
-          if (window.screen?.orientation?.lock) {
-            window.screen.orientation.lock('landscape').catch(() => {});
-          }
-        }).catch(err => {
-          console.log('Fullscreen request bypassed:', err);
-        });
-      }
+      this.enterFullscreenLandscape();
     } else {
       const exit = doc.exitFullscreen || doc.webkitExitFullscreen || doc.mozCancelFullScreen || doc.msExitFullscreen;
       if (exit) {
@@ -4226,28 +4285,31 @@ class RiftbornApp {
     this.checkOrientation();
     window.addEventListener('resize', () => this.checkOrientation());
     window.addEventListener('orientationchange', () => {
-      setTimeout(() => this.checkOrientation(), 100);
+      setTimeout(() => {
+        this.checkOrientation();
+        this.enterFullscreenLandscape();
+      }, 100);
     });
+
+    const btnPrompt = document.getElementById('btn-enter-landscape-prompt');
+    if (btnPrompt) {
+      btnPrompt.addEventListener('click', () => {
+        this.enterFullscreenLandscape();
+        const overlay = document.getElementById('orientation-prompt-overlay');
+        if (overlay) overlay.style.display = 'none';
+      });
+    }
   }
 
   checkOrientation() {
-    const gameView = document.getElementById('game-view');
     const overlay = document.getElementById('orientation-prompt-overlay');
     if (!overlay) return;
 
-    // Only prompt rotation when actively inside combat game view
-    const isCombatActive = gameView && (gameView.style.display !== 'none');
-    if (!isCombatActive) {
-      overlay.style.display = 'none';
-      return;
-    }
-
-    // Phone detection: shortest viewport dimension <= 560px and currently in portrait (width < height)
-    // Excludes tablets (iPad is 768x1024 or 820x1180, laptops/desktops are 1280+)
-    const isPhone = Math.min(window.innerWidth, window.innerHeight) <= 560;
+    // Detect if device is held in portrait on mobile or compact viewport
     const isPortrait = window.innerWidth < window.innerHeight;
+    const isMobileDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (Math.min(window.innerWidth, window.innerHeight) <= 768);
 
-    if (isPhone && isPortrait) {
+    if (isPortrait && isMobileDevice) {
       overlay.style.display = 'flex';
     } else {
       overlay.style.display = 'none';
