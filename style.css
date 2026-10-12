@@ -4333,8 +4333,102 @@ body::before {
    MOBILE LANDSCAPE & SHORT VIEWPORT OPTIMIZATIONS
    Complete native widescreen landscape styling across all game screens
    ========================================================================== */
+/* ==========================================================================
+   MOBILE COMBAT ORIENTATION PROMPT (Landscape-first enforcement)
+   ========================================================================== */
+.orientation-prompt-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(10, 13, 20, 0.98);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+.orientation-prompt-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 320px;
+  gap: 14px;
+}
+
+.orientation-brand {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #FFFFFF;
+}
+
+.orientation-device-icon {
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 6px 0;
+}
+
+.phone-rotate-anim {
+  width: 38px;
+  height: 68px;
+  border: 3px solid rgba(255, 255, 255, 0.85);
+  border-radius: 8px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: phoneRotateLandscape 2.4s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(217, 54, 54, 0.4);
+}
+
+.phone-screen-inner {
+  width: 28px;
+  height: 52px;
+  background: rgba(217, 54, 54, 0.25);
+  border-radius: 4px;
+  border: 1px dashed var(--action-primary);
+}
+
+@keyframes phoneRotateLandscape {
+  0%, 15% {
+    transform: rotate(0deg);
+  }
+  50%, 80% {
+    transform: rotate(90deg);
+  }
+  100% {
+    transform: rotate(90deg);
+  }
+}
+
+.orientation-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.orientation-desc {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.4;
+  margin: 0;
+}
+
 @media (orientation: landscape) {
-  #orientation-prompt-overlay {
+  #orientation-prompt-overlay,
+  .orientation-prompt-overlay {
     display: none !important;
   }
 }
@@ -4353,6 +4447,17 @@ body::before {
   .nav-links {
     display: flex !important;
     gap: 3px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    flex-shrink: 1;
+  }
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
+  .nav-user {
+    flex-shrink: 0;
   }
   .nav-btn {
     padding: 3px 8px;

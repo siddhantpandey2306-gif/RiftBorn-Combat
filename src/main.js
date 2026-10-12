@@ -64,7 +64,7 @@ class RiftbornApp {
     this.setupChallengesHub();
     this.setupLeaderboards();
     this.setupEngineCallbacks();
-    this.setupAutoFullscreen();
+    this.setupFullscreenController();
     this.setupOrientationHandler();
     this.setupMoveListGuide();
     this.setupTutorialAndTraining();
@@ -356,19 +356,6 @@ class RiftbornApp {
       });
     }
 
-    // Fullscreen Toggle Handlers (Navbar, Combat HUD, Pause Menu)
-    const handleFullscreenClick = () => {
-      this.toggleFullscreen();
-      soundEngine.playUiClick();
-    };
-    const btnNavFs = document.getElementById('btn-toggle-fullscreen');
-    if (btnNavFs) btnNavFs.addEventListener('click', handleFullscreenClick);
-
-    const btnHudFs = document.getElementById('btn-hud-fullscreen');
-    if (btnHudFs) btnHudFs.addEventListener('click', handleFullscreenClick);
-
-    const btnPauseFs = document.getElementById('btn-pause-fullscreen');
-    if (btnPauseFs) btnPauseFs.addEventListener('click', handleFullscreenClick);
 
     // In-game Pause & Exit buttons
     const btnHudPause = document.getElementById('btn-hud-pause');
@@ -2919,8 +2906,19 @@ class RiftbornApp {
     }
   }
 
-  // --- FULLSCREEN CONTROLLER ---
-  enterFullscreenLandscape() {
+  // --- FULLSCREEN & ORIENTATION CONTROLLER ---
+  isTouchDevice() {
+    return ('ontouchstart' in window) || 
+           (navigator.maxTouchPoints > 0) || 
+           (window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+  }
+
+  enterFullscreenLandscape(forceOnDesktop = false) {
+    // On desktop, keep normal browser window experience unless explicitly toggled by player
+    if (!this.isTouchDevice() && !forceOnDesktop) {
+      return Promise.resolve(false);
+    }
+
     const doc = document;
     const docEl = document.documentElement;
     const isFullscreen = !!(doc.fullscreenElement || doc.webkitFullscreenElement || doc.mozFullScreenElement || doc.msFullscreenElement);
@@ -2942,65 +2940,119 @@ class RiftbornApp {
     if (!isFullscreen) {
       const req = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
       if (req) {
-        req.call(docEl).then(() => {
+        return req.call(docEl).then(() => {
           lockLandscape();
+          this.updateFullscreenUI(true);
+          return true;
         }).catch((err) => {
-          console.log('Fullscreen request bypassed / not allowed without user gesture:', err);
+          // Gracefully fallback: unsupported APIs or rejected promise (e.g. iOS Safari) must not break gameplay
           lockLandscape();
+          return false;
         });
       } else {
         lockLandscape();
+        return Promise.resolve(false);
       }
     } else {
       lockLandscape();
+      return Promise.resolve(true);
     }
   }
 
-  setupAutoFullscreen() {
-    // 1. Try on load (works in PWA standalone or pre-authorized contexts)
-    this.enterFullscreenLandscape();
-
-    // 2. Automatically enter fullscreen landscape on very first user interaction anywhere
-    const autoFsTrigger = () => {
-      this.enterFullscreenLandscape();
-    };
-
-    window.addEventListener('pointerdown', autoFsTrigger, { once: true, passive: true });
-    window.addEventListener('touchstart', autoFsTrigger, { once: true, passive: true });
-    window.addEventListener('click', autoFsTrigger, { once: true, passive: true });
-
-    // 3. Re-engage on core action buttons to guarantee seamless landscape during navigation
-    const autoFsSelectors = [
-      '#btn-play-hero',
-      '#btn-select-launch-match',
-      '#btn-casual-launch-match',
-      '#btn-ranked-launch-match',
-      '#nav-play',
-      '#nav-characters',
-      '#btn-enter-landscape-prompt'
-    ];
-    autoFsSelectors.forEach(sel => {
-      const el = document.querySelector(sel);
-      if (el) {
-        el.addEventListener('click', () => {
-          this.enterFullscreenLandscape();
-        }, { passive: true });
-      }
-    });
+  exitFullscreen() {
+    const doc = document;
+    const exit = doc.exitFullscreen || doc.webkitExitFullscreen || doc.mozCancelFullScreen || doc.msExitFullscreen;
+    if (exit && (doc.fullscreenElement || doc.webkitFullscreenElement || doc.mozFullScreenElement || doc.msFullscreenElement)) {
+      return exit.call(doc).then(() => {
+        this.updateFullscreenUI(false);
+      }).catch(() => {});
+    }
   }
 
   toggleFullscreen() {
     const doc = document;
-    const docEl = document.documentElement;
-    const isFullscreen = doc.fullscreenElement || doc.webkitFullscreenElement || doc.mozFullScreenElement || doc.msFullscreenElement;
+    const isFullscreen = !!(doc.fullscreenElement || doc.webkitFullscreenElement || doc.mozFullScreenElement || doc.msFullscreenElement);
 
     if (!isFullscreen) {
-      this.enterFullscreenLandscape();
+      this.enterFullscreenLandscape(true); // Explicit button tap allows desktop fullscreen
     } else {
-      const exit = doc.exitFullscreen || doc.webkitExitFullscreen || doc.mozCancelFullScreen || doc.msExitFullscreen;
-      if (exit) {
-        exit.call(doc).catch(() => {});
+      this.exitFullscreen();
+    }
+  }
+
+  updateFullscreenUI(isFullscreen) {
+    const btnNavFs = document.getElementById('btn-toggle-fullscreen');
+    if (btnNavFs) {
+      const lbl = btnNavFs.querySelector('.nav-icon-label');
+      if (lbl) lbl.textContent = isFullscreen ? 'EXIT' : 'FULLSCREEN';
+      btnNavFs.title = isFullscreen ? 'Exit Fullscreen' : 'Toggle Fullscreen';
+    }
+
+    const btnHudFs = document.getElementById('btn-hud-fullscreen');
+    if (btnHudFs) {
+      btnHudFs.textContent = isFullscreen ? '⛶ EXIT' : '⛶ FULL';
+    }
+
+    const btnPauseFs = document.getElementById('btn-pause-fullscreen');
+    if (btnPauseFs) {
+      btnPauseFs.textContent = isFullscreen ? '⛶ EXIT FULLSCREEN' : '⛶ TOGGLE FULLSCREEN';
+    }
+  }
+
+  setupFullscreenController() {
+    // 1. Listen for standard and vendor fullscreen change events to sync UI without loops
+    ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => {
+      document.addEventListener(evt, () => {
+        const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+        this.updateFullscreenUI(isFs);
+        this.checkOrientation();
+      });
+    });
+
+    // 2. Play gesture triggers: When the player taps main Play buttons, attempt fullscreen landscape
+    const playButtonIds = [
+      'btn-play-hero',            // Home screen main PLAY button
+      'btn-select-launch-match',  // Fighter select LOCK IN & FIGHT
+      'btn-casual-launch-match',  // Casual setup DEPLOY
+      'btn-ranked-launch-match',  // Ranked setup MATCH
+      'btn-start-story-battle',   // Story battle ENGAGE
+      'btn-enter-landscape-prompt'// Rotate overlay button
+    ];
+
+    playButtonIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('click', () => {
+          if (this.isTouchDevice()) {
+            this.enterFullscreenLandscape();
+          }
+        }, { passive: true });
       }
+    });
+
+    // 3. Fullscreen toggle buttons
+    const btnNavFs = document.getElementById('btn-toggle-fullscreen');
+    if (btnNavFs) {
+      btnNavFs.addEventListener('click', () => {
+        this.toggleFullscreen();
+        soundEngine.playUiClick();
+      });
+    }
+
+    const btnHudFs = document.getElementById('btn-hud-fullscreen');
+    if (btnHudFs) {
+      btnHudFs.addEventListener('click', () => {
+        this.toggleFullscreen();
+        soundEngine.playUiClick();
+      });
+    }
+
+    const btnPauseFs = document.getElementById('btn-pause-fullscreen');
+    if (btnPauseFs) {
+      btnPauseFs.addEventListener('click', () => {
+        this.toggleFullscreen();
+        soundEngine.playUiClick();
+      });
     }
   }
 
@@ -4287,18 +4339,8 @@ class RiftbornApp {
     window.addEventListener('orientationchange', () => {
       setTimeout(() => {
         this.checkOrientation();
-        this.enterFullscreenLandscape();
-      }, 100);
+      }, 120);
     });
-
-    const btnPrompt = document.getElementById('btn-enter-landscape-prompt');
-    if (btnPrompt) {
-      btnPrompt.addEventListener('click', () => {
-        this.enterFullscreenLandscape();
-        const overlay = document.getElementById('orientation-prompt-overlay');
-        if (overlay) overlay.style.display = 'none';
-      });
-    }
   }
 
   checkOrientation() {
@@ -4307,7 +4349,7 @@ class RiftbornApp {
 
     // Detect if device is held in portrait on mobile or compact viewport
     const isPortrait = window.innerWidth < window.innerHeight;
-    const isMobileDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (Math.min(window.innerWidth, window.innerHeight) <= 768);
+    const isMobileDevice = this.isTouchDevice() && (Math.min(window.innerWidth, window.innerHeight) <= 768);
 
     if (isPortrait && isMobileDevice) {
       overlay.style.display = 'flex';
