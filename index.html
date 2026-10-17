@@ -9,25 +9,51 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="canonical" href="https://siddhantpandey2306-gif.github.io/RiftBorn-Combat/">
+  <meta property="og:title" content="RIFTBORN — Original Competitive Fighting Game">
+  <meta property="og:description" content="RIFTBORN is an original competitive futuristic hero-based fighting game. Channel unique energy cores, master fast-paced combat, unlock progression, and climb the Rift Champion ranks.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://siddhantpandey2306-gif.github.io/RiftBorn-Combat/">
+  <meta property="og:image" content="https://siddhantpandey2306-gif.github.io/RiftBorn-Combat/favicon.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RIFTBORN — Original Competitive Fighting Game">
+  <meta name="twitter:description" content="RIFTBORN is an original competitive futuristic hero-based fighting game. Channel unique energy cores, master fast-paced combat, unlock progression, and climb the Rift Champion ranks.">
+  <meta name="twitter:image" content="https://siddhantpandey2306-gif.github.io/RiftBorn-Combat/favicon.svg">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/favicon.svg">
   <link rel="stylesheet" href="./style.css">
+  <script>
+    (function() {
+      try {
+        var savedTheme = localStorage.getItem('riftborn_theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+        var metaTheme = document.querySelector('meta[name="theme-color"]');
+        if (metaTheme) metaTheme.setAttribute('content', theme === 'dark' ? '#0B0E14' : '#F4F6F8');
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
 
-  <!-- TOP NAVIGATION BAR (Clean Light Combat Header) -->
+  <!-- ACCESSIBLE SKIP TO CONTENT LINK -->
+  <a href="#screen-container" class="skip-to-content" id="skip-link">Skip to main content</a>
+
+  <!-- TOP NAVIGATION BAR (Responsive Sticky Header with Theme & Search) -->
   <header id="navbar">
-    <div class="nav-brand" id="btn-nav-brand">
-      <div class="brand-emblem"></div>
+    <button type="button" class="nav-brand" id="btn-nav-brand" aria-label="RIFTBORN Home Screen">
+      <div class="brand-emblem" aria-hidden="true"></div>
       <div class="brand-text">RIFTBORN</div>
       <span class="brand-tag">ORIGINAL COMBAT</span>
-    </div>
+    </button>
 
     <!-- Core Simplified Navigation: HOME, FIGHT, FIGHTERS, RANK, PROFILE, STORY -->
-    <nav class="nav-links">
+    <nav class="nav-links" aria-label="Desktop Primary Navigation">
       <button class="nav-btn active" data-screen="screen-home" id="nav-home">HOME</button>
       <button class="nav-btn" data-screen="screen-play" id="nav-play">FIGHT</button>
       <button class="nav-btn" data-screen="screen-character-select" id="nav-characters">FIGHTERS</button>
@@ -42,48 +68,117 @@
       <button class="nav-btn" data-screen="screen-leaderboard" id="nav-leaderboard" style="display:none;">LEADERBOARD</button>
     </nav>
 
-    <!-- Right Controls: Bounties, Settings, Currency, Passport -->
+    <!-- Right Controls: Search, Theme Toggle, Bounties, Guide, Settings, Currency, Mobile Menu -->
     <div class="nav-user">
-      <button class="nav-icon-btn" id="nav-guide-btn" title="Combat Guide & Move List">
-        <span class="nav-icon-glyph">📖</span>
+      <button class="nav-icon-btn" id="btn-search-trigger" title="Search Content (Ctrl+K)" aria-label="Search site content">
+        <span class="nav-icon-glyph" aria-hidden="true">🔍</span>
+        <span class="nav-icon-label">SEARCH</span>
+      </button>
+
+      <button class="nav-icon-btn" id="btn-theme-toggle" title="Toggle Light / Dark Theme" aria-label="Toggle Light or Dark Theme">
+        <span class="nav-icon-glyph" id="theme-icon-glyph" aria-hidden="true">🌙</span>
+        <span class="nav-icon-label" id="theme-icon-label">THEME</span>
+      </button>
+
+      <button class="nav-icon-btn" id="nav-guide-btn" title="Combat Guide & Move List" aria-label="Combat Guide and Move List">
+        <span class="nav-icon-glyph" aria-hidden="true">📖</span>
         <span class="nav-icon-label">GUIDE</span>
       </button>
 
-      <button class="nav-icon-btn" id="nav-challenges" title="Challenges & Bounties">
-        <span class="nav-icon-glyph">🎯</span>
+      <button class="nav-icon-btn" id="nav-challenges" title="Challenges & Bounties" aria-label="Challenges and Bounties">
+        <span class="nav-icon-glyph" aria-hidden="true">🎯</span>
         <span class="nav-icon-label">BOUNTIES</span>
         <span id="nav-challenges-badge" class="nav-alert-dot" style="display:none;"></span>
       </button>
 
-      <button class="nav-icon-btn" data-screen="screen-settings" id="nav-settings" title="System Settings">
-        <span class="nav-icon-glyph">⚙</span>
+      <button class="nav-icon-btn" data-screen="screen-settings" id="nav-settings" title="System Settings" aria-label="System Settings">
+        <span class="nav-icon-glyph" aria-hidden="true">⚙</span>
       </button>
 
-      <button class="nav-icon-btn" id="btn-toggle-fullscreen" title="Toggle Fullscreen">
-        <span class="nav-icon-glyph">⛶</span>
+      <button class="nav-icon-btn" id="btn-toggle-fullscreen" title="Toggle Fullscreen" aria-label="Toggle Fullscreen">
+        <span class="nav-icon-glyph" aria-hidden="true">⛶</span>
         <span class="nav-icon-label">FULLSCREEN</span>
       </button>
 
-      <div class="nav-currency-group">
-        <div class="currency-pill">
-          <span class="currency-icon">✦</span>
+      <div class="nav-currency-group" aria-label="Player Currencies">
+        <div class="currency-pill" title="Rift Shards">
+          <span class="currency-icon" aria-hidden="true">✦</span>
           <span id="nav-shards-display">1,400</span>
         </div>
-        <div class="currency-pill">
-          <span class="currency-icon">⬢</span>
+        <div class="currency-pill" title="Cosmetic Prisms">
+          <span class="currency-icon" aria-hidden="true">⬢</span>
           <span id="nav-prisms-display">60</span>
         </div>
       </div>
 
-      <div class="profile-pill" id="nav-profile-pill">
+      <div class="profile-pill" id="nav-profile-pill" role="button" tabindex="0" aria-label="View Operative Profile">
         <div class="profile-avatar-mini" id="nav-avatar">V</div>
         <div class="profile-info-mini">
           <span class="profile-name-mini" id="nav-username">RiftOperative</span>
           <span class="profile-rank-mini" id="nav-rank-badge">Silver I</span>
         </div>
       </div>
+
+      <!-- Mobile Hamburger Menu Button -->
+      <button class="nav-icon-btn mobile-menu-btn" id="btn-mobile-menu" aria-label="Open Navigation Menu" aria-expanded="false" aria-controls="mobile-nav-drawer">
+        <span class="nav-icon-glyph" aria-hidden="true">☰</span>
+      </button>
     </div>
   </header>
+ 
+  <!-- SCROLL PROGRESS INDICATOR -->
+  <div id="scroll-progress-container" class="scroll-progress-container" aria-hidden="true">
+    <div id="scroll-progress-bar" class="scroll-progress-bar"></div>
+  </div>
+
+  <!-- ACCESSIBLE MOBILE NAVIGATION DRAWER -->
+  <div id="mobile-nav-drawer-backdrop" class="mobile-drawer-backdrop" style="display:none;" aria-hidden="true"></div>
+  <aside id="mobile-nav-drawer" class="mobile-nav-drawer" aria-label="Mobile Navigation Menu" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="mobile-drawer-header">
+      <div class="drawer-brand">
+        <div class="brand-emblem" aria-hidden="true"></div>
+        <div class="brand-text">RIFTBORN</div>
+      </div>
+      <button class="nav-icon-btn btn-close-drawer" id="btn-close-mobile-drawer" aria-label="Close navigation menu">✕</button>
+    </div>
+    <div class="mobile-drawer-scroll custom-scroll">
+      <div class="drawer-section-title">COMBAT DESTINATIONS</div>
+      <nav class="drawer-nav-list" aria-label="Mobile Primary Navigation">
+        <button class="drawer-nav-btn active" data-screen="screen-home"><span class="drawer-icon" aria-hidden="true">⌂</span> HOME</button>
+        <button class="drawer-nav-btn" data-screen="screen-play"><span class="drawer-icon" aria-hidden="true">⚔</span> FIGHT & MODES</button>
+        <button class="drawer-nav-btn" data-screen="screen-character-select"><span class="drawer-icon" aria-hidden="true">🥋</span> FIGHTERS ROSTER</button>
+        <button class="drawer-nav-btn" data-screen="screen-ranked-setup"><span class="drawer-icon" aria-hidden="true">🏆</span> RANKED LADDER</button>
+        <button class="drawer-nav-btn" data-screen="screen-profile"><span class="drawer-icon" aria-hidden="true">👤</span> OPERATIVE PROFILE</button>
+        <button class="drawer-nav-btn" data-screen="screen-story"><span class="drawer-icon" aria-hidden="true">📜</span> STORY CHRONICLES</button>
+      </nav>
+
+      <div class="drawer-section-title">TACTICAL UTILITIES</div>
+      <nav class="drawer-nav-list" aria-label="Mobile Tactical Utilities">
+        <button class="drawer-nav-btn" id="drawer-btn-search"><span class="drawer-icon" aria-hidden="true">🔍</span> SEARCH CONTENT</button>
+        <button class="drawer-nav-btn" id="drawer-btn-guide"><span class="drawer-icon" aria-hidden="true">📖</span> COMBAT GUIDE & MOVES</button>
+        <button class="drawer-nav-btn" id="drawer-btn-challenges"><span class="drawer-icon" aria-hidden="true">🎯</span> BOUNTIES & CHALLENGES</button>
+        <button class="drawer-nav-btn" data-screen="screen-settings"><span class="drawer-icon" aria-hidden="true">⚙</span> SYSTEM CONFIGURATION</button>
+      </nav>
+
+      <div class="drawer-section-title">PREFERENCES & QUICK ACTIONS</div>
+      <div class="drawer-actions-row">
+        <button class="drawer-action-pill" id="drawer-btn-theme" aria-label="Toggle Light or Dark Theme">
+          <span class="drawer-theme-icon" id="drawer-theme-icon" aria-hidden="true">🌙</span>
+          <span class="drawer-theme-text" id="drawer-theme-text">THEME</span>
+        </button>
+        <button class="drawer-action-pill" id="drawer-btn-fullscreen" aria-label="Toggle Fullscreen">
+          <span aria-hidden="true">⛶</span> FULLSCREEN
+        </button>
+      </div>
+
+      <div class="drawer-section-title">LEGAL & POLICIES</div>
+      <nav class="drawer-nav-list drawer-legal-list" aria-label="Legal and Policy Links">
+        <button class="drawer-nav-btn drawer-legal-btn" data-screen="screen-privacy">Privacy Policy</button>
+        <button class="drawer-nav-btn drawer-legal-btn" data-screen="screen-terms">Terms of Service</button>
+        <button class="drawer-nav-btn drawer-legal-btn" data-screen="screen-cookies">Cookie & Storage Notice</button>
+      </nav>
+    </div>
+  </aside>
 
   <!-- APP SCREENS CONTAINER -->
   <main id="screen-container">
@@ -1206,6 +1301,10 @@
               <div class="profile-name-row">
                 <span class="profile-clan-badge" id="profile-clan-tag">[RIFT]</span>
                 <h2 class="profile-username" id="profile-username-big">RiftOperative</h2>
+                <button type="button" class="btn-copy-tag" id="btn-copy-player-id" title="Copy Operative Battle Code" aria-label="Copy Operative Battle Code">
+                  <span id="copy-btn-icon" aria-hidden="true">📋</span>
+                  <span id="copy-btn-text">COPY TAG</span>
+                </button>
               </div>
               <div class="profile-title" id="profile-title-big">The Rift Vanguard • Initiate of the Singularity</div>
               <div class="profile-level" id="profile-level-big">Account Level 3 • 450 / 1,500 XP</div>
@@ -1535,8 +1634,245 @@
       </div>
     </section>
 
+    <!-- 12. PRIVACY POLICY SCREEN -->
+    <section class="screen" id="screen-privacy">
+      <div class="legal-screen-container">
+        <div class="legal-header">
+          <div>
+            <span class="cs-phase-tag">TRANSPARENCY // DATA GOVERNANCE</span>
+            <h1 class="modes-main-title" style="margin: 0;">PRIVACY POLICY</h1>
+            <div class="legal-updated-badge">LAST UPDATED: OCTOBER 17, 2026</div>
+          </div>
+          <button class="btn-secondary" data-screen="screen-home" style="padding: 8px 18px; font-size: 13px; font-weight: 700;">← RETURN HOME</button>
+        </div>
 
-  <!-- FULLSCREEN CINEMATIC ARENA TRANSITION OVERLAY -->
+        <div class="legal-card-layout">
+          <div class="legal-section">
+            <h2 class="legal-heading">1. Zero External Telemetry & Tracking</h2>
+            <p class="legal-body-text">
+              RIFTBORN is an open-source browser-based fighting game designed with client-first privacy architecture. We do <strong>not</strong> use remote tracking pixels, third-party analytics SDKs (such as Google Analytics or Meta Pixel), advertising trackers, or device fingerprinting. Your gameplay interactions, combative inputs, and browsing habits remain entirely private inside your local browser sandbox.
+            </p>
+          </div>
+
+          <div class="legal-section">
+            <h2 class="legal-heading">2. What Information Is Stored & Why</h2>
+            <p class="legal-body-text">
+              All gameplay progress and custom preferences are stored strictly on your device using HTML5 <code class="legal-code">localStorage</code>. We collect zero personally identifiable information (no real names, physical addresses, telephone numbers, emails, or government identification).
+            </p>
+            <div class="legal-storage-table-frame">
+              <table class="legal-table" aria-label="Locally Stored Data Keys">
+                <thead>
+                  <tr>
+                    <th>Storage Key</th>
+                    <th>Classification</th>
+                    <th>Technical Purpose</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>riftborn_save_data</code></td>
+                    <td>Essential Gameplay</td>
+                    <td>Maintains your operative tag, character unlocks, level mastery, Rift Shards, Cosmetic Prisms, and competitive ladder RP.</td>
+                  </tr>
+                  <tr>
+                    <td><code>riftborn_theme</code></td>
+                    <td>UI Preference</td>
+                    <td>Remembers your visual theme choice (<code class="legal-code">light</code> or <code class="legal-code">dark</code> mode).</td>
+                  </tr>
+                  <tr>
+                    <td><code>riftborn_touch_config</code></td>
+                    <td>Ergonomics</td>
+                    <td>Saves custom on-screen virtual joystick and button coordinates for mobile gameplay.</td>
+                  </tr>
+                  <tr>
+                    <td><code>riftborn_tutorial_completed</code></td>
+                    <td>UX Flag</td>
+                    <td>Records whether you have finished the introductory training sequence.</td>
+                  </tr>
+                  <tr>
+                    <td><code>riftborn_consent</code></td>
+                    <td>Compliance</td>
+                    <td>Stores your acknowledgment of our privacy & storage transparency notice.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="legal-section">
+            <h2 class="legal-heading">3. User Data Rights & Local Management</h2>
+            <p class="legal-body-text">
+              Because all data is maintained exclusively on your local client machine, you retain complete sovereignty over your data at all times. You can inspect your stored telemetry, export your backup, or purge all local game data instantly:
+            </p>
+            <div class="legal-actions-group">
+              <button class="btn-game-secondary" id="btn-privacy-export-data">📥 EXPORT SAVE FILE (JSON)</button>
+              <button class="btn-game-secondary danger" id="btn-privacy-reset-data">🗑 PURGE ALL LOCAL DATA</button>
+            </div>
+          </div>
+
+          <div class="legal-section">
+            <h2 class="legal-heading">4. Contact & Security Reporting</h2>
+            <p class="legal-body-text">
+              For security vulnerability disclosures, audit verification, or questions regarding our privacy architecture, please submit an issue through our verified project repository:
+              <br><br>
+              <a href="https://github.com/siddhantpandey2306-gif/RiftBorn-Combat/issues" target="_blank" rel="noopener noreferrer" class="footer-external-link">
+                <strong>https://github.com/siddhantpandey2306-gif/RiftBorn-Combat/issues ↗</strong>
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13. TERMS OF SERVICE SCREEN -->
+    <section class="screen" id="screen-terms">
+      <div class="legal-screen-container">
+        <div class="legal-header">
+          <div>
+            <span class="cs-phase-tag">LEGAL TERMS // USER AGREEMENT</span>
+            <h1 class="modes-main-title" style="margin: 0;">TERMS OF SERVICE</h1>
+            <div class="legal-updated-badge">LAST UPDATED: OCTOBER 17, 2026</div>
+          </div>
+          <button class="btn-secondary" data-screen="screen-home" style="padding: 8px 18px; font-size: 13px; font-weight: 700;">← RETURN HOME</button>
+        </div>
+
+        <div class="legal-card-layout">
+          <div class="legal-section">
+            <h2 class="legal-heading">1. Acceptance of Terms</h2>
+            <p class="legal-body-text">
+              By loading, playing, or accessing RIFTBORN, you agree to comply with these Terms of Service and applicable open-source license agreements. If you do not agree with any portion of these terms, please discontinue use of the application.
+            </p>
+          </div>
+
+          <div class="legal-section">
+            <h2 class="legal-heading">2. Fair Play & Prohibited Abuse</h2>
+            <p class="legal-body-text">
+              RIFTBORN is built for honest competitive sparring and martial enjoyment. Users agree not to:
+            </p>
+            <ul class="legal-list">
+              <li>Attempt to reverse engineer network coordinators to transmit malicious packets or exploit WebSocket ports.</li>
+              <li>Impersonate creators, developers, or official project contributors.</li>
+              <li>Use unauthorized botting scripts or automate inputs in online multiplayer scenarios.</li>
+            </ul>
+          </div>
+
+          <div class="legal-section">
+            <h2 class="legal-heading">3. Intellectual Property</h2>
+            <p class="legal-body-text">
+              All original visual artwork, character concepts (Vex, Solaris, Lyra, Aeron, Kairo, Nox), canvas renderers, combat sound engines, lore, and software source code are the intellectual property of Siddhant Pandey and the RIFTBORN project contributors. Code is licensed under standard open-source terms referenced in the repository license.
+            </p>
+          </div>
+
+          <div class="legal-section">
+            <h2 class="legal-heading">4. Warranty Disclaimer</h2>
+            <p class="legal-body-text">
+              RIFTBORN is provided on an "as is" and "as available" basis without warranties of any kind, whether express or implied. The project maintainers do not guarantee uninterrupted game server availability, error-free client execution on unsupported hardware, or retention of local browser cache across device resets.
+            </p>
+          </div>
+
+          <div class="legal-section">
+            <h2 class="legal-heading">5. Governing Law & Project Contacts</h2>
+            <p class="legal-body-text">
+              Any questions regarding these Terms of Service should be directed to the project maintainers via the public GitHub repository at <a href="https://github.com/siddhantpandey2306-gif/RiftBorn-Combat" target="_blank" rel="noopener noreferrer" class="footer-external-link">github.com/siddhantpandey2306-gif/RiftBorn-Combat</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14. COOKIE & STORAGE NOTICE SCREEN -->
+    <section class="screen" id="screen-cookies">
+      <div class="legal-screen-container">
+        <div class="legal-header">
+          <div>
+            <span class="cs-phase-tag">STORAGE POLICY // BROWSER COOKIES</span>
+            <h1 class="modes-main-title" style="margin: 0;">COOKIE & STORAGE POLICY</h1>
+            <div class="legal-updated-badge">LAST UPDATED: OCTOBER 17, 2026</div>
+          </div>
+          <button class="btn-secondary" data-screen="screen-home" style="padding: 8px 18px; font-size: 13px; font-weight: 700;">← RETURN HOME</button>
+        </div>
+
+        <div class="legal-card-layout">
+          <div class="legal-section">
+            <h2 class="legal-heading">1. Does RIFTBORN Use HTTP Cookies?</h2>
+            <p class="legal-body-text">
+              <strong>No.</strong> RIFTBORN does not set or transmit traditional HTTP cookies (<code class="legal-code">document.cookie</code>). There are no third-party advertising cookies, cross-site trackers, or session identifiers transmitted to remote analytics providers.
+            </p>
+          </div>
+
+          <div class="legal-section">
+            <h2 class="legal-heading">2. Browser Local Storage (<code class="legal-code">localStorage</code>)</h2>
+            <p class="legal-body-text">
+              To ensure that your fighter unlock progress, competitive rank, cosmetic Shards, and ergonomic touchscreen controls are not lost each time you close your browser tab, RIFTBORN uses HTML5 <code class="legal-code">localStorage</code>. This data never leaves your browser and is never uploaded to remote marketing vendors.
+            </p>
+          </div>
+
+          <div class="legal-section">
+            <h2 class="legal-heading">3. How to Clear or Manage Your Storage</h2>
+            <p class="legal-body-text">
+              You may clear your stored game data at any time either through your browser's Developer Tools (Application &gt; Storage &gt; Clear site data) or by clicking the button below:
+            </p>
+            <div class="legal-actions-group">
+              <button class="btn-primary-glow danger" id="btn-cookies-clear-storage">CLEAR RIFTBORN LOCAL STORAGE</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GLOBAL SITE FOOTER -->
+    <footer id="site-footer" class="site-footer" role="contentinfo">
+      <div class="footer-top-row">
+        <div class="footer-brand-col">
+          <div class="footer-brand">
+            <div class="brand-emblem" aria-hidden="true"></div>
+            <span class="brand-text">RIFTBORN</span>
+          </div>
+          <p class="footer-tagline">Original 2D futuristic combat powered by procedural WebGL & HTML5 Canvas rendering. Master your core energy and battle for supremacy.</p>
+          <div class="footer-repo-link">
+            <a href="https://github.com/siddhantpandey2306-gif/RiftBorn-Combat" target="_blank" rel="noopener noreferrer" class="footer-external-link">
+              <span>View Source on GitHub ↗</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-links-col">
+          <div class="footer-col-title">TACTICAL ARENA</div>
+          <button class="footer-nav-btn" data-screen="screen-home">Home Stage</button>
+          <button class="footer-nav-btn" data-screen="screen-play">Combat Modes</button>
+          <button class="footer-nav-btn" data-screen="screen-character-select">Fighters Roster</button>
+          <button class="footer-nav-btn" data-screen="screen-ranked-setup">Competitive Ladder</button>
+        </div>
+
+        <div class="footer-links-col">
+          <div class="footer-col-title">INTELLIGENCE</div>
+          <button class="footer-nav-btn" data-screen="screen-profile">Operative Profile</button>
+          <button class="footer-nav-btn" data-screen="screen-story">Story Chronicles</button>
+          <button class="footer-nav-btn" id="footer-btn-guide">Move List Guide</button>
+          <button class="footer-nav-btn" id="footer-btn-faq">Gameplay FAQ</button>
+          <button class="footer-nav-btn" data-screen="screen-settings">System Configuration</button>
+        </div>
+
+        <div class="footer-links-col">
+          <div class="footer-col-title">LEGAL & PRIVACY</div>
+          <button class="footer-nav-btn" data-screen="screen-privacy">Privacy Policy</button>
+          <button class="footer-nav-btn" data-screen="screen-terms">Terms of Service</button>
+          <button class="footer-nav-btn" data-screen="screen-cookies">Cookie & Storage Notice</button>
+          <button class="footer-nav-btn" id="footer-btn-manage-storage">Manage Local Data</button>
+        </div>
+      </div>
+
+      <div class="footer-bottom-row">
+        <div class="footer-copy">
+          &copy; <span id="current-year">2026</span> RIFTBORN. Original open-source browser fighting game developed by Siddhant Pandey.
+        </div>
+        <div class="footer-meta-badges">
+          <span class="footer-badge">NO COOKIE TRACKING</span>
+          <span class="footer-badge">CLIENT-SIDE PRIVACY</span>
+          <span class="footer-badge">WCAG 2.2 AA</span>
+        </div>
+      </div>
+    </footer>
   <div id="arena-transition-overlay" class="arena-transition-overlay hidden">
     <div class="ato-backdrop"></div>
     <div class="ato-speedlines"></div>
@@ -1822,6 +2158,7 @@
         <button class="movelist-tab-btn active" id="tab-guide-controls">BASIC CONTROLS</button>
         <button class="movelist-tab-btn" id="tab-guide-combos">COMBO COMBINATIONS</button>
         <button class="movelist-tab-btn" id="tab-guide-fighters">FIGHTER SPECIALS</button>
+        <button class="movelist-tab-btn" id="tab-guide-faq">GAMEPLAY FAQ</button>
       </div>
 
       <!-- Tab 1: Basic Controls -->
@@ -2018,6 +2355,46 @@
         </div>
         <div class="guide-fighter-details-card" id="guide-fighter-details">
           <!-- Populated dynamically with selected fighter's real abilities -->
+        </div>
+      </div>
+
+      <!-- Tab 4: Frequently Asked Questions (FAQ) -->
+      <div class="movelist-tab-content" id="content-guide-faq" style="display: none;">
+        <div class="faq-accordion-group">
+          <details class="faq-item" open>
+            <summary class="faq-question">How does the Kinetic Block & Parry counter system work?</summary>
+            <div class="faq-answer">
+              Holding <strong>SHIFT</strong> (or the touch [BLOCK] button) activates continuous Kinetic Block, mitigating 85% of incoming strike damage with a slight chip damage penalty. Tapping <strong>H</strong> (or [PARRY]) right before an enemy strike connects executes a Perfect Parry: this fully negates damage, stuns the attacker for 28 frames, and delivers guaranteed counter damage.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">How are Energy and Core Ultimate gauge charged?</summary>
+            <div class="faq-answer">
+              Every clean Light or Heavy strike landed on the opponent builds your Core Energy bar. Successfully blocking attacks or dodging also grants defensive energy bonuses. Once Core reaches 100%, tap <strong>I</strong> (or touch [ULTIMATE]) to execute your character's cinematic finishing move.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">Is an internet connection or backend database required?</summary>
+            <div class="faq-answer">
+              No. RIFTBORN runs 100% locally in your modern web browser using client-side HTML5 Canvas and Web Audio synthesis. All unlocks, character mastery, and difficulty preferences persist in your browser's local storage. Real multiplayer mode can optionally connect to an active WebSocket server when configured.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">How do Seasonal Ladder and Elo/RP rankings work?</summary>
+            <div class="faq-answer">
+              Matches won in Ranked 1v1 award Rating Points (RP) based on performance and opponent difficulty tier (Bronze, Silver, Gold, Platinum, Diamond). At season transition, a soft-reset formula retains 50% of earned placement progress and awards Rift Shards bonus rewards.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">Can I customize mobile touch controls?</summary>
+            <div class="faq-answer">
+              Yes! Open <em>System Configuration &gt; Mobile Touch HUD</em> or launch the Touch Customizer directly from the guide. You can resize joystick clusters, reposition attack buttons, and adjust HUD opacity to match your phone's grip.
+            </div>
+          </details>
         </div>
       </div>
     </div>
@@ -2396,8 +2773,11 @@
       </div>
       <h2 class="orientation-title">ROTATE YOUR DEVICE TO PLAY</h2>
       <p class="orientation-desc">Turn your phone sideways for the full cinematic widescreen arena experience.</p>
-      <button id="btn-enter-landscape-prompt" class="btn-primary-glow" style="margin-top: 10px; padding: 10px 20px; font-size: 13px; font-family: var(--font-display); letter-spacing: 1px; cursor: pointer;">
+      <button id="btn-enter-landscape-prompt" class="btn-primary-glow" style="margin-top: 10px; padding: 10px 20px; font-size: 13px; font-family: var(--font-display); letter-spacing: 1px; cursor: pointer; width: 100%;">
         ⛶ ENTER LANDSCAPE FULLSCREEN
+      </button>
+      <button id="btn-dismiss-orientation" class="btn-secondary" style="margin-top: 8px; padding: 8px 16px; font-size: 12px; font-family: var(--font-display); letter-spacing: 1px; cursor: pointer; width: 100%;">
+        CONTINUE BROWSING IN PORTRAIT
       </button>
     </div>
   </div>
@@ -2425,6 +2805,70 @@
       <span class="mobile-nav-label">PROFILE</span>
     </button>
   </nav>
+
+  <!-- FLOATING BACK-TO-TOP BUTTON -->
+  <button id="btn-back-to-top" class="btn-back-to-top" title="Scroll back to top" aria-label="Scroll back to top">
+    <span aria-hidden="true">▲</span>
+  </button>
+
+  <!-- FLOATING FEEDBACK / CONTACT BUTTON -->
+  <a href="https://github.com/siddhantpandey2306-gif/RiftBorn-Combat/issues" target="_blank" rel="noopener noreferrer" id="btn-floating-contact" class="btn-floating-contact" title="Feedback & Bug Reports on GitHub" aria-label="Report feedback or bug on GitHub">
+    <span class="floating-icon" aria-hidden="true">💬</span>
+    <span class="floating-label">FEEDBACK</span>
+  </a>
+
+  <!-- SITE CONTENT SEARCH MODAL -->
+  <div class="modal-overlay" id="modal-site-search" role="dialog" aria-modal="true" aria-labelledby="search-modal-title" style="display: none;">
+    <div class="modal-box search-modal-box">
+      <div class="search-modal-header">
+        <div class="search-input-wrapper">
+          <span class="search-input-icon" aria-hidden="true">🔍</span>
+          <input type="search" id="site-search-input" class="site-search-input" placeholder="Search fighters, abilities, arenas, story, guide, settings..." aria-label="Search site content" autocomplete="off" spellcheck="false">
+          <span class="search-kbd-hint">ESC</span>
+        </div>
+        <button class="nav-icon-btn btn-close-search" id="btn-close-search" aria-label="Close search">✕</button>
+      </div>
+      <div id="site-search-results" class="site-search-results custom-scroll" role="listbox" aria-label="Search Results">
+        <!-- Populated dynamically via main.js -->
+      </div>
+      <div class="search-modal-footer">
+        <span><kbd>↑</kbd> <kbd>↓</kbd> navigate</span>
+        <span><kbd>↵</kbd> select</span>
+        <span><kbd>ESC</kbd> close</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACCESSIBLE CONFIRMATION MODAL -->
+  <div class="modal-overlay" id="modal-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title" style="display: none;">
+    <div class="modal-box confirm-modal-box">
+      <h3 id="confirm-modal-title" class="confirm-modal-title">CONFIRM ACTION</h3>
+      <p id="confirm-modal-message" class="confirm-modal-message"></p>
+      <div class="confirm-modal-actions">
+        <button class="btn-secondary" id="btn-confirm-cancel">CANCEL</button>
+        <button class="btn-primary-glow danger" id="btn-confirm-proceed">CONFIRM</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRIVACY & STORAGE TRANSPARENCY NOTICE BANNER -->
+  <div id="cookie-consent-banner" class="cookie-banner" role="region" aria-label="Storage and Privacy Transparency" style="display: none;">
+    <div class="cookie-banner-content">
+      <div class="cookie-banner-text">
+        <div class="cookie-banner-title">🔒 PRIVACY & STORAGE TRANSPARENCY</div>
+        <p class="cookie-banner-desc">
+          RIFTBORN uses local browser storage (<code>localStorage</code>) to save your fighter unlocks, mastery, and touch controls layout. We do <strong>not</strong> use third-party tracking cookies or sell your personal data.
+        </p>
+      </div>
+      <div class="cookie-banner-actions">
+        <button id="btn-cookie-manage" class="btn-secondary cookie-btn">MANAGE PREFERENCES</button>
+        <button id="btn-cookie-accept" class="btn-primary-glow cookie-btn">ACKNOWLEDGE & SAVE</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GLOBAL ACCESSIBLE TOAST NOTIFICATIONS CONTAINER -->
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
 
   <script type="module" src="./src/main.js"></script>
 </body>

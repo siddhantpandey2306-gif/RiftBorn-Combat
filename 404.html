@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>404 — Sector Collapse | RIFTBORN</title>
+  <meta name="description" content="The sector coordinate you requested has collapsed into the Rift. Return to base command.">
+  <meta name="theme-color" content="#0B0E14">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07090E;
+      --card-bg: rgba(18, 22, 32, 0.85);
+      --border: rgba(255, 45, 85, 0.3);
+      --accent: #FF2B2B;
+      --accent-glow: rgba(255, 43, 43, 0.4);
+      --text: #F0F4FC;
+      --text-muted: #8E9BB0;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 50% 30%, rgba(255, 43, 43, 0.12) 0%, transparent 60%),
+        linear-gradient(180deg, #07090E 0%, #0D111A 100%);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      position: relative;
+      overflow-x: hidden;
+    }
+    .grid-lines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .error-card {
+      position: relative;
+      z-index: 1;
+      max-width: 580px;
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 48px 32px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px var(--accent-glow);
+      backdrop-filter: blur(12px);
+    }
+    .emblem {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .status-code {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(4rem, 12vw, 6.5rem);
+      font-weight: 900;
+      letter-spacing: 4px;
+      line-height: 1;
+      color: var(--accent);
+      text-shadow: 0 0 24px var(--accent-glow);
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.8rem, 5vw, 2.4rem);
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+      color: #FFFFFF;
+    }
+    p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #FF2B2B 0%, #B81414 100%);
+      color: #FFFFFF;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.25rem;
+      letter-spacing: 1.5px;
+      padding: 12px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(255, 43, 43, 0.35);
+      transition: all 0.2s ease;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 43, 43, 0.5);
+    }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #D2DCF0;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.25rem;
+      letter-spacing: 1.5px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: #FFFFFF;
+    }
+    .btn-primary:focus-visible, .btn-secondary:focus-visible {
+      outline: 2px solid #00F0FF;
+      outline-offset: 3px;
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-lines" aria-hidden="true"></div>
+  <main class="error-card">
+    <div class="emblem" aria-hidden="true">
+      <svg viewBox="0 0 100 100" width="64" height="64">
+        <polygon points="50,5 90,25 90,75 50,95 10,75 10,25" fill="none" stroke="#FF2B2B" stroke-width="3"/>
+        <path d="M54,20 L32,52 L50,52 L44,80 L72,44 L54,44 Z" fill="#FF2B2B"/>
+      </svg>
+    </div>
+    <div class="status-code" aria-hidden="true">404</div>
+    <h1>SECTOR ANOMALY // NOT FOUND</h1>
+    <p>
+      The tactical coordinates you navigated to do not exist or have collapsed into the Rift. Return to headquarters to re-engage with your warrior unit.
+    </p>
+    <div class="btn-group">
+      <a href="/" class="btn-primary">RETURN TO HOME</a>
+      <a href="/#screen-character-select" class="btn-secondary">SELECT WARRIOR</a>
+    </div>
+  </main>
+</body>
+</html>

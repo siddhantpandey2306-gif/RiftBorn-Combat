@@ -1,0 +1,5 @@
+# RIFTBORN robots.txt
+User-agent: *
+Allow: /
+
+Sitemap: https://siddhantpandey2306-gif.github.io/RiftBorn-Combat/sitemap.xml

@@ -49,6 +49,8 @@ class RiftbornApp {
   }
 
   init() {
+    window.showToast = (msg, type, dur) => this.showToast(msg, type, dur);
+    window.showConfirmation = (title, msg, onConfirm, isDestructive) => this.showConfirmation(title, msg, onConfirm, isDestructive);
     this.setupNavigation();
     this.setupAudioSettings();
     this.setupModeSelector();
@@ -68,6 +70,15 @@ class RiftbornApp {
     this.setupOrientationHandler();
     this.setupMoveListGuide();
     this.setupTutorialAndTraining();
+    this.captureUtmCampaign();
+    this.setupThemeSystem();
+    this.setupMobileDrawer();
+    this.setupStickyHeader();
+    this.setupScrollProgressAndBackToTop();
+    this.setupSiteSearch();
+    this.setupCopyButtons();
+    this.setupCookieConsent();
+    this.setupFooterAndLegal();
     this.updateUserDisplay();
     this.renderHomeHero();
 
@@ -94,6 +105,12 @@ class RiftbornApp {
     if (mobileBtn) {
       mobileBtn.classList.add('active');
     }
+
+    document.querySelectorAll('.drawer-nav-btn[data-screen]').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-screen') === screenId);
+    });
+
+    this.updateScreenMetadata(screenId);
 
     // Hide fight view when browsing menus
     document.getElementById('game-view').style.display = 'none';
@@ -137,6 +154,657 @@ class RiftbornApp {
     }
 
     soundEngine.playUiHover();
+  }
+
+  setupThemeSystem() {
+    const savedTheme = localStorage.getItem('riftborn_theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme = savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light');
+    this.applyTheme(initialTheme);
+
+    const btnThemeToggle = document.getElementById('btn-theme-toggle');
+    if (btnThemeToggle) {
+      btnThemeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        this.applyTheme(nextTheme);
+        localStorage.setItem('riftborn_theme', nextTheme);
+        soundEngine.playUiClick();
+      });
+    }
+
+    const drawerBtnTheme = document.getElementById('drawer-btn-theme');
+    if (drawerBtnTheme) {
+      drawerBtnTheme.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        this.applyTheme(nextTheme);
+        localStorage.setItem('riftborn_theme', nextTheme);
+        soundEngine.playUiClick();
+      });
+    }
+
+    // System theme change listener (when user has not set explicit manual override)
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('riftborn_theme')) {
+          this.applyTheme(e.matches ? 'dark' : 'light');
+        }
+      });
+    }
+  }
+
+  applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) {
+      metaTheme.setAttribute('content', theme === 'dark' ? '#0B0E14' : '#F4F6F8');
+    }
+
+    // Update navbar theme button
+    const themeGlyph = document.getElementById('theme-icon-glyph');
+    const themeLabel = document.getElementById('theme-icon-label');
+    if (themeGlyph) {
+      themeGlyph.textContent = theme === 'dark' ? '☀' : '🌙';
+    }
+    if (themeLabel) {
+      themeLabel.textContent = theme === 'dark' ? 'LIGHT' : 'DARK';
+    }
+
+    // Update drawer theme button
+    const drawerThemeIcon = document.getElementById('drawer-theme-icon');
+    const drawerThemeText = document.getElementById('drawer-theme-text');
+    if (drawerThemeIcon) {
+      drawerThemeIcon.textContent = theme === 'dark' ? '☀' : '🌙';
+    }
+    if (drawerThemeText) {
+      drawerThemeText.textContent = theme === 'dark' ? 'LIGHT MODE' : 'DARK MODE';
+    }
+  }
+
+  setupMobileDrawer() {
+    const btnMenu = document.getElementById('btn-mobile-menu');
+    const drawer = document.getElementById('mobile-nav-drawer');
+    const backdrop = document.getElementById('mobile-nav-drawer-backdrop');
+    const btnClose = document.getElementById('btn-close-mobile-drawer');
+
+    const openDrawer = () => {
+      if (drawer && backdrop) {
+        drawer.classList.add('active');
+        backdrop.style.display = 'block';
+        void backdrop.offsetWidth; // Force reflow
+        backdrop.classList.add('active');
+        document.body.classList.add('drawer-open');
+        drawer.setAttribute('aria-hidden', 'false');
+        if (btnMenu) btnMenu.setAttribute('aria-expanded', 'true');
+        if (btnClose) btnClose.focus();
+        soundEngine.playUiClick();
+      }
+    };
+
+    const closeDrawer = () => {
+      if (drawer && backdrop) {
+        drawer.classList.remove('active');
+        backdrop.classList.remove('active');
+        document.body.classList.remove('drawer-open');
+        drawer.setAttribute('aria-hidden', 'true');
+        if (btnMenu) {
+          btnMenu.setAttribute('aria-expanded', 'false');
+          btnMenu.focus();
+        }
+        setTimeout(() => {
+          if (!drawer.classList.contains('active')) {
+            backdrop.style.display = 'none';
+          }
+        }, 280);
+      }
+    };
+
+    if (btnMenu) {
+      btnMenu.addEventListener('click', openDrawer);
+    }
+    if (btnClose) {
+      btnClose.addEventListener('click', closeDrawer);
+    }
+    if (backdrop) {
+      backdrop.addEventListener('click', closeDrawer);
+    }
+
+    // Close on Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawer && drawer.classList.contains('active')) {
+        closeDrawer();
+      }
+    });
+
+    // Drawer navigation buttons
+    document.querySelectorAll('.drawer-nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const screenId = btn.getAttribute('data-screen');
+        if (screenId) {
+          this.showScreen(screenId);
+          closeDrawer();
+          soundEngine.playUiClick();
+        }
+      });
+    });
+
+    const drawerSearch = document.getElementById('drawer-btn-search');
+    if (drawerSearch) {
+      drawerSearch.addEventListener('click', () => {
+        closeDrawer();
+        const searchTrigger = document.getElementById('btn-search-trigger');
+        if (searchTrigger) searchTrigger.click();
+      });
+    }
+
+    const drawerGuide = document.getElementById('drawer-btn-guide');
+    if (drawerGuide) {
+      drawerGuide.addEventListener('click', () => {
+        closeDrawer();
+        const guideBtn = document.getElementById('nav-guide-btn');
+        if (guideBtn) guideBtn.click();
+      });
+    }
+
+    const drawerChallenges = document.getElementById('drawer-btn-challenges');
+    if (drawerChallenges) {
+      drawerChallenges.addEventListener('click', () => {
+        closeDrawer();
+        const challengesBtn = document.getElementById('nav-challenges');
+        if (challengesBtn) challengesBtn.click();
+      });
+    }
+
+    const drawerFullscreen = document.getElementById('drawer-btn-fullscreen');
+    if (drawerFullscreen) {
+      drawerFullscreen.addEventListener('click', () => {
+        closeDrawer();
+        const fullBtn = document.getElementById('btn-toggle-fullscreen');
+        if (fullBtn) fullBtn.click();
+      });
+    }
+  }
+
+  setupStickyHeader() {
+    const screenContainer = document.getElementById('screen-container');
+    const navbar = document.getElementById('navbar');
+    if (screenContainer && navbar) {
+      screenContainer.addEventListener('scroll', () => {
+        if (screenContainer.scrollTop > 10) {
+          navbar.classList.add('is-scrolled');
+        } else {
+          navbar.classList.remove('is-scrolled');
+        }
+      }, { passive: true });
+    }
+  }
+
+  captureUtmCampaign() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const utmSource = params.get('utm_source');
+      const utmMedium = params.get('utm_medium');
+      const utmCampaign = params.get('utm_campaign');
+
+      if (utmSource || utmMedium || utmCampaign) {
+        const utmData = {
+          source: utmSource ? utmSource.substring(0, 50) : null,
+          medium: utmMedium ? utmMedium.substring(0, 50) : null,
+          campaign: utmCampaign ? utmCampaign.substring(0, 50) : null,
+          timestamp: Date.now()
+        };
+        sessionStorage.setItem('riftborn_utm', JSON.stringify(utmData));
+
+        const cleanUrl = window.location.origin + window.location.pathname + window.location.hash;
+        window.history.replaceState({}, document.title, cleanUrl);
+      }
+    } catch (_) {}
+  }
+
+  updateScreenMetadata(screenId) {
+    const metaMap = {
+      'screen-home': {
+        title: 'RIFTBORN - Original Competitive Fighting Game',
+        desc: 'Master fast-paced 2D combat with unique energy cores. Spar vs AI, climb ranked tiers, and unlock fighter masteries.'
+      },
+      'screen-character-select': {
+        title: 'Fighters Roster & Moves | RIFTBORN',
+        desc: 'Explore the 6 Riftborn fighters: Vex, Solaris, Lyra, Aeron, Kairo, and Nox. Review ratings, specials, and ultimates.'
+      },
+      'screen-play': {
+        title: 'Select Combat Mode | RIFTBORN',
+        desc: 'Choose your arena challenge: Casual Sparring, Ranked 1v1 Season 1, Dojo Training, or Story Chronicles.'
+      },
+      'screen-ranked-setup': {
+        title: 'Competitive Ranked 1v1 Ladder | RIFTBORN',
+        desc: 'Review seasonal ladder standings, RP tier progression from Bronze to Diamond, and battleground telemetries.'
+      },
+      'screen-profile': {
+        title: 'Operative Profile & Telemetry | RIFTBORN',
+        desc: 'Review combat account level, win rates, character mastery breakdown, and seasonal performance graphs.'
+      },
+      'screen-story': {
+        title: 'Story Mode: Chronicles of the Genesis Breach | RIFTBORN',
+        desc: 'Embark on the narrative campaign across Sector 9, face Warden Aeron, and investigate the Crimson Core anomaly.'
+      },
+      'screen-settings': {
+        title: 'System Preferences & Controls | RIFTBORN',
+        desc: 'Configure screen shake feedback, SFX and arena music volume, keyboard mappings, and mobile touch HUD.'
+      },
+      'screen-privacy': {
+        title: 'Privacy Policy | RIFTBORN',
+        desc: 'Our client-first privacy architecture: zero third-party telemetry, client-side localStorage, and complete user data sovereignty.'
+      },
+      'screen-terms': {
+        title: 'Terms of Service | RIFTBORN',
+        desc: 'Terms of use, open-source licensing, fair play standards, and intellectual property attribution for RIFTBORN.'
+      },
+      'screen-cookies': {
+        title: 'Cookie & Storage Notice | RIFTBORN',
+        desc: 'Transparency notice regarding browser localStorage usage for offline save progression and preferences.'
+      }
+    };
+
+    const info = metaMap[screenId] || {
+      title: 'RIFTBORN - Original 2D Competitive Combat',
+      desc: 'Channel your core in fast-paced futuristic martial combat.'
+    };
+
+    document.title = info.title;
+    const descMeta = document.querySelector('meta[name="description"]');
+    if (descMeta) descMeta.setAttribute('content', info.desc);
+  }
+
+  setupScrollProgressAndBackToTop() {
+    const screenContainer = document.getElementById('screen-container');
+    const progressBar = document.getElementById('scroll-progress-bar');
+    const progressContainer = document.getElementById('scroll-progress-container');
+    const btnBackToTop = document.getElementById('btn-back-to-top');
+
+    if (!screenContainer) return;
+
+    screenContainer.addEventListener('scroll', () => {
+      const scrollTop = screenContainer.scrollTop;
+      const maxScroll = screenContainer.scrollHeight - screenContainer.clientHeight;
+
+      if (progressBar && progressContainer) {
+        if (maxScroll > 20) {
+          progressContainer.style.display = 'block';
+          const pct = Math.min(100, Math.max(0, (scrollTop / maxScroll) * 100));
+          progressBar.style.width = `${pct}%`;
+        } else {
+          progressContainer.style.display = 'none';
+        }
+      }
+
+      if (btnBackToTop) {
+        if (scrollTop > 280) {
+          btnBackToTop.classList.add('visible');
+        } else {
+          btnBackToTop.classList.remove('visible');
+        }
+      }
+    }, { passive: true });
+
+    if (btnBackToTop) {
+      btnBackToTop.addEventListener('click', () => {
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        screenContainer.scrollTo({
+          top: 0,
+          behavior: prefersReduced ? 'auto' : 'smooth'
+        });
+        soundEngine.playUiClick();
+      });
+    }
+  }
+
+  showConfirmation({ title, message, onConfirm }) {
+    const modal = document.getElementById('modal-confirm-dialog');
+    const titleEl = document.getElementById('confirm-modal-title');
+    const msgEl = document.getElementById('confirm-modal-message');
+    const btnCancel = document.getElementById('btn-confirm-cancel');
+    const btnProceed = document.getElementById('btn-confirm-proceed');
+
+    if (!modal) {
+      if (confirm(message)) onConfirm();
+      return;
+    }
+
+    if (titleEl) titleEl.textContent = title || 'CONFIRM ACTION';
+    if (msgEl) msgEl.textContent = message || 'Are you sure you want to proceed?';
+
+    modal.style.display = 'flex';
+    modal.classList.add('active');
+
+    const cleanup = () => {
+      modal.style.display = 'none';
+      modal.classList.remove('active');
+      btnProceed.onclick = null;
+      btnCancel.onclick = null;
+    };
+
+    btnCancel.onclick = () => {
+      cleanup();
+      soundEngine.playUiClick();
+    };
+
+    btnProceed.onclick = () => {
+      cleanup();
+      soundEngine.playUiClick();
+      if (typeof onConfirm === 'function') onConfirm();
+    };
+  }
+
+  showToast(message, type = 'info', duration = 3000) {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    const icon = type === 'success' ? '✓' : type === 'error' ? '⚠' : 'ℹ';
+    toast.innerHTML = `<span aria-hidden="true" style="font-weight:700;">${icon}</span><span>${message}</span>`;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(8px)';
+      toast.style.transition = 'all 0.2s ease';
+      setTimeout(() => {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 200);
+    }, duration);
+  }
+
+  setupSiteSearch() {
+    const modal = document.getElementById('modal-site-search');
+    const input = document.getElementById('site-search-input');
+    const resultsContainer = document.getElementById('site-search-results');
+    const btnClose = document.getElementById('btn-close-search');
+    const trigger = document.getElementById('btn-search-trigger');
+
+    if (!modal || !input) return;
+
+    const searchIndex = [
+      { id: 'f_vex', title: 'Vex — The Rift Vanguard', category: 'Fighter', desc: 'Balanced fighter channeling Crimson Core. Abilities: Crimson Dash, Rift Slash, Rift Breaker.', screen: 'screen-character-select', charId: 'vex' },
+      { id: 'f_solaris', title: 'Solaris — Radiant Juggernaut', category: 'Fighter', desc: 'Heavy brawler with Gold Core. High armor, Solar Nova, Radiant Pillar, Supernova Ignition.', screen: 'screen-character-select', charId: 'solaris' },
+      { id: 'f_lyra', title: 'Lyra — Phantom Weave', category: 'Fighter', desc: 'Speed assassin wielding Rose Core. High mobility, Phantom Blink, Rose Mirage, Dimensional Execution.', screen: 'screen-character-select', charId: 'lyra' },
+      { id: 'f_aeron', title: 'Aeron — Warden of the Deep', category: 'Fighter', desc: 'Azure Core zoning master. Projectile pressure with Azure Lance, Deep Tide, and Absolute Deluge.', screen: 'screen-character-select', charId: 'aeron' },
+      { id: 'f_kairo', title: 'Kairo — Verdant Chronomancer', category: 'Fighter', desc: 'Emerald Core tactician. Manipulates flow of combat with Verdant Snare and Chrono Rift.', screen: 'screen-character-select', charId: 'kairo' },
+      { id: 'f_nox', title: 'Nox — Shadow Reaver', category: 'Fighter', desc: 'Violet Core shadow counter-brawler. High burst counters with Umbral Strike and Oblivion Void.', screen: 'screen-character-select', charId: 'nox' },
+      { id: 'm_casual', title: 'Casual 1v1 Sparring', category: 'Game Mode', desc: 'Offline skirmishes against configurable Easy, Normal, or Hard AI bots.', screen: 'screen-casual-setup' },
+      { id: 'm_ranked', title: 'Ranked 1v1 Season Ladder', category: 'Game Mode', desc: 'Competitive matchmaking ladder with Bronze to Diamond Elo RP divisions.', screen: 'screen-ranked-setup' },
+      { id: 'm_dojo', title: 'Dojo Training Mode', category: 'Game Mode', desc: 'Practice combos with telemetry, damage meters, and position reset.', screen: 'screen-character-select' },
+      { id: 'm_story', title: 'Story Mode Chronicles', category: 'Game Mode', desc: 'Narrative campaign through Sector 9, Boss Aeron, and Genesis Rift breach.', screen: 'screen-story' },
+      { id: 'g_parry', title: 'Kinetic Block & Perfect Parry', category: 'Combat Mechanics', desc: 'Mitigate 85% damage or tap H right before impact for a frame-advantage stun counter.', action: () => this.openMoveListGuide('controls') },
+      { id: 'g_combos', title: 'Signature Combo Routes', category: 'Combat Mechanics', desc: 'Learn cancel chains from Light attack into Heavy Launcher and Air Juggle.', action: () => this.openMoveListGuide('combos') },
+      { id: 'g_touch', title: 'Mobile Touch Controls Customizer', category: 'Settings', desc: 'Configure joystick placement, button scaling, and opacity for mobile screens.', action: () => { const m = document.getElementById('modal-touch-customizer'); if (m) m.classList.add('active'); } },
+      { id: 'g_faq', title: 'Gameplay FAQ', category: 'Guide', desc: 'Frequently asked questions regarding combat mechanics, local storage, and controls.', action: () => this.openMoveListGuide('faq') },
+      { id: 's_audio', title: 'Audio & Music Settings', category: 'Settings', desc: 'Adjust volume sliders for synthesized SFX strikes and arena background themes.', screen: 'screen-settings' },
+      { id: 's_keys', title: 'Keyboard Controls Protocol', category: 'Settings', desc: 'View keyboard bindings: WASD movement, J Light, K Heavy, L Special, I Ultimate, Space Dodge.', screen: 'screen-settings' },
+      { id: 's_profile', title: 'Operative Profile & Telemetry', category: 'Dossier', desc: 'Account level, win rate, character mastery breakdown, and rank milestones.', screen: 'screen-profile' },
+      { id: 's_challenges', title: 'Bounties & Challenges Hub', category: 'Progression', desc: 'Daily and weekly combat missions to earn Rift Shards and cosmetic XP.', action: () => { const m = document.getElementById('modal-challenges-hub'); if (m) m.classList.add('active'); } },
+      { id: 'l_privacy', title: 'Privacy Policy', category: 'Legal', desc: 'Detailed data governance disclosure. Zero external tracking; client-side localStorage only.', screen: 'screen-privacy' },
+      { id: 'l_terms', title: 'Terms of Service', category: 'Legal', desc: 'Fair play agreement, acceptable use, intellectual property, and warranty disclaimers.', screen: 'screen-terms' },
+      { id: 'l_cookies', title: 'Cookie & Storage Notice', category: 'Legal', desc: 'Technical explanation of localStorage usage and one-click data purge tool.', screen: 'screen-cookies' }
+    ];
+
+    const openSearch = () => {
+      modal.style.display = 'flex';
+      modal.classList.add('active');
+      input.value = '';
+      renderResults(searchIndex);
+      input.focus();
+      soundEngine.playUiClick();
+    };
+
+    const closeSearch = () => {
+      modal.style.display = 'none';
+      modal.classList.remove('active');
+    };
+
+    let selectedIdx = 0;
+    let currentResults = searchIndex;
+
+    const renderResults = (items) => {
+      currentResults = items;
+      selectedIdx = 0;
+      resultsContainer.innerHTML = '';
+
+      if (items.length === 0) {
+        resultsContainer.innerHTML = `<div class="search-empty-notice">No tactical records matching query.</div>`;
+        return;
+      }
+
+      items.forEach((item, idx) => {
+        const row = document.createElement('div');
+        row.className = `search-result-item ${idx === 0 ? 'selected' : ''}`;
+        row.setAttribute('role', 'option');
+        row.innerHTML = `
+          <div class="search-res-info">
+            <span class="search-res-title">${item.title}</span>
+            <span class="search-res-desc">${item.desc}</span>
+          </div>
+          <span class="search-res-badge">${item.category}</span>
+        `;
+        row.onclick = () => selectItem(item);
+        resultsContainer.appendChild(row);
+      });
+    };
+
+    const selectItem = (item) => {
+      closeSearch();
+      if (item.action) {
+        item.action();
+      } else if (item.screen) {
+        this.showScreen(item.screen);
+        if (item.charId) {
+          this.selectCharacterForSelect(item.charId);
+        }
+      }
+      soundEngine.playUiClick();
+    };
+
+    input.addEventListener('input', () => {
+      const q = input.value.trim().toLowerCase();
+      if (!q) {
+        renderResults(searchIndex);
+        return;
+      }
+      const filtered = searchIndex.filter(i => 
+        i.title.toLowerCase().includes(q) || 
+        i.desc.toLowerCase().includes(q) || 
+        i.category.toLowerCase().includes(q)
+      );
+      renderResults(filtered);
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (currentResults.length > 0) {
+          selectedIdx = (selectedIdx + 1) % currentResults.length;
+          updateSelected();
+        }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (currentResults.length > 0) {
+          selectedIdx = (selectedIdx - 1 + currentResults.length) % currentResults.length;
+          updateSelected();
+        }
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (currentResults[selectedIdx]) {
+          selectItem(currentResults[selectedIdx]);
+        }
+      } else if (e.key === 'Escape') {
+        closeSearch();
+      }
+    });
+
+    const updateSelected = () => {
+      const rows = resultsContainer.querySelectorAll('.search-result-item');
+      rows.forEach((r, idx) => {
+        r.classList.toggle('selected', idx === selectedIdx);
+        if (idx === selectedIdx) r.scrollIntoView({ block: 'nearest' });
+      });
+    };
+
+    if (trigger) trigger.addEventListener('click', openSearch);
+    if (btnClose) btnClose.addEventListener('click', closeSearch);
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeSearch();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        if (modal.classList.contains('active')) {
+          closeSearch();
+        } else {
+          openSearch();
+        }
+      }
+    });
+  }
+
+  setupCopyButtons() {
+    const btnCopy = document.getElementById('btn-copy-player-id');
+    if (btnCopy) {
+      btnCopy.addEventListener('click', async () => {
+        const username = document.getElementById('profile-username-big')?.textContent || 'RiftOperative';
+        const tag = `${username}#7701`;
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(tag);
+          } else {
+            const input = document.createElement('input');
+            input.value = tag;
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            document.body.removeChild(input);
+          }
+
+          const icon = document.getElementById('copy-btn-icon');
+          const text = document.getElementById('copy-btn-text');
+          if (icon) icon.textContent = '✓';
+          if (text) text.textContent = 'COPIED!';
+          this.showToast(`Operative Tag "${tag}" copied to clipboard!`, 'success');
+          soundEngine.playUiClick();
+
+          setTimeout(() => {
+            if (icon) icon.textContent = '📋';
+            if (text) text.textContent = 'COPY TAG';
+          }, 2000);
+        } catch (e) {
+          this.showToast('Could not access clipboard: ' + e.message, 'error');
+        }
+      });
+    }
+  }
+
+  setupCookieConsent() {
+    const banner = document.getElementById('cookie-consent-banner');
+    const btnAccept = document.getElementById('btn-cookie-accept');
+    const btnManage = document.getElementById('btn-cookie-manage');
+
+    if (!banner) return;
+
+    const consent = localStorage.getItem('riftborn_consent');
+    if (!consent) {
+      banner.style.display = 'block';
+    }
+
+    if (btnAccept) {
+      btnAccept.addEventListener('click', () => {
+        localStorage.setItem('riftborn_consent', 'acknowledged');
+        banner.style.display = 'none';
+        this.showToast('Privacy & storage preferences recorded.', 'success');
+        soundEngine.playUiClick();
+      });
+    }
+
+    if (btnManage) {
+      btnManage.addEventListener('click', () => {
+        banner.style.display = 'none';
+        this.showScreen('screen-cookies');
+        soundEngine.playUiClick();
+      });
+    }
+  }
+
+  setupFooterAndLegal() {
+    document.querySelectorAll('.footer-nav-btn[data-screen]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const sId = btn.getAttribute('data-screen');
+        if (sId) {
+          this.showScreen(sId);
+          soundEngine.playUiClick();
+        }
+      });
+    });
+
+    const fGuide = document.getElementById('footer-btn-guide');
+    if (fGuide) {
+      fGuide.addEventListener('click', () => this.openMoveListGuide('controls'));
+    }
+
+    const fFaq = document.getElementById('footer-btn-faq');
+    if (fFaq) {
+      fFaq.addEventListener('click', () => this.openMoveListGuide('faq'));
+    }
+
+    const fManage = document.getElementById('footer-btn-manage-storage');
+    if (fManage) {
+      fManage.addEventListener('click', () => {
+        this.showScreen('screen-cookies');
+        soundEngine.playUiClick();
+      });
+    }
+
+    const btnExport = document.getElementById('btn-privacy-export-data');
+    if (btnExport) {
+      btnExport.addEventListener('click', () => {
+        try {
+          const raw = localStorage.getItem('riftborn_save_data') || '{}';
+          const blob = new Blob([raw], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `riftborn_backup_${Date.now()}.json`;
+          a.click();
+          URL.revokeObjectURL(url);
+          this.showToast('Save data exported successfully.', 'success');
+        } catch (e) {
+          this.showToast('Export failed: ' + e.message, 'error');
+        }
+      });
+    }
+
+    const handleResetData = () => {
+      this.showConfirmation({
+        title: 'PURGE ALL LOCAL GAME DATA?',
+        message: 'This will reset your character unlocks, operative level, cosmetic Shards, and custom touch controls back to initial state. This action cannot be undone.',
+        onConfirm: () => {
+          localStorage.removeItem('riftborn_save_data');
+          localStorage.removeItem('riftborn_touch_config');
+          localStorage.removeItem('riftborn_tutorial_completed');
+          this.showToast('Local data purged. Reloading fresh state...', 'info');
+          setTimeout(() => window.location.reload(), 1000);
+        }
+      });
+    };
+
+    const btnPrivReset = document.getElementById('btn-privacy-reset-data');
+    if (btnPrivReset) btnPrivReset.addEventListener('click', handleResetData);
+
+    const btnCookiesClear = document.getElementById('btn-cookies-clear-storage');
+    if (btnCookiesClear) btnCookiesClear.addEventListener('click', handleResetData);
+
+    const yearEl = document.getElementById('current-year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
   }
 
   setupNavigation() {
@@ -2133,7 +2801,7 @@ class RiftbornApp {
       this.updateUserDisplay();
       this.renderHomeHero();
       soundEngine.playParry();
-      alert(`${CHARACTERS[this.selectedCharId].name} is now your Main Warrior!`);
+      this.showToast(`${CHARACTERS[this.selectedCharId].name} is now your Main Warrior!`, 'success');
     });
 
     // Customize Button
@@ -2250,7 +2918,7 @@ class RiftbornApp {
           this.renderCustomizationScreen(charId);
         } else {
           soundEngine.playBlock();
-          alert('Not enough Rift Shards! Earn more shards by winning matches and completing story chapters.');
+          this.showToast('Not enough Rift Shards! Earn more shards by winning matches and completing story chapters.', 'error');
         }
       });
     });
@@ -2494,12 +3162,19 @@ class RiftbornApp {
 
     if (confirmResetBtn) {
       confirmResetBtn.onclick = () => {
-        const resetResult = progressionManager.performSeasonReset();
-        if (resetModal) resetModal.classList.remove('active');
-        this.updateUserDisplay();
-        this.renderProfile();
-        soundEngine.playParry();
-        alert(`🏆 Season 1 Finalized! Disbursed +${resetResult.shardsBonus} Rift Shards and seasonal rewards. Welcome to Season ${resetResult.newSeason}!`);
+        this.showConfirmation(
+          'Finalize Season 1?',
+          'Are you sure you want to finalize Season 1? Your competitive rating will be soft-reset and seasonal rewards will be deposited into your account.',
+          () => {
+            const resetResult = progressionManager.performSeasonReset();
+            if (resetModal) resetModal.classList.remove('active');
+            this.updateUserDisplay();
+            this.renderProfile();
+            soundEngine.playParry();
+            this.showToast(`🏆 Season 1 Finalized! Disbursed +${resetResult.shardsBonus} Rift Shards and seasonal rewards. Welcome to Season ${resetResult.newSeason}!`, 'success');
+          },
+          true
+        );
       };
     }
   }
@@ -3607,7 +4282,7 @@ class RiftbornApp {
         const all = [...(cData.daily || []), ...(cData.weekly || [])];
         const claimable = all.filter(c => c.completed && !c.claimed);
         if (claimable.length === 0) {
-          alert('No completed challenges ready to claim yet. Complete more combat objectives!');
+          this.showToast('No completed challenges ready to claim yet. Complete more combat objectives!', 'info');
           return;
         }
 
@@ -3624,7 +4299,7 @@ class RiftbornApp {
         soundEngine.playParry();
         this.updateUserDisplay();
         this.renderChallengesHub(currentTab);
-        alert(`Claimed all completed bounties! Received +${totalCoins} Rift Coins and +${totalXp} XP!`);
+        this.showToast(`Claimed all completed bounties! Received +${totalCoins} Rift Coins and +${totalXp} XP!`, 'success');
       };
     }
   }
@@ -3818,7 +4493,7 @@ class RiftbornApp {
       progressionManager.saveData();
       this.updateUserDisplay();
       soundEngine.playParry();
-      alert('Claimed 400 Rift Shards from Season 1 Pass tiers!');
+      this.showToast('Claimed 400 Rift Shards from Season 1 Pass tiers!', 'success');
     });
   }
 
@@ -4311,7 +4986,7 @@ class RiftbornApp {
           else tc.config.enabled = tc.isTouchDevice ? 'never' : 'always';
           tc.saveConfig();
           tc.updateVisibility();
-          alert(`On-Screen Touch Controls: ${tc.config.enabled.toUpperCase()}`);
+          this.showToast(`On-Screen Touch Controls: ${tc.config.enabled.toUpperCase()}`, 'info');
         }
         soundEngine.playUiClick();
       });
@@ -4325,7 +5000,7 @@ class RiftbornApp {
           tc.saveConfig();
           tc.applyLayoutStyles();
           tc.updateVisibility();
-          alert('Touch Controls reset to default ergonomic positions.');
+          this.showToast('Touch Controls reset to default ergonomic positions.', 'success');
         }
         soundEngine.playUiClick();
       });
@@ -4334,6 +5009,31 @@ class RiftbornApp {
 
   // --- RESPONSIVE MOBILE ORIENTATION CONTROLLER ---
   setupOrientationHandler() {
+    this.portraitBrowsingAllowed = false;
+    const btnDismiss = document.getElementById('btn-dismiss-orientation');
+    if (btnDismiss) {
+      btnDismiss.addEventListener('click', () => {
+        this.portraitBrowsingAllowed = true;
+        const overlay = document.getElementById('orientation-prompt-overlay');
+        if (overlay) overlay.style.display = 'none';
+        soundEngine.playUiClick();
+      });
+    }
+
+    const btnEnterLandscape = document.getElementById('btn-enter-landscape-prompt');
+    if (btnEnterLandscape) {
+      btnEnterLandscape.addEventListener('click', async () => {
+        try {
+          if (document.documentElement.requestFullscreen) {
+            await document.documentElement.requestFullscreen();
+          }
+          if (screen.orientation && screen.orientation.lock) {
+            await screen.orientation.lock('landscape');
+          }
+        } catch (_) {}
+      });
+    }
+
     this.checkOrientation();
     window.addEventListener('resize', () => this.checkOrientation());
     window.addEventListener('orientationchange', () => {
@@ -4350,8 +5050,9 @@ class RiftbornApp {
     // Detect if device is held in portrait on mobile or compact viewport
     const isPortrait = window.innerWidth < window.innerHeight;
     const isMobileDevice = this.isTouchDevice() && (Math.min(window.innerWidth, window.innerHeight) <= 768);
+    const isCombatActive = document.getElementById('game-view') && document.getElementById('game-view').style.display !== 'none';
 
-    if (isPortrait && isMobileDevice) {
+    if (isPortrait && isMobileDevice && (isCombatActive || !this.portraitBrowsingAllowed)) {
       overlay.style.display = 'flex';
     } else {
       overlay.style.display = 'none';
@@ -4399,6 +5100,7 @@ class RiftbornApp {
     const tabControls = document.getElementById('tab-guide-controls');
     const tabCombos = document.getElementById('tab-guide-combos');
     const tabFighters = document.getElementById('tab-guide-fighters');
+    const tabFaq = document.getElementById('tab-guide-faq');
 
     if (tabControls) {
       tabControls.addEventListener('click', () => this.switchGuideTab('controls'));
@@ -4411,6 +5113,9 @@ class RiftbornApp {
         const charId = (this.engine && this.engine.p1) ? this.engine.p1.charId : (this.selectedSelectCharId || 'vex');
         this.switchGuideTab('fighters', charId);
       });
+    }
+    if (tabFaq) {
+      tabFaq.addEventListener('click', () => this.switchGuideTab('faq'));
     }
   }
 
@@ -4432,7 +5137,8 @@ class RiftbornApp {
     const tabs = {
       controls: { btn: document.getElementById('tab-guide-controls'), content: document.getElementById('content-guide-controls') },
       combos: { btn: document.getElementById('tab-guide-combos'), content: document.getElementById('content-guide-combos') },
-      fighters: { btn: document.getElementById('tab-guide-fighters'), content: document.getElementById('content-guide-fighters') }
+      fighters: { btn: document.getElementById('tab-guide-fighters'), content: document.getElementById('content-guide-fighters') },
+      faq: { btn: document.getElementById('tab-guide-faq'), content: document.getElementById('content-guide-faq') }
     };
 
     Object.keys(tabs).forEach(k => {

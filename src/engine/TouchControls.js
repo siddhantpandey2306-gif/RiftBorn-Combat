@@ -402,7 +402,9 @@ export class TouchControls {
         else this.config.enabled = this.isTouchDevice ? 'never' : 'always';
         this.saveConfig();
         this.updateVisibility();
-        alert(`Touch Controls: ${this.overlay.style.display === 'block' ? 'ENABLED' : 'DISABLED'}`);
+        if (typeof window !== 'undefined' && window.showToast) {
+          window.showToast(`Touch Controls: ${this.overlay.style.display === 'block' ? 'ENABLED' : 'DISABLED'}`, 'info');
+        }
       });
     }
 
