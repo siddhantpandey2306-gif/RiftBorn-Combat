@@ -3686,7 +3686,8 @@ class RiftbornApp {
 
     // 2. Play gesture triggers: When the player taps main Play buttons, attempt fullscreen landscape
     const playButtonIds = [
-      'btn-play-hero',            // Home screen main PLAY button
+      'btn-quick-start-fight',    // Home screen main PLAY NOW button
+      'btn-play-hero',            // Home screen secondary play button
       'btn-select-launch-match',  // Fighter select LOCK IN & FIGHT
       'btn-casual-launch-match',  // Casual setup DEPLOY
       'btn-ranked-launch-match',  // Ranked setup MATCH
@@ -5010,6 +5011,7 @@ class RiftbornApp {
   // --- RESPONSIVE MOBILE ORIENTATION CONTROLLER ---
   setupOrientationHandler() {
     this.portraitBrowsingAllowed = false;
+
     const btnDismiss = document.getElementById('btn-dismiss-orientation');
     if (btnDismiss) {
       btnDismiss.addEventListener('click', () => {
@@ -5023,23 +5025,34 @@ class RiftbornApp {
     const btnEnterLandscape = document.getElementById('btn-enter-landscape-prompt');
     if (btnEnterLandscape) {
       btnEnterLandscape.addEventListener('click', async () => {
+        soundEngine.playUiClick();
         try {
-          if (document.documentElement.requestFullscreen) {
-            await document.documentElement.requestFullscreen();
+          const docEl = document.documentElement;
+          const req = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+          if (req) {
+            await req.call(docEl);
           }
-          if (screen.orientation && screen.orientation.lock) {
-            await screen.orientation.lock('landscape');
+          if (window.screen?.orientation?.lock) {
+            await window.screen.orientation.lock('landscape').catch(() => {});
+          } else if (window.screen?.lockOrientation) {
+            window.screen.lockOrientation('landscape');
           }
         } catch (_) {}
+
+        // Always allow progression and dismiss overlay when user taps this button
+        this.portraitBrowsingAllowed = true;
+        const overlay = document.getElementById('orientation-prompt-overlay');
+        if (overlay) overlay.style.display = 'none';
       });
     }
 
     this.checkOrientation();
     window.addEventListener('resize', () => this.checkOrientation());
     window.addEventListener('orientationchange', () => {
-      setTimeout(() => {
-        this.checkOrientation();
-      }, 120);
+      this.checkOrientation();
+      setTimeout(() => this.checkOrientation(), 100);
+      setTimeout(() => this.checkOrientation(), 250);
+      setTimeout(() => this.checkOrientation(), 500);
     });
   }
 
@@ -5047,12 +5060,29 @@ class RiftbornApp {
     const overlay = document.getElementById('orientation-prompt-overlay');
     if (!overlay) return;
 
-    // Detect if device is held in portrait on mobile or compact viewport
-    const isPortrait = window.innerWidth < window.innerHeight;
-    const isMobileDevice = this.isTouchDevice() && (Math.min(window.innerWidth, window.innerHeight) <= 768);
+    // Multi-factor landscape detection
+    const isLandscape = (window.innerWidth > window.innerHeight) ||
+                        (window.screen?.orientation && window.screen.orientation.type?.includes('landscape')) ||
+                        (Math.abs(window.orientation) === 90 || Math.abs(window.orientation) === 270);
+
+    // If device is in landscape, ALWAYS hide orientation prompt immediately
+    if (isLandscape) {
+      overlay.style.display = 'none';
+      return;
+    }
+
+    // On desktop browsers (width > 900 and height > 550), never show orientation prompt
+    if (window.innerWidth > 900 && window.innerHeight > 550) {
+      overlay.style.display = 'none';
+      return;
+    }
+
+    // Only prompt in portrait on actual mobile / touch devices
+    const isTouch = this.isTouchDevice();
+    const isSmallScreen = Math.min(window.innerWidth, window.innerHeight) <= 768;
     const isCombatActive = document.getElementById('game-view') && document.getElementById('game-view').style.display !== 'none';
 
-    if (isPortrait && isMobileDevice && (isCombatActive || !this.portraitBrowsingAllowed)) {
+    if ((isTouch || isSmallScreen) && (isCombatActive || !this.portraitBrowsingAllowed)) {
       overlay.style.display = 'flex';
     } else {
       overlay.style.display = 'none';
