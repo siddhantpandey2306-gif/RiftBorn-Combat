@@ -4691,104 +4691,43 @@ button.nav-brand:hover {
    Complete native widescreen landscape styling across all game screens
    ========================================================================== */
 /* ==========================================================================
-   MOBILE COMBAT ORIENTATION PROMPT (Landscape-first enforcement)
+   MOBILE LANDSCAPE BY DEFAULT & COMBAT VIEWPORT AUTO-ORIENTATION
+   Landscape is the default presentation for mobile fighting gameplay.
+   Disruptive rotation prompts are permanently disabled.
    ========================================================================== */
+#orientation-prompt-overlay,
 .orientation-prompt-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: rgba(10, 13, 20, 0.98);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  pointer-events: auto;
-  touch-action: none;
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
-.orientation-prompt-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  max-width: 320px;
-  gap: 14px;
-}
-
-.orientation-brand {
-  font-family: var(--font-display);
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  color: #FFFFFF;
-}
-
-.orientation-device-icon {
-  width: 90px;
-  height: 90px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 6px 0;
-}
-
-.phone-rotate-anim {
-  width: 38px;
-  height: 68px;
-  border: 3px solid rgba(255, 255, 255, 0.85);
-  border-radius: 8px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: phoneRotateLandscape 2.4s ease-in-out infinite;
-  box-shadow: 0 0 20px rgba(217, 54, 54, 0.4);
-}
-
-.phone-screen-inner {
-  width: 28px;
-  height: 52px;
-  background: rgba(217, 54, 54, 0.25);
-  border-radius: 4px;
-  border: 1px dashed var(--action-primary);
-}
-
-@keyframes phoneRotateLandscape {
-  0%, 15% {
-    transform: rotate(0deg);
-  }
-  50%, 80% {
-    transform: rotate(90deg);
-  }
-  100% {
-    transform: rotate(90deg);
+/* On mobile devices in portrait, automatically rotate combat arena to full landscape */
+@media screen and (orientation: portrait) and (max-width: 900px) {
+  #game-view,
+  .arena-transition-overlay {
+    width: 100vh !important;
+    height: 100vw !important;
+    max-width: 100vh !important;
+    max-height: 100vw !important;
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) rotate(90deg) !important;
+    transform-origin: center center !important;
+    overflow: hidden !important;
   }
 }
 
-.orientation-title {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  color: #FFFFFF;
-  margin: 0;
-}
-
-.orientation-desc {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.75);
-  line-height: 1.4;
-  margin: 0;
-}
-
-@media (orientation: landscape) {
-  #orientation-prompt-overlay,
-  .orientation-prompt-overlay {
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
+/* On mobile devices in landscape, fill the screen natively */
+@media screen and (orientation: landscape) {
+  #game-view,
+  .arena-transition-overlay {
+    width: 100vw !important;
+    height: 100vh !important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
   }
 }
 
@@ -5450,151 +5389,7 @@ button.nav-brand:hover {
   box-shadow: 0 0 24px rgba(217, 54, 54, 0.8);
 }
 
-/* ==========================================================================
-   MOBILE COMBAT ORIENTATION PROMPT (Landscape-first enforcement)
-   ========================================================================== */
-.orientation-prompt-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: #0A0D14;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-}
-@media (orientation: landscape) {
-  #orientation-prompt-overlay,
-  .orientation-prompt-overlay {
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-  }
-}
 
-#btn-enter-landscape-prompt {
-  background: linear-gradient(135deg, #FF2B2B 0%, #B81414 100%) !important;
-  color: #FFFFFF !important;
-  border: 1px solid #FF4D4D !important;
-  box-shadow: 0 4px 20px rgba(255, 43, 43, 0.5) !important;
-  font-family: var(--font-display) !important;
-  font-size: 14px !important;
-  font-weight: 700 !important;
-  letter-spacing: 1.5px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  height: 48px !important;
-  border-radius: 8px !important;
-  cursor: pointer !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
-  width: 100% !important;
-  margin-top: 14px !important;
-  transition: all 0.2s ease !important;
-}
-#btn-enter-landscape-prompt:hover, #btn-enter-landscape-prompt:active {
-  background: linear-gradient(135deg, #FF4D4D 0%, #D91A1A 100%) !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 6px 26px rgba(255, 43, 43, 0.75) !important;
-}
-
-#btn-dismiss-orientation {
-  background: rgba(255, 255, 255, 0.1) !important;
-  color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  font-family: var(--font-display) !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  letter-spacing: 1px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  height: 44px !important;
-  border-radius: 8px !important;
-  cursor: pointer !important;
-  width: 100% !important;
-  margin-top: 10px !important;
-  transition: all 0.2s ease !important;
-}
-#btn-dismiss-orientation:hover, #btn-dismiss-orientation:active {
-  background: rgba(255, 255, 255, 0.2) !important;
-  border-color: rgba(255, 255, 255, 0.5) !important;
-}
-
-.orientation-prompt-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  max-width: 320px;
-  gap: 16px;
-}
-
-.orientation-brand {
-  font-family: var(--font-display);
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  color: #FFFFFF;
-}
-
-.orientation-device-icon {
-  width: 90px;
-  height: 90px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 10px 0;
-}
-
-.phone-rotate-anim {
-  width: 38px;
-  height: 68px;
-  border: 3px solid rgba(255, 255, 255, 0.85);
-  border-radius: 8px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: phoneRotateLandscape 2.4s ease-in-out infinite;
-}
-
-.phone-screen-inner {
-  width: 28px;
-  height: 52px;
-  background: rgba(217, 54, 54, 0.25);
-  border-radius: 4px;
-  border: 1px dashed var(--action-primary);
-}
-
-@keyframes phoneRotateLandscape {
-  0%, 15% {
-    transform: rotate(0deg);
-  }
-  50%, 80% {
-    transform: rotate(90deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
-}
-
-.orientation-title {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: #FFFFFF;
-  margin: 0;
-}
-
-.orientation-desc {
-  font-size: 13px;
-  color: #94A3B8;
-  line-height: 1.5;
-  margin: 0;
-}
 
 /* ==========================================================================
    INTERACTIVE COMBAT TUTORIAL OVERLAY

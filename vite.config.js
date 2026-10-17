@@ -7,5 +7,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    sourcemap: false, // Security: Never publish internal source maps in production
+    minify: true,
   },
 });

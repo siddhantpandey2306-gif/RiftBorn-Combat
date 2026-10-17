@@ -8,6 +8,22 @@ dist/
 dist-ssr/
 *.local
 
+# Secrets, Environment & Credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+id_rsa*
+id_ecdsa*
+id_ed25519*
+*.secret
+credentials.json
+
 # Editor & OS files
 .DS_Store
 Thumbs.db

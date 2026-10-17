@@ -213,9 +213,21 @@ export class ProgressionManager {
 
   ensureCharacterProgressionIntegrity() {
     if (!this.data.profile) this.data.profile = this.getDefaultData().profile;
+    
+    // Security: Input sanitization & boundary validation for player profile strings
+    if (typeof this.data.profile.username !== 'string' || !this.data.profile.username.trim()) {
+      this.data.profile.username = 'RiftOperative';
+    } else {
+      this.data.profile.username = this.data.profile.username.replace(/[<>"'&]/g, '').trim().slice(0, 24) || 'RiftOperative';
+    }
+    if (typeof this.data.profile.clanTag !== 'string' || !this.data.profile.clanTag.trim()) {
+      this.data.profile.clanTag = 'RIFT';
+    } else {
+      this.data.profile.clanTag = this.data.profile.clanTag.replace(/[^A-Za-z0-9_\-]/g, '').trim().slice(0, 6) || 'RIFT';
+    }
+
     if (this.data.profile.winStreak === undefined) this.data.profile.winStreak = 3;
     if (this.data.profile.highestWinStreak === undefined) this.data.profile.highestWinStreak = 5;
-    if (!this.data.profile.clanTag) this.data.profile.clanTag = 'RIFT';
     if (!this.data.profile.mainCharacter) this.data.profile.mainCharacter = 'vex';
 
     if (!this.data.ranked) this.data.ranked = this.getDefaultData().ranked;

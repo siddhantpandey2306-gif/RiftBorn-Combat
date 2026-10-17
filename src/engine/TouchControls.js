@@ -231,9 +231,25 @@ export class TouchControls {
     });
   }
 
+  isRotatedView() {
+    if (typeof window === 'undefined') return false;
+    const gv = document.getElementById('game-view');
+    if (!gv || gv.style.display === 'none') return false;
+    return window.innerWidth <= 900 && window.innerHeight > window.innerWidth;
+  }
+
   updateJoystickPosition(clientX, clientY) {
-    const dx = clientX - this.joystickState.startX;
-    const dy = clientY - this.joystickState.startY;
+    let dx = clientX - this.joystickState.startX;
+    let dy = clientY - this.joystickState.startY;
+
+    // When viewport is auto-rotated 90deg in mobile portrait, map screen deltas to local joystick coordinates
+    if (this.isRotatedView()) {
+      const physDx = dx;
+      const physDy = dy;
+      dx = physDy;
+      dy = -physDx;
+    }
+
     const dist = Math.sqrt(dx * dx + dy * dy);
     const maxR = this.joystickState.maxRadius * this.config.scale;
 

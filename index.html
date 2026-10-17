@@ -25,19 +25,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/favicon.svg">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; media-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <link rel="stylesheet" href="./style.css">
-  <script>
-    (function() {
-      try {
-        var savedTheme = localStorage.getItem('riftborn_theme');
-        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        var theme = savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light');
-        document.documentElement.setAttribute('data-theme', theme);
-        var metaTheme = document.querySelector('meta[name="theme-color"]');
-        if (metaTheme) metaTheme.setAttribute('content', theme === 'dark' ? '#0B0E14' : '#F4F6F8');
-      } catch (e) {}
-    })();
-  </script>
+  <script type="module" src="./src/theme-init.js"></script>
 </head>
 <body>
 
@@ -2762,25 +2753,8 @@
     </div>
   </div>
 
-  <!-- MOBILE COMBAT ORIENTATION SCREEN (Landscape-first enforcement across entire game) -->
-  <div id="orientation-prompt-overlay" class="orientation-prompt-overlay" style="display: none;">
-    <div class="orientation-prompt-content">
-      <div class="orientation-brand">RIFTBORN</div>
-      <div class="orientation-device-icon">
-        <div class="phone-rotate-anim">
-          <div class="phone-screen-inner"></div>
-        </div>
-      </div>
-      <h2 class="orientation-title">ROTATE YOUR DEVICE TO PLAY</h2>
-      <p class="orientation-desc">Turn your phone sideways for the full cinematic widescreen arena experience.</p>
-      <button id="btn-enter-landscape-prompt" type="button" aria-label="Enter Landscape Fullscreen">
-        ⛶ ENTER LANDSCAPE FULLSCREEN
-      </button>
-      <button id="btn-dismiss-orientation" type="button" aria-label="Continue Browsing in Portrait">
-        CONTINUE BROWSING IN PORTRAIT
-      </button>
-    </div>
-  </div>
+  <!-- MOBILE ORIENTATION: Landscape is enforced automatically without disruptive prompts -->
+  <div id="orientation-prompt-overlay" style="display: none !important;" aria-hidden="true"></div>
 
   <!-- MOBILE BOTTOM NAVIGATION (Ergonomic for 320px - 430px) -->
   <nav id="mobile-bottom-nav" class="mobile-bottom-nav">

@@ -12,6 +12,16 @@ import { STORY_CHAPTERS } from './modes/StoryMode.js';
 import { GLOBAL_LEADERBOARD } from './social/SocialSystem.js';
 import { RANK_TIERS, SEASON_CONFIG, CompetitiveRankEngine, competitiveNetworkCoordinator } from './competitive/CompetitiveSystem.js';
 
+export function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 class RiftbornApp {
   constructor() {
     this.canvas = document.getElementById('game-canvas');
@@ -503,7 +513,14 @@ class RiftbornApp {
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     const icon = type === 'success' ? '✓' : type === 'error' ? '⚠' : 'ℹ';
-    toast.innerHTML = `<span aria-hidden="true" style="font-weight:700;">${icon}</span><span>${message}</span>`;
+    const iconSpan = document.createElement('span');
+    iconSpan.setAttribute('aria-hidden', 'true');
+    iconSpan.style.fontWeight = '700';
+    iconSpan.textContent = icon;
+    const msgSpan = document.createElement('span');
+    msgSpan.textContent = String(message);
+    toast.appendChild(iconSpan);
+    toast.appendChild(msgSpan);
     container.appendChild(toast);
 
     setTimeout(() => {
@@ -3528,11 +3545,19 @@ class RiftbornApp {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
 
     document.getElementById('game-view').style.display = 'block';
-    this.checkOrientation();
 
-    if (window.screen?.orientation?.lock) {
-      window.screen.orientation.lock('landscape').catch(() => {});
-    }
+    try {
+      const docEl = document.documentElement;
+      const req = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+      if (req && (this.isTouchDevice() || window.innerWidth <= 1024)) {
+        req.call(docEl).catch(() => {});
+      }
+      if (window.screen?.orientation?.lock) {
+        window.screen.orientation.lock('landscape').catch(() => {});
+      }
+    } catch (_) {}
+
+    this.checkOrientation();
 
     const isTraining = (this.engine.gameMode === 'Training');
     const trainOverlay = document.getElementById('training-telemetry-overlay');
@@ -4763,26 +4788,26 @@ class RiftbornApp {
       tr.innerHTML = `
         <td>
           <span style="font-family: 'Oswald', 'Bebas Neue', sans-serif; font-weight: 900; font-size: 11px; padding: 2px 8px; border-radius: 4px; background: ${isWin ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)'}; border: 1px solid ${isWin ? 'var(--accent-green)' : 'var(--accent-red)'}; color: ${isWin ? 'var(--accent-green)' : 'var(--accent-red)'};">
-            ${m.result}
+            ${escapeHtml(m.result)}
           </span>
         </td>
         <td style="font-weight: 700;">
-          <span style="color: ${heroChar.coreColor};">● </span>${heroChar.name}
+          <span style="color: ${heroChar.coreColor};">● </span>${escapeHtml(heroChar.name)}
         </td>
         <td style="color: var(--text-secondary);">
-          <span style="color: ${oppChar.coreColor};">● </span>${oppChar.name}
+          <span style="color: ${oppChar.coreColor};">● </span>${escapeHtml(oppChar.name)}
         </td>
         <td>
           <span style="font-family: 'Oswald', 'Bebas Neue', sans-serif; font-size: 10px; font-weight: 800; color: ${isRanked ? 'var(--accent-gold)' : 'var(--accent-cyan)'};">
-            ${m.mode.toUpperCase()}
+            ${escapeHtml(m.mode.toUpperCase())}
           </span>
         </td>
-        <td style="font-family: var(--font-display); font-size: 12px; font-weight: 600; color: var(--text-primary);">${m.roundScore || '2 - 0'}</td>
-        <td style="color: var(--text-muted); font-size: 12px;">${m.duration}</td>
+        <td style="font-family: var(--font-display); font-size: 12px; font-weight: 600; color: var(--text-primary);">${escapeHtml(m.roundScore || '2 - 0')}</td>
+        <td style="color: var(--text-muted); font-size: 12px;">${escapeHtml(m.duration)}</td>
         <td style="font-family: 'Oswald', 'Bebas Neue', sans-serif; font-weight: 800; color: ${m.rpChange.startsWith('+') ? 'var(--accent-green)' : (m.rpChange.startsWith('-') ? 'var(--core-crimson)' : 'var(--text-muted)')};">
-          ${m.rpChange}
+          ${escapeHtml(m.rpChange)}
         </td>
-        <td style="color: var(--text-muted); font-size: 11px;">${timeStr}</td>
+        <td style="color: var(--text-muted); font-size: 11px;">${escapeHtml(timeStr)}</td>
       `;
       tbody.appendChild(tr);
     });
@@ -4897,13 +4922,13 @@ class RiftbornApp {
       tr.innerHTML = `
         <td style="font-family: var(--font-display); font-weight: 700; color: ${entry.rank <= 3 ? 'var(--accent-gold)' : 'var(--text-muted)'};">#${entry.rank}</td>
         <td style="font-weight: 700; color: ${entry.isUser ? 'var(--primary-action)' : 'var(--text-primary)'};">
-          ${entry.name} ${entry.isUser ? '<span style="font-size: 10px; color: var(--accent-gold); font-family: var(--font-display);">★ YOU</span>' : ''}
+          ${escapeHtml(entry.name)} ${entry.isUser ? '<span style="font-size: 10px; color: var(--accent-gold); font-family: var(--font-display);">★ YOU</span>' : ''}
         </td>
-        <td style="color: ${rankColor}; font-family: 'Oswald', 'Bebas Neue', sans-serif; font-size: 12px; font-weight: 800;">${entry.tier}</td>
+        <td style="color: ${rankColor}; font-family: 'Oswald', 'Bebas Neue', sans-serif; font-size: 12px; font-weight: 800;">${escapeHtml(entry.tier)}</td>
         <td style="font-family: 'Oswald', 'Bebas Neue', sans-serif; font-weight: 800; color: var(--accent-gold);">${entry.rp} RP</td>
-        <td><span style="color: ${charData.coreColor};">● </span>${charData.name}</td>
+        <td><span style="color: ${charData.coreColor};">● </span>${escapeHtml(charData.name)}</td>
         <td>${entry.wins}</td>
-        <td style="color: var(--accent-green); font-weight: 700;">${entry.winRate}</td>
+        <td style="color: var(--accent-green); font-weight: 700;">${escapeHtml(entry.winRate)}</td>
       `;
       tbody.appendChild(tr);
     });
@@ -5010,41 +5035,25 @@ class RiftbornApp {
 
   // --- RESPONSIVE MOBILE ORIENTATION CONTROLLER ---
   setupOrientationHandler() {
-    this.portraitBrowsingAllowed = false;
+    this.portraitBrowsingAllowed = true;
 
-    const btnDismiss = document.getElementById('btn-dismiss-orientation');
-    if (btnDismiss) {
-      btnDismiss.addEventListener('click', () => {
-        this.portraitBrowsingAllowed = true;
-        const overlay = document.getElementById('orientation-prompt-overlay');
-        if (overlay) overlay.style.display = 'none';
-        soundEngine.playUiClick();
-      });
-    }
+    // Proactively lock to landscape mode on any touch or click without asking
+    const autoLockLandscape = () => {
+      try {
+        if (window.screen?.orientation?.lock) {
+          window.screen.orientation.lock('landscape').catch(() => {});
+        } else if (window.screen?.lockOrientation) {
+          window.screen.lockOrientation('landscape');
+        } else if (window.screen?.webkitLockOrientation) {
+          window.screen.webkitLockOrientation('landscape');
+        } else if (window.screen?.mozLockOrientation) {
+          window.screen.mozLockOrientation('landscape');
+        }
+      } catch (_) {}
+    };
 
-    const btnEnterLandscape = document.getElementById('btn-enter-landscape-prompt');
-    if (btnEnterLandscape) {
-      btnEnterLandscape.addEventListener('click', async () => {
-        soundEngine.playUiClick();
-        try {
-          const docEl = document.documentElement;
-          const req = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
-          if (req) {
-            await req.call(docEl);
-          }
-          if (window.screen?.orientation?.lock) {
-            await window.screen.orientation.lock('landscape').catch(() => {});
-          } else if (window.screen?.lockOrientation) {
-            window.screen.lockOrientation('landscape');
-          }
-        } catch (_) {}
-
-        // Always allow progression and dismiss overlay when user taps this button
-        this.portraitBrowsingAllowed = true;
-        const overlay = document.getElementById('orientation-prompt-overlay');
-        if (overlay) overlay.style.display = 'none';
-      });
-    }
+    window.addEventListener('touchstart', autoLockLandscape, { passive: true });
+    window.addEventListener('click', autoLockLandscape, { passive: true });
 
     this.checkOrientation();
     window.addEventListener('resize', () => this.checkOrientation());
@@ -5057,34 +5066,14 @@ class RiftbornApp {
   }
 
   checkOrientation() {
+    // Proactively lock orientation on mobile/touch devices
+    if (window.screen?.orientation?.lock && (this.isTouchDevice() || window.innerWidth <= 1024)) {
+      window.screen.orientation.lock('landscape').catch(() => {});
+    }
+
+    // Never block the user with an orientation prompt overlay - landscape is enforced automatically
     const overlay = document.getElementById('orientation-prompt-overlay');
-    if (!overlay) return;
-
-    // Multi-factor landscape detection
-    const isLandscape = (window.innerWidth > window.innerHeight) ||
-                        (window.screen?.orientation && window.screen.orientation.type?.includes('landscape')) ||
-                        (Math.abs(window.orientation) === 90 || Math.abs(window.orientation) === 270);
-
-    // If device is in landscape, ALWAYS hide orientation prompt immediately
-    if (isLandscape) {
-      overlay.style.display = 'none';
-      return;
-    }
-
-    // On desktop browsers (width > 900 and height > 550), never show orientation prompt
-    if (window.innerWidth > 900 && window.innerHeight > 550) {
-      overlay.style.display = 'none';
-      return;
-    }
-
-    // Only prompt in portrait on actual mobile / touch devices
-    const isTouch = this.isTouchDevice();
-    const isSmallScreen = Math.min(window.innerWidth, window.innerHeight) <= 768;
-    const isCombatActive = document.getElementById('game-view') && document.getElementById('game-view').style.display !== 'none';
-
-    if ((isTouch || isSmallScreen) && (isCombatActive || !this.portraitBrowsingAllowed)) {
-      overlay.style.display = 'flex';
-    } else {
+    if (overlay) {
       overlay.style.display = 'none';
     }
   }
