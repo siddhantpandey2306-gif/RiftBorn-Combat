@@ -2,6 +2,20 @@
 
 All notable changes to the RIFTBORN project are documented in this file.
 
+## [1.2.0] - 2026-10-26
+
+### UI & Lobby Experience
+- **1-Screen Fit (Zero Scroll)**: Resized `#screen-home` and `.lobby-stage-container` to lock to viewport height (`100vh`/`100dvh`, `overflow: hidden`) with corner-anchored HUD elements, eliminating vertical scroll.
+- **Relocated Feedback**: Shifted floating feedback button out of the bottom-right corner into the top navigation header and mobile drawer.
+- **Bottom-Right Combat Dock**: Placed Casual/Ranked mode selector directly above the prominent primary `PLAY` button in the bottom-right corner.
+- **Fighter Stepper Selection**: Fixed `< 1 / 6 >` character cycling stepper beside "Change Fighter" to select and persist fighters in progression and HUD, syncing with quick match launches.
+- **Default Landscape Mode**: Added auto-locking landscape orientation on mobile link open, mobile landscape meta tags, and an orientation prompt overlay for mobile portrait devices.
+
+### Match Pause Menu
+- **Interactive Controls**: Moved pause modal outside combat canvas overlay and enabled direct pointer events.
+- **In-Menu Audio & Shake Settings**: Added sub-view to adjust SFX, Music, and Screen Shake directly inside the pause screen.
+- **Restart & Quit**: Wired restart match (preserving fighters, arena, mode, and difficulty) and clean match quit back to home lobby.
+
 ## [1.0.0] - 2026-10-11
 
 ### Security & Compliance

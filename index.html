@@ -9,6 +9,10 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="screen-orientation" content="landscape">
+  <meta name="x5-orientation" content="landscape">
+  <meta name="x5-fullscreen" content="true">
+  <meta name="x5-page-mode" content="app">
   <link rel="canonical" href="https://siddhantpandey2306-gif.github.io/RiftBorn-Combat/">
   <meta property="og:title" content="RIFTBORN — Original Competitive Fighting Game">
   <meta property="og:description" content="RIFTBORN is an original competitive futuristic hero-based fighting game. Channel unique energy cores, master fast-paced combat, unlock progression, and climb the Rift Champion ranks.">
@@ -86,6 +90,11 @@
         <span class="nav-icon-glyph" aria-hidden="true">⚙</span>
       </button>
 
+      <a href="https://github.com/siddhantpandey2306-gif/RiftBorn-Combat/issues" target="_blank" rel="noopener noreferrer" class="nav-icon-btn nav-feedback-btn" id="nav-btn-feedback" title="Feedback & Bug Reports on GitHub" aria-label="Feedback and Bug Reports">
+        <span class="nav-icon-glyph" aria-hidden="true">💬</span>
+        <span class="nav-icon-label">FEEDBACK</span>
+      </a>
+
       <button class="nav-icon-btn" id="btn-toggle-fullscreen" title="Toggle Fullscreen" aria-label="Toggle Fullscreen">
         <span class="nav-icon-glyph" aria-hidden="true">⛶</span>
         <span class="nav-icon-label">FULLSCREEN</span>
@@ -147,6 +156,7 @@
         <button class="drawer-nav-btn" id="drawer-btn-search"><span class="drawer-icon" aria-hidden="true">🔍</span> SEARCH CONTENT</button>
         <button class="drawer-nav-btn" id="drawer-btn-guide"><span class="drawer-icon" aria-hidden="true">📖</span> COMBAT GUIDE & MOVES</button>
         <button class="drawer-nav-btn" data-screen="screen-settings"><span class="drawer-icon" aria-hidden="true">⚙</span> SYSTEM CONFIGURATION</button>
+        <a href="https://github.com/siddhantpandey2306-gif/RiftBorn-Combat/issues" target="_blank" rel="noopener noreferrer" class="drawer-nav-btn" id="drawer-btn-feedback"><span class="drawer-icon" aria-hidden="true">💬</span> FEEDBACK & BUGS</a>
       </nav>
 
       <div class="drawer-section-title">PREFERENCES & QUICK ACTIONS</div>
@@ -253,16 +263,16 @@
           <div class="lobby-pedestal-light" aria-hidden="true"></div>
         </div>
 
-        <!-- Hidden elements for backward compatibility -->
-        <div style="display:none;">
-          <div id="home-hero-level">LEVEL 1</div>
-          <div id="home-hero-xp-fill"></div>
-          <div id="home-hero-xp-text"></div>
-          <div id="home-hero-traits"></div>
-          <div id="home-hero-quote"></div>
+        <!-- Bottom Left: Ergonomic Tactical Helper / Controls Hint -->
+        <div class="lobby-bottom-left-hud">
+          <div class="lobby-shortcut-hint">
+            <span class="shortcut-key">ENTER</span> <span class="shortcut-desc">START</span>
+            <span class="shortcut-sep">•</span>
+            <span class="shortcut-key">◄ ►</span> <span class="shortcut-desc">FIGHTER</span>
+          </div>
         </div>
 
-        <!-- Bottom: Primary Action Dock (Mode Selector + Giant PLAY Button) -->
+        <!-- Bottom Right: Primary Action Dock (Mode Selector + Giant PLAY Button) -->
         <div class="lobby-bottom-action-dock">
           <!-- Compact Segmented Match-Mode Selector (Inspired by BGMI / Free Fire) -->
           <div class="lobby-mode-selector-strip" id="lobby-mode-selector" role="radiogroup" aria-label="Select Combat Match Mode">
@@ -1968,25 +1978,58 @@
       </div>
 
 
-      <!-- IN-GAME COMBAT PAUSE MODAL -->
-      <div id="modal-combat-pause" class="combat-pause-overlay" style="display: none;">
-        <div class="combat-pause-card">
-          <div class="combat-pause-header">
-            <span class="pause-icon">⏸</span>
-            <h2 class="pause-title">MATCH PAUSED</h2>
-            <span class="pause-sub">PRESS ESC / P TO RESUME</span>
+    </div>
+    <!-- END #hud-overlay -->
+
+    <!-- IN-GAME COMBAT PAUSE MODAL (Direct child of #game-view for clean z-index and click events) -->
+    <div id="modal-combat-pause" class="combat-pause-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="pause-menu-title">
+      <div class="combat-pause-card">
+        <div class="combat-pause-header">
+          <span class="pause-icon" aria-hidden="true">⏸</span>
+          <h2 class="pause-title" id="pause-menu-title">MATCH PAUSED</h2>
+          <span class="pause-sub" id="pause-menu-sub">PRESS ESC / P TO RESUME</span>
+        </div>
+
+        <!-- Main Pause Options -->
+        <div class="combat-pause-body" id="pause-view-main">
+          <button id="btn-pause-resume" class="btn-pause-primary">▶ RESUME COMBAT</button>
+          <button id="btn-pause-settings" class="btn-pause-secondary">⚙ AUDIO & SETTINGS</button>
+          <button id="btn-pause-fullscreen" class="btn-pause-secondary">⛶ TOGGLE FULLSCREEN</button>
+          <button id="btn-pause-restart" class="btn-pause-secondary">↺ RESTART MATCH</button>
+          <a href="https://github.com/siddhantpandey2306-gif/RiftBorn-Combat/issues" target="_blank" rel="noopener noreferrer" id="btn-pause-feedback" class="btn-pause-secondary" style="display:flex; align-items:center; justify-content:center; gap:6px; text-decoration:none;">💬 REPORT BUG / FEEDBACK ↗</a>
+          <button id="btn-pause-quit" class="btn-pause-secondary danger">🚪 QUIT TO HOME</button>
+        </div>
+
+        <!-- Audio & Settings Sub-View -->
+        <div class="combat-pause-body" id="pause-view-settings" style="display: none;">
+          <div class="pause-settings-group">
+            <div class="pause-slider-row">
+              <span class="pause-slider-label">SFX VOLUME</span>
+              <span id="pause-sfx-val" class="pause-slider-val">80%</span>
+            </div>
+            <input type="range" min="0" max="100" value="80" id="pause-slider-sfx" class="pause-range-input" aria-label="SFX Volume">
           </div>
-          <div class="combat-pause-body">
-            <button id="btn-pause-resume" class="btn-pause-primary">▶ RESUME COMBAT</button>
-            <button id="btn-pause-settings" class="btn-pause-secondary">⚙ AUDIO & SETTINGS</button>
-            <button id="btn-pause-fullscreen" class="btn-pause-secondary">⛶ TOGGLE FULLSCREEN</button>
-            <button id="btn-pause-restart" class="btn-pause-secondary">↺ RESTART MATCH</button>
-            <a href="https://github.com/siddhantpandey2306-gif/RiftBorn-Combat/issues" target="_blank" rel="noopener noreferrer" id="btn-pause-feedback" class="btn-pause-secondary" style="display:flex; align-items:center; justify-content:center; gap:6px; text-decoration:none;">💬 REPORT BUG / FEEDBACK ↗</a>
-            <button id="btn-pause-quit" class="btn-pause-secondary danger">🚪 QUIT TO HOME</button>
+
+          <div class="pause-settings-group">
+            <div class="pause-slider-row">
+              <span class="pause-slider-label">MUSIC VOLUME</span>
+              <span id="pause-music-val" class="pause-slider-val">50%</span>
+            </div>
+            <input type="range" min="0" max="100" value="50" id="pause-slider-music" class="pause-range-input" aria-label="Music Volume">
           </div>
+
+          <div class="pause-settings-group">
+            <div class="pause-slider-row">
+              <span class="pause-slider-label">SCREEN SHAKE</span>
+              <span id="pause-shake-val" class="pause-slider-val">100%</span>
+            </div>
+            <input type="range" min="0" max="150" value="100" id="pause-slider-shake" class="pause-range-input" aria-label="Screen Shake Intensity">
+          </div>
+
+          <button id="btn-pause-settings-back" class="btn-pause-primary">◀ BACK TO PAUSE MENU</button>
+          <button id="btn-pause-settings-full" class="btn-pause-secondary" style="font-size: 11px;">OPEN FULL SYSTEM CONFIGURATION ➔</button>
         </div>
       </div>
-
     </div>
   </section>
 
@@ -2564,8 +2607,20 @@
   </div>
 
 
-  <!-- MOBILE ORIENTATION: Landscape is enforced automatically without disruptive prompts -->
-  <div id="orientation-prompt-overlay" style="display: none !important;" aria-hidden="true"></div>
+  <!-- MOBILE ORIENTATION PROMPT OVERLAY (Shown when portrait on touch devices) -->
+  <div id="orientation-prompt-overlay" class="orientation-prompt-overlay" aria-live="polite">
+    <div class="orientation-prompt-card">
+      <div class="orientation-phone-anim" aria-hidden="true">
+        <span class="phone-glyph">📱</span>
+        <span class="rotate-arrow-glyph">↻</span>
+      </div>
+      <h2 class="orientation-prompt-title">ROTATE DEVICE</h2>
+      <p class="orientation-prompt-desc">RIFTBORN is designed for widescreen landscape combat. Rotate your phone to landscape or tap below to play.</p>
+      <button type="button" class="btn-orientation-fullscreen" id="btn-orientation-fullscreen">
+        <span>⛶ PLAY IN LANDSCAPE</span>
+      </button>
+    </div>
+  </div>
 
   <!-- MOBILE BOTTOM NAVIGATION (Ergonomic for 320px - 430px) -->
   <nav id="mobile-bottom-nav" class="mobile-bottom-nav">
@@ -2599,8 +2654,8 @@
     <span aria-hidden="true">▲</span>
   </button>
 
-  <!-- FLOATING FEEDBACK / CONTACT BUTTON -->
-  <a href="https://github.com/siddhantpandey2306-gif/RiftBorn-Combat/issues" target="_blank" rel="noopener noreferrer" id="btn-floating-contact" class="btn-floating-contact" title="Feedback & Bug Reports on GitHub" aria-label="Report feedback or bug on GitHub">
+  <!-- FLOATING FEEDBACK / CONTACT BUTTON (Shifted to Navigation Bar & Drawer) -->
+  <a href="https://github.com/siddhantpandey2306-gif/RiftBorn-Combat/issues" target="_blank" rel="noopener noreferrer" id="btn-floating-contact" class="btn-floating-contact" style="display: none !important;" title="Feedback & Bug Reports on GitHub" aria-label="Report feedback or bug on GitHub">
     <span class="floating-icon" aria-hidden="true">💬</span>
     <span class="floating-label">FEEDBACK</span>
   </a>

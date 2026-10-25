@@ -264,6 +264,7 @@ export class GameEngine {
   initMatch(p1CharId = 'vex', p2CharId = 'vex', arenaId = 'neon_metro', mode = 'Casual', aiDifficulty = 'NORMAL') {
     this.gameMode = mode;
     this.currentArena = arenaId;
+    this.isPaused = false;
     this.roundNumber = 1;
     this.roundTime = 99;
     this.roundTimerMs = 0;

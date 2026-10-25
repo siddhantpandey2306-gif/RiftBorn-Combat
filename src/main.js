@@ -865,19 +865,15 @@ class RiftbornApp {
     const btnSettingsBack = document.getElementById('btn-settings-back');
     if (btnSettingsBack) {
       btnSettingsBack.addEventListener('click', () => {
+        if (this.isReturningFromSettingsToMatch) {
+          this.isReturningFromSettingsToMatch = false;
+          this.showGameView();
+          const pauseModal = document.getElementById('modal-combat-pause');
+          if (pauseModal) pauseModal.style.display = 'flex';
+          soundEngine.playUiClick();
+          return;
+        }
         this.showScreen('screen-home');
-        soundEngine.playUiClick();
-      });
-    }
-
-    // Pause Modal Settings Button
-    const btnPauseSettings = document.getElementById('btn-pause-settings');
-    if (btnPauseSettings) {
-      btnPauseSettings.addEventListener('click', () => {
-        const pauseModal = document.getElementById('modal-combat-pause');
-        if (pauseModal) pauseModal.style.display = 'none';
-        document.getElementById('game-view').style.display = 'none';
-        this.showScreen('screen-settings');
         soundEngine.playUiClick();
       });
     }
@@ -886,7 +882,8 @@ class RiftbornApp {
     const quickStartBtn = document.getElementById('btn-quick-start-fight');
     if (quickStartBtn) {
       quickStartBtn.addEventListener('click', () => {
-        const p1Id = progressionManager.getMainCharacter() || this.homeRoster[this.homeShowcaseCharIndex] || 'vex';
+        const p1Id = this.homeRoster[this.homeShowcaseCharIndex] || progressionManager.getMainCharacter() || 'vex';
+        progressionManager.setMainCharacter(p1Id);
         const p2Id = this.getRandomOpponent(p1Id);
         soundEngine.playUiClick();
 
@@ -972,6 +969,35 @@ class RiftbornApp {
       });
     }
 
+    // Keyboard navigation on Home Lobby (◄ ► / A D to cycle fighter, Enter to start match)
+    if (!this.homeKeyboardBound) {
+      this.homeKeyboardBound = true;
+      window.addEventListener('keydown', (e) => {
+        const gv = document.getElementById('game-view');
+        if (gv && (gv.style.display === 'block' || this.isTransitioningToArena)) return;
+        if (this.engine && (this.engine.roundState === 'FIGHTING' || this.engine.roundState === 'INTRO_READY')) return;
+
+        const homeEl = document.getElementById('screen-home');
+        if (!homeEl || !homeEl.classList.contains('active')) return;
+
+        if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA')) return;
+
+        if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+          e.preventDefault();
+          this.cycleHomeHero(-1);
+          soundEngine.playUiClick();
+        } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+          e.preventDefault();
+          this.cycleHomeHero(1);
+          soundEngine.playUiClick();
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          const playBtn = document.getElementById('btn-quick-start-fight');
+          if (playBtn) playBtn.click();
+        }
+      });
+    }
+
     const btnHomeView = document.getElementById('btn-home-view-fighter');
     if (btnHomeView) {
       btnHomeView.addEventListener('click', () => {
@@ -1038,51 +1064,8 @@ class RiftbornApp {
 
 
 
-    // In-game Pause & Exit buttons
-    const btnHudPause = document.getElementById('btn-hud-pause');
-    if (btnHudPause) {
-      btnHudPause.addEventListener('click', () => {
-        this.togglePause();
-        soundEngine.playUiClick();
-      });
-    }
-
-    const btnPauseResume = document.getElementById('btn-pause-resume');
-    if (btnPauseResume) {
-      btnPauseResume.addEventListener('click', () => {
-        this.togglePause();
-        soundEngine.playUiClick();
-      });
-    }
-
-    const btnPauseRestart = document.getElementById('btn-pause-restart');
-    if (btnPauseRestart) {
-      btnPauseRestart.addEventListener('click', () => {
-        if (this.engine) this.engine.isPaused = false;
-        const pauseModal = document.getElementById('modal-combat-pause');
-        if (pauseModal) pauseModal.style.display = 'none';
-        const p1Id = this.engine.p1 ? this.engine.p1.charId : 'vex';
-        const p2Id = this.getRandomOpponent(p1Id);
-        const arena = this.engine.arenaConfig ? this.engine.arenaConfig.id : 'neon_metro';
-        this.launchMatch(p1Id, p2Id, arena, this.selectedDifficulty);
-        soundEngine.playUiClick();
-      });
-    }
-
-    const btnPauseQuit = document.getElementById('btn-pause-quit');
-    if (btnPauseQuit) {
-      btnPauseQuit.addEventListener('click', () => {
-        if (this.engine) {
-          this.engine.isPaused = false;
-          this.engine.stopLoop();
-        }
-        const pauseModal = document.getElementById('modal-combat-pause');
-        if (pauseModal) pauseModal.style.display = 'none';
-        document.getElementById('game-view').style.display = 'none';
-        this.showScreen('screen-home');
-        soundEngine.playUiClick();
-      });
-    }
+    // In-game Pause & Exit controller
+    this.setupCombatPauseController();
 
     const btnQuitMatch = document.getElementById('btn-quit-match');
     if (btnQuitMatch) {
@@ -1415,11 +1398,13 @@ class RiftbornApp {
 
   // --- HOME SCREEN HERO RENDERING & INTERACTIVE STAGE ---
   renderHomeHero() {
-    // If not set yet, sync with current main character
+    // If not set yet, sync with current main character from progression
     const mainId = progressionManager.getMainCharacter() || 'vex';
     const mainIdx = this.homeRoster.indexOf(mainId);
-    if (this.homeShowcaseCharIndex === undefined || this.homeShowcaseCharIndex === null) {
-      this.homeShowcaseCharIndex = mainIdx >= 0 ? mainIdx : 0;
+    if (mainIdx >= 0) {
+      this.homeShowcaseCharIndex = mainIdx;
+    } else if (this.homeShowcaseCharIndex === undefined || this.homeShowcaseCharIndex === null) {
+      this.homeShowcaseCharIndex = 0;
     }
     this.updateHomeHeroDisplay();
     this.updateHomeIntelTelemetry();
@@ -1428,7 +1413,17 @@ class RiftbornApp {
   cycleHomeHero(delta) {
     const len = this.homeRoster.length;
     this.homeShowcaseCharIndex = (this.homeShowcaseCharIndex + delta + len) % len;
+    const charId = this.homeRoster[this.homeShowcaseCharIndex] || 'vex';
+    
+    // Explicitly update and persist selected main character
+    progressionManager.setMainCharacter(charId);
+    this.selectedSelectCharId = charId;
+
     this.updateHomeHeroDisplay();
+    this.updateHUD();
+    if (this.updateCharacterSelectUI) {
+      this.updateCharacterSelectUI();
+    }
   }
 
   updateHomeHeroDisplay() {
@@ -3428,6 +3423,178 @@ class RiftbornApp {
   }
 
   // --- COMBAT PAUSE CONTROLLER ---
+  setupCombatPauseController() {
+    const btnHudPause = document.getElementById('btn-hud-pause');
+    if (btnHudPause) {
+      btnHudPause.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.togglePause();
+        soundEngine.playUiClick();
+      };
+    }
+
+    const btnPauseResume = document.getElementById('btn-pause-resume');
+    if (btnPauseResume) {
+      btnPauseResume.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.togglePause();
+        soundEngine.playUiClick();
+      };
+    }
+
+    const btnPauseSettings = document.getElementById('btn-pause-settings');
+    if (btnPauseSettings) {
+      btnPauseSettings.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const mainView = document.getElementById('pause-view-main');
+        const settingsView = document.getElementById('pause-view-settings');
+        const subTitle = document.getElementById('pause-menu-sub');
+        if (mainView) mainView.style.display = 'none';
+        if (settingsView) settingsView.style.display = 'flex';
+        if (subTitle) subTitle.textContent = 'ADJUST COMBAT AUDIO & INTENSITY';
+        this.syncPauseAudioSliders();
+        soundEngine.playUiClick();
+      };
+    }
+
+    const btnPauseSettingsBack = document.getElementById('btn-pause-settings-back');
+    if (btnPauseSettingsBack) {
+      btnPauseSettingsBack.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const mainView = document.getElementById('pause-view-main');
+        const settingsView = document.getElementById('pause-view-settings');
+        const subTitle = document.getElementById('pause-menu-sub');
+        if (mainView) mainView.style.display = 'flex';
+        if (settingsView) settingsView.style.display = 'none';
+        if (subTitle) subTitle.textContent = 'PRESS ESC / P TO RESUME';
+        soundEngine.playUiClick();
+      };
+    }
+
+    const btnPauseSettingsFull = document.getElementById('btn-pause-settings-full');
+    if (btnPauseSettingsFull) {
+      btnPauseSettingsFull.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.isReturningFromSettingsToMatch = true;
+        document.getElementById('game-view').style.display = 'none';
+        this.showScreen('screen-settings');
+        soundEngine.playUiClick();
+      };
+    }
+
+    const pauseSfxSlider = document.getElementById('pause-slider-sfx');
+    if (pauseSfxSlider) {
+      pauseSfxSlider.oninput = (e) => {
+        const val = parseInt(e.target.value, 10);
+        const ratio = val / 100;
+        soundEngine.setSfxVolume(ratio);
+        try {
+          if (progressionManager?.data?.settings) progressionManager.data.settings.sfxVolume = ratio;
+        } catch (_) {}
+        const lbl = document.getElementById('pause-sfx-val');
+        if (lbl) lbl.textContent = `${val}%`;
+        const mainSlider = document.getElementById('slider-sfx-vol');
+        if (mainSlider) mainSlider.value = val;
+        const mainLbl = document.getElementById('label-sfx-vol');
+        if (mainLbl) mainLbl.textContent = `${val}%`;
+      };
+    }
+
+    const pauseMusicSlider = document.getElementById('pause-slider-music');
+    if (pauseMusicSlider) {
+      pauseMusicSlider.oninput = (e) => {
+        const val = parseInt(e.target.value, 10);
+        const ratio = val / 100;
+        soundEngine.setMusicVolume(ratio);
+        try {
+          if (progressionManager?.data?.settings) progressionManager.data.settings.musicVolume = ratio;
+        } catch (_) {}
+        const lbl = document.getElementById('pause-music-val');
+        if (lbl) lbl.textContent = `${val}%`;
+        const mainSlider = document.getElementById('slider-music-vol');
+        if (mainSlider) mainSlider.value = val;
+        const mainLbl = document.getElementById('label-music-vol');
+        if (mainLbl) mainLbl.textContent = `${val}%`;
+      };
+    }
+
+    const pauseShakeSlider = document.getElementById('pause-slider-shake');
+    if (pauseShakeSlider) {
+      pauseShakeSlider.oninput = (e) => {
+        const val = parseInt(e.target.value, 10);
+        try {
+          if (progressionManager?.data?.settings) progressionManager.data.settings.screenShakeIntensity = val;
+        } catch (_) {}
+        const lbl = document.getElementById('pause-shake-val');
+        if (lbl) lbl.textContent = `${val}%`;
+        const mainSlider = document.getElementById('slider-shake-vol');
+        if (mainSlider) mainSlider.value = val;
+        const mainLbl = document.getElementById('label-shake-vol');
+        if (mainLbl) mainLbl.textContent = `${val}%`;
+      };
+    }
+
+    const btnPauseFs = document.getElementById('btn-pause-fullscreen');
+    if (btnPauseFs) {
+      btnPauseFs.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.toggleFullscreen();
+        soundEngine.playUiClick();
+      };
+    }
+
+    const btnPauseRestart = document.getElementById('btn-pause-restart');
+    if (btnPauseRestart) {
+      btnPauseRestart.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (this.engine) this.engine.isPaused = false;
+        const pauseModal = document.getElementById('modal-combat-pause');
+        if (pauseModal) pauseModal.style.display = 'none';
+        const p1Id = this.engine?.p1 ? this.engine.p1.charId : (progressionManager?.getMainCharacter() || 'vex');
+        const p2Id = this.engine?.p2 ? this.engine.p2.charId : this.getRandomOpponent(p1Id);
+        const arena = this.engine?.arenaConfig?.id || this.engine?.currentArena || 'neon_metro';
+        const mode = this.engine?.gameMode || 'Casual';
+        const diff = this.engine?.aiDifficulty || this.selectedDifficulty || 'NORMAL';
+        this.launchMatch(p1Id, p2Id, arena, diff, mode);
+        soundEngine.playUiClick();
+      };
+    }
+
+    const btnPauseQuit = document.getElementById('btn-pause-quit');
+    if (btnPauseQuit) {
+      btnPauseQuit.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (this.engine) {
+          this.engine.isPaused = false;
+          this.engine.stopLoop();
+        }
+        const pauseModal = document.getElementById('modal-combat-pause');
+        if (pauseModal) pauseModal.style.display = 'none';
+        document.getElementById('game-view').style.display = 'none';
+        this.showScreen('screen-home');
+        soundEngine.playUiClick();
+      };
+    }
+
+    const pauseModal = document.getElementById('modal-combat-pause');
+    if (pauseModal) {
+      pauseModal.addEventListener('click', (e) => {
+        if (e.target === pauseModal) {
+          this.togglePause();
+          soundEngine.playUiClick();
+        }
+      });
+    }
+  }
+
   togglePause() {
     if (!this.engine) return;
     const pauseModal = document.getElementById('modal-combat-pause');
@@ -3445,9 +3612,46 @@ class RiftbornApp {
       const isGameView = document.getElementById('game-view')?.style.display === 'block';
       if (isGameView || this.engine.roundState === 'FIGHTING') {
         this.engine.isPaused = true;
+
+        // Reset pause views to main
+        const mainView = document.getElementById('pause-view-main');
+        const settingsView = document.getElementById('pause-view-settings');
+        const subTitle = document.getElementById('pause-menu-sub');
+        if (mainView) mainView.style.display = 'flex';
+        if (settingsView) settingsView.style.display = 'none';
+        if (subTitle) subTitle.textContent = 'PRESS ESC / P TO RESUME';
+
+        // Synchronize fullscreen label
+        const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+        this.updateFullscreenUI(isFs);
+
+        // Sync audio sliders with current volume
+        this.syncPauseAudioSliders();
+
         pauseModal.style.display = 'flex';
       }
     }
+  }
+
+  syncPauseAudioSliders() {
+    const sfxVal = Math.round((soundEngine.sfxVolume ?? 0.8) * 100);
+    const musicVal = Math.round((soundEngine.musicVolume ?? 0.5) * 100);
+    const shakeVal = Math.round(progressionManager?.data?.settings?.screenShakeIntensity ?? 100);
+
+    const sfxSlider = document.getElementById('pause-slider-sfx');
+    const sfxLbl = document.getElementById('pause-sfx-val');
+    if (sfxSlider) sfxSlider.value = sfxVal;
+    if (sfxLbl) sfxLbl.textContent = `${sfxVal}%`;
+
+    const musicSlider = document.getElementById('pause-slider-music');
+    const musicLbl = document.getElementById('pause-music-val');
+    if (musicSlider) musicSlider.value = musicVal;
+    if (musicLbl) musicLbl.textContent = `${musicVal}%`;
+
+    const shakeSlider = document.getElementById('pause-slider-shake');
+    const shakeLbl = document.getElementById('pause-shake-val');
+    if (shakeSlider) shakeSlider.value = shakeVal;
+    if (shakeLbl) shakeLbl.textContent = `${shakeVal}%`;
   }
 
   // --- FULLSCREEN & ORIENTATION CONTROLLER ---
@@ -4955,11 +5159,20 @@ class RiftbornApp {
   setupOrientationHandler() {
     this.portraitBrowsingAllowed = true;
 
-    // Proactively lock to landscape mode on any touch or click without asking
-    const autoLockLandscape = () => {
+    // Helper to lock landscape and enter fullscreen on user gesture
+    this.enterLandscapeMode = async () => {
+      try {
+        const docEl = document.documentElement;
+        if (docEl.requestFullscreen) {
+          await docEl.requestFullscreen();
+        } else if (docEl.webkitRequestFullscreen) {
+          await docEl.webkitRequestFullscreen();
+        }
+      } catch (_) {}
+
       try {
         if (window.screen?.orientation?.lock) {
-          window.screen.orientation.lock('landscape').catch(() => {});
+          await window.screen.orientation.lock('landscape');
         } else if (window.screen?.lockOrientation) {
           window.screen.lockOrientation('landscape');
         } else if (window.screen?.webkitLockOrientation) {
@@ -4968,10 +5181,30 @@ class RiftbornApp {
           window.screen.mozLockOrientation('landscape');
         }
       } catch (_) {}
+
+      this.checkOrientation();
+    };
+
+    // Auto-attempt landscape lock on touch or click
+    const autoLockLandscape = () => {
+      try {
+        if (window.screen?.orientation?.lock) {
+          window.screen.orientation.lock('landscape').catch(() => {});
+        }
+      } catch (_) {}
     };
 
     window.addEventListener('touchstart', autoLockLandscape, { passive: true });
     window.addEventListener('click', autoLockLandscape, { passive: true });
+
+    // Connect orientation prompt button
+    const orientBtn = document.getElementById('btn-orientation-fullscreen');
+    if (orientBtn) {
+      orientBtn.addEventListener('click', () => {
+        this.enterLandscapeMode();
+        soundEngine.playUiClick();
+      });
+    }
 
     this.checkOrientation();
     window.addEventListener('resize', () => this.checkOrientation());
@@ -4984,15 +5217,19 @@ class RiftbornApp {
   }
 
   checkOrientation() {
-    // Proactively lock orientation on mobile/touch devices
-    if (window.screen?.orientation?.lock && (this.isTouchDevice() || window.innerWidth <= 1024)) {
-      window.screen.orientation.lock('landscape').catch(() => {});
+    const isPortrait = window.matchMedia && window.matchMedia('(orientation: portrait) and (max-width: 900px)').matches;
+    const isTouch = this.isTouchDevice() || (window.innerWidth <= 900 && window.innerHeight > window.innerWidth);
+    const overlay = document.getElementById('orientation-prompt-overlay');
+
+    if (isPortrait && isTouch) {
+      if (overlay) overlay.style.display = 'flex';
+    } else {
+      if (overlay) overlay.style.display = 'none';
     }
 
-    // Never block the user with an orientation prompt overlay - landscape is enforced automatically
-    const overlay = document.getElementById('orientation-prompt-overlay');
-    if (overlay) {
-      overlay.style.display = 'none';
+    // Proactively lock orientation on mobile/touch devices
+    if (window.screen?.orientation?.lock && (isTouch || window.innerWidth <= 1024)) {
+      window.screen.orientation.lock('landscape').catch(() => {});
     }
   }
 
