@@ -43,15 +43,16 @@
       <span class="brand-tag">ORIGINAL COMBAT</span>
     </button>
 
-    <!-- Core Simplified Navigation: HOME, FIGHT, FIGHTERS, RANK, PROFILE, STORY -->
+    <!-- Core Simplified Navigation: HOME, FIGHTERS, RANK, MISSIONS, PROFILE -->
     <nav class="nav-links" aria-label="Desktop Primary Navigation">
       <button class="nav-btn active" data-screen="screen-home" id="nav-home">HOME</button>
-      <button class="nav-btn" data-screen="screen-play" id="nav-play">FIGHT</button>
       <button class="nav-btn" data-screen="screen-character-select" id="nav-characters">FIGHTERS</button>
       <button class="nav-btn" data-screen="screen-ranked-setup" id="nav-ranked">RANK</button>
+      <button class="nav-btn" id="nav-missions-btn">MISSIONS</button>
       <button class="nav-btn" data-screen="screen-profile" id="nav-profile">PROFILE</button>
-      <button class="nav-btn" data-screen="screen-story" id="nav-story">STORY</button>
       <!-- Hidden compatibility buttons for internal script references if any -->
+      <button class="nav-btn" data-screen="screen-play" id="nav-play" style="display:none;">FIGHT</button>
+      <button class="nav-btn" data-screen="screen-story" id="nav-story" style="display:none;">STORY</button>
       <button class="nav-btn" data-screen="screen-characters" id="nav-characters-dossier" style="display:none;">DOSSIER</button>
       <button class="nav-btn" data-screen="screen-progression" id="nav-progression" style="display:none;">PROGRESSION</button>
       <button class="nav-btn" data-screen="screen-character-select" id="nav-dojo" style="display:none;">DOJO</button>
@@ -76,9 +77,9 @@
         <span class="nav-icon-label">GUIDE</span>
       </button>
 
-      <button class="nav-icon-btn" id="nav-challenges" title="Challenges & Bounties" aria-label="Challenges and Bounties">
+      <button class="nav-icon-btn" id="nav-challenges" title="Combat Missions & Bounties" aria-label="Combat Missions and Bounties">
         <span class="nav-icon-glyph" aria-hidden="true">🎯</span>
-        <span class="nav-icon-label">BOUNTIES</span>
+        <span class="nav-icon-label">MISSIONS</span>
         <span id="nav-challenges-badge" class="nav-alert-dot" style="display:none;"></span>
       </button>
 
@@ -136,9 +137,9 @@
       <div class="drawer-section-title">COMBAT DESTINATIONS</div>
       <nav class="drawer-nav-list" aria-label="Mobile Primary Navigation">
         <button class="drawer-nav-btn active" data-screen="screen-home"><span class="drawer-icon" aria-hidden="true">⌂</span> HOME</button>
-        <button class="drawer-nav-btn" data-screen="screen-play"><span class="drawer-icon" aria-hidden="true">⚔</span> FIGHT & MODES</button>
         <button class="drawer-nav-btn" data-screen="screen-character-select"><span class="drawer-icon" aria-hidden="true">🥋</span> FIGHTERS ROSTER</button>
         <button class="drawer-nav-btn" data-screen="screen-ranked-setup"><span class="drawer-icon" aria-hidden="true">🏆</span> RANKED LADDER</button>
+        <button class="drawer-nav-btn" id="drawer-btn-challenges"><span class="drawer-icon" aria-hidden="true">🎯</span> MISSIONS HUB</button>
         <button class="drawer-nav-btn" data-screen="screen-profile"><span class="drawer-icon" aria-hidden="true">👤</span> OPERATIVE PROFILE</button>
         <button class="drawer-nav-btn" data-screen="screen-story"><span class="drawer-icon" aria-hidden="true">📜</span> STORY CHRONICLES</button>
       </nav>
@@ -147,7 +148,6 @@
       <nav class="drawer-nav-list" aria-label="Mobile Tactical Utilities">
         <button class="drawer-nav-btn" id="drawer-btn-search"><span class="drawer-icon" aria-hidden="true">🔍</span> SEARCH CONTENT</button>
         <button class="drawer-nav-btn" id="drawer-btn-guide"><span class="drawer-icon" aria-hidden="true">📖</span> COMBAT GUIDE & MOVES</button>
-        <button class="drawer-nav-btn" id="drawer-btn-challenges"><span class="drawer-icon" aria-hidden="true">🎯</span> BOUNTIES & CHALLENGES</button>
         <button class="drawer-nav-btn" data-screen="screen-settings"><span class="drawer-icon" aria-hidden="true">⚙</span> SYSTEM CONFIGURATION</button>
       </nav>
 
@@ -174,151 +174,121 @@
   <!-- APP SCREENS CONTAINER -->
   <main id="screen-container">
 
-    <!-- 1. HOME SCREEN: PREMIUM FIGHTING GAME MAIN STAGE -->
+    <!-- 1. HOME SCREEN: CINEMATIC FIGHTING GAME LOBBY -->
     <section class="screen active" id="screen-home">
-      <div class="home-stage-container">
-        
-        <!-- Left: Major Hero Presentation -->
-        <div class="home-hero-presentation">
+      <div class="lobby-stage-container">
+        <!-- Cinematic Atmospheric Backdrop & Lighting FX -->
+        <div class="lobby-backdrop-fx" aria-hidden="true">
+          <div class="lobby-aurora-glow"></div>
+          <div class="lobby-platform-reflection"></div>
+        </div>
+
+        <!-- Top Left: Operative & Fighter Status Tag -->
+        <div class="lobby-top-left-hud">
+          <div class="lobby-season-pill">SEASON 1 // GENESIS</div>
+          <div class="lobby-hero-headline">
+            <h1 class="lobby-fighter-name" id="home-hero-title">VEX</h1>
+            <div class="lobby-core-tag" id="home-hero-core-pill">CRIMSON CORE // BALANCED</div>
+          </div>
+          <div class="lobby-hero-sub" id="home-hero-sub">THE RIFT VANGUARD • BALANCED</div>
           
-          <!-- 1. Game Identity & Masthead (Top Priority) -->
-          <div class="home-brand-masthead">
-            <div class="home-brand-badge-row">
-              <span class="home-brand-badge">ORIGINAL 2D COMBAT</span>
-              <span class="home-brand-subtag">SEASON 1 • GENESIS</span>
-            </div>
-            <h1 class="home-brand-title">RIFTBORN</h1>
-            <p class="home-brand-tagline">Channel unique energy cores • Fast-paced competitive fighting</p>
-          </div>
-
-          <!-- 2. Primary Play Action Hub (Prominent, Visible Immediately Without Scrolling) -->
-          <div class="home-hero-actions home-primary-actions">
-            <button class="btn-play-hero btn-home-primary-play" id="btn-quick-start-fight" title="Start Playing Now">
-              <span class="btn-play-icon">⚔</span>
-              <div class="btn-play-text-group">
-                <span class="btn-play-label">PLAY NOW</span>
-                <span class="btn-play-sub">INSTANT MATCH VS RANDOM RIVAL</span>
-              </div>
-              <span class="btn-play-arrow">➔</span>
+          <div class="lobby-hero-quick-actions">
+            <button type="button" class="btn-lobby-change-fighter" id="btn-home-view-fighter" title="Choose or Customize Fighter">
+              <span class="btn-icon" aria-hidden="true">🥋</span>
+              <span>CHANGE FIGHTER</span>
             </button>
-            <button class="btn-hero-secondary" id="btn-home-view-fighter" title="Choose Fighter">
-              <span class="btn-secondary-icon">🥋</span>
-              <span>SELECT FIGHTER</span>
-            </button>
-          </div>
-
-          <!-- 3. Featured Character Showcase Stage (Interactive Canvas & Meta) -->
-          <div class="home-showcase-container">
-            <div class="home-hero-eyebrow">
-              <span class="home-eyebrow-tag">FEATURED FIGHTER</span>
-              <div class="home-fighter-switcher">
-                <button class="btn-fighter-cycle" id="btn-home-prev-fighter" title="Previous Fighter">◄</button>
-                <span class="home-fighter-counter" id="home-fighter-index">1 / 6</span>
-                <button class="btn-fighter-cycle" id="btn-home-next-fighter" title="Next Fighter">►</button>
-              </div>
-            </div>
-
-            <!-- Character Interactive Stage Canvas / Artwork -->
-            <div class="home-hero-stage" id="home-hero-stage">
-              <canvas id="home-hero-canvas" width="480" height="320"></canvas>
-              <div class="home-hero-badge-overlay" id="home-hero-core-pill">CRIMSON CORE</div>
-            </div>
-
-            <!-- Editorial Fighter Identity -->
-            <div class="home-hero-meta">
-              <div class="home-fighter-title-row">
-                <h2 class="home-fighter-name" id="home-hero-title">VEX</h2>
-                <div class="home-fighter-sub" id="home-hero-sub">CRIMSON CORE // BALANCED</div>
-              </div>
-              <div class="home-fighter-progression">
-                <div class="home-fighter-level-tag" id="home-hero-level">LEVEL 18</div>
-                <div class="home-fighter-xp-meter">
-                  <div class="home-fighter-xp-fill" id="home-hero-xp-fill" style="width: 85%;"></div>
-                </div>
-                <span class="home-fighter-xp-digits" id="home-hero-xp-text">4,250 / 5,000 XP</span>
-              </div>
-              <!-- Short Scannable Combat Traits -->
-              <div class="home-fighter-traits-strip" id="home-hero-traits">
-                <span class="fighter-trait-pill"><span class="trait-icon">⚔</span> Versatile Offense</span>
-                <span class="fighter-trait-pill"><span class="trait-icon">🛡</span> Reliable Defense</span>
-                <span class="fighter-trait-pill"><span class="trait-icon">⚡</span> Fast Counters</span>
-              </div>
-              <div id="home-hero-quote" style="display: none;"></div>
+            <div class="lobby-fighter-arrows">
+              <button type="button" class="btn-fighter-cycle" id="btn-home-prev-fighter" title="Previous Fighter" aria-label="Previous Fighter">◄</button>
+              <span class="home-fighter-counter" id="home-fighter-index">1 / 6</span>
+              <button type="button" class="btn-fighter-cycle" id="btn-home-next-fighter" title="Next Fighter" aria-label="Next Fighter">►</button>
             </div>
           </div>
         </div>
 
-        <!-- Right: Editorial Battle Intel Modules (Clean, Non-SaaS Game Intel) -->
-        <div class="home-editorial-column">
-          
-          <!-- Module 1: Daily Challenge -->
-          <div class="home-intel-module" id="home-module-challenge">
-            <div class="intel-module-header">
-              <span class="intel-module-kicker">DAILY BOUNTY</span>
-              <button class="intel-link-btn" id="btn-home-open-challenges">CHALLENGES HUB ➔</button>
-            </div>
-            <div class="intel-challenge-content">
-              <div class="intel-challenge-title" id="home-daily-title">Ascendant Victory</div>
-              <div class="intel-challenge-desc" id="home-daily-desc">Win 2 matches across Casual or Ranked sparring.</div>
-              <div class="intel-meter-row">
-                <div class="intel-bar-bg">
-                  <div class="intel-bar-fill" id="home-daily-bar-fill" style="width: 50%;"></div>
-                </div>
-                <span class="intel-meter-val" id="home-daily-progress-text">1 / 2</span>
+        <!-- Top Right: Compact Mission & Rank Widget Hub -->
+        <div class="lobby-top-right-hud">
+          <!-- Small Missions Shortcut Card -->
+          <div class="lobby-widget-pill" id="home-module-challenge" role="button" tabindex="0" title="Open Missions & Challenges">
+            <div class="widget-icon-box">🎯</div>
+            <div class="widget-meta">
+              <div class="widget-kicker">DAILY MISSION</div>
+              <div class="widget-title-truncate" id="home-daily-title">Ascendant Victory</div>
+              <div class="widget-meter-track">
+                <div class="widget-meter-fill" id="home-daily-bar-fill" style="width: 50%;"></div>
               </div>
-              <div class="intel-reward-pill">🪙 +200 COINS • ✦ +250 XP</div>
             </div>
+            <span class="widget-arrow">➔</span>
+            <!-- Hidden elements for script updates -->
+            <button id="btn-home-open-challenges" style="display:none;"></button>
+            <span id="home-daily-desc" style="display:none;"></span>
+            <span id="home-daily-progress-text" style="display:none;">1 / 2</span>
           </div>
 
-          <!-- Module 2: Current Rank -->
-          <div class="home-intel-module" id="home-module-rank">
-            <div class="intel-module-header">
-              <span class="intel-module-kicker">COMPETITIVE STANDING</span>
-              <button class="intel-link-btn" id="btn-home-open-ranked">RANKED LADDER ➔</button>
+          <!-- Small Rank Shortcut Card -->
+          <div class="lobby-widget-pill" id="home-module-rank" role="button" tabindex="0" title="Open Rank & Ladder">
+            <div class="widget-icon-box" id="home-rank-crest">🥈</div>
+            <div class="widget-meta">
+              <div class="widget-kicker">CURRENT RANK</div>
+              <div class="widget-title-truncate" id="home-rank-title">SILVER I</div>
+              <div class="widget-sub-stats" id="home-rank-streak">🔥 3 WINS</div>
             </div>
-            <div class="intel-rank-content">
-              <div class="intel-rank-crest-row">
-                <span class="intel-rank-crest" id="home-rank-crest">🥈</span>
-                <div>
-                  <div class="intel-rank-title" id="home-rank-title">SILVER I</div>
-                  <div class="intel-rank-sub" id="home-rank-rp">585 TOTAL RP • 85/100 RP TO GOLD III</div>
-                </div>
-              </div>
-              <div class="intel-stats-strip">
-                <div class="intel-stat-unit">
-                  <span class="stat-unit-label">WIN STREAK</span>
-                  <span class="stat-unit-val" id="home-rank-streak">🔥 3</span>
-                </div>
-                <div class="intel-stat-unit">
-                  <span class="stat-unit-label">WIN RATE</span>
-                  <span class="stat-unit-val" id="home-rank-winrate">75.0%</span>
-                </div>
-                <div class="intel-stat-unit">
-                  <span class="stat-unit-label">SEASON</span>
-                  <span class="stat-unit-val">1: GENESIS</span>
-                </div>
-              </div>
-            </div>
+            <span class="widget-arrow">➔</span>
+            <!-- Hidden elements for script updates -->
+            <button id="btn-home-open-ranked" style="display:none;"></button>
+            <span id="home-rank-rp" style="display:none;"></span>
+            <span id="home-rank-winrate" style="display:none;"></span>
           </div>
 
-          <!-- Module 3: Recent Match -->
-          <div class="home-intel-module" id="home-module-match">
-            <div class="intel-module-header">
-              <span class="intel-module-kicker">LAST COMBAT TELEMETRY</span>
-              <button class="intel-link-btn" id="btn-home-open-profile">FULL PASSPORT ➔</button>
-            </div>
-            <div class="intel-match-content">
-              <div class="intel-match-top">
-                <span class="intel-outcome-badge victory" id="home-recent-outcome">VICTORY</span>
-                <span class="intel-match-grade" id="home-recent-grade">GRADE S</span>
-                <span class="intel-match-score" id="home-recent-score">2 - 0</span>
-              </div>
-              <div class="intel-match-detail" id="home-recent-detail">
-                VEX vs SOLARIS • Casual 1v1 • Max Combo: 8 Hits
-              </div>
-            </div>
+          <!-- Hidden match telemetry for script update compatibility -->
+          <div id="home-module-match" style="display:none;">
+            <button id="btn-home-open-profile"></button>
+            <span id="home-recent-outcome"></span>
+            <span id="home-recent-grade"></span>
+            <span id="home-recent-score"></span>
+            <div id="home-recent-detail"></div>
+          </div>
+        </div>
+
+        <!-- Center: Fighter Hero Canvas Stage (Main Visual Anchor) -->
+        <div class="lobby-center-stage" id="home-hero-stage">
+          <canvas id="home-hero-canvas" width="600" height="420"></canvas>
+          <div class="lobby-pedestal-light" aria-hidden="true"></div>
+        </div>
+
+        <!-- Hidden elements for backward compatibility -->
+        <div style="display:none;">
+          <div id="home-hero-level">LEVEL 1</div>
+          <div id="home-hero-xp-fill"></div>
+          <div id="home-hero-xp-text"></div>
+          <div id="home-hero-traits"></div>
+          <div id="home-hero-quote"></div>
+        </div>
+
+        <!-- Bottom: Primary Action Dock (Mode Selector + Giant PLAY Button) -->
+        <div class="lobby-bottom-action-dock">
+          <!-- Compact Segmented Match-Mode Selector (Inspired by BGMI / Free Fire) -->
+          <div class="lobby-mode-selector-strip" id="lobby-mode-selector" role="radiogroup" aria-label="Select Combat Match Mode">
+            <button type="button" class="lobby-mode-pill active" id="btn-lobby-mode-casual" data-mode="casual" role="radio" aria-checked="true">
+              <span class="mode-pill-icon">⚔️</span>
+              <span class="mode-pill-label">CASUAL</span>
+            </button>
+            <button type="button" class="lobby-mode-pill" id="btn-lobby-mode-ranked" data-mode="ranked" role="radio" aria-checked="false">
+              <span class="mode-pill-icon">🏆</span>
+              <span class="mode-pill-label">RANKED</span>
+            </button>
           </div>
 
+          <!-- Prominent Primary PLAY Button -->
+          <button type="button" class="btn-lobby-primary-play" id="btn-quick-start-fight" title="Start Match [ENTER]">
+            <div class="btn-lobby-play-content">
+              <span class="lobby-play-symbol" aria-hidden="true">⚔</span>
+              <div class="lobby-play-text-col">
+                <span class="lobby-play-title">PLAY</span>
+                <span class="lobby-play-sub" id="lobby-play-mode-caption">CASUAL 1v1 • QUICK SPARRING</span>
+              </div>
+              <span class="lobby-play-arrow" aria-hidden="true">➔</span>
+            </div>
+          </button>
         </div>
 
       </div>
@@ -536,55 +506,33 @@
               </div>
             </div>
 
-            <!-- Match Parameters -->
-            <div class="cs-match-config-card">
-              <div class="cs-section-header">
-                <span class="cs-sec-icon">⚙</span>
-                <span class="cs-sec-title">MATCH PARAMETERS</span>
-              </div>
-
-              <div class="cs-config-grid-row">
-                <div class="cs-config-field" style="display: none;">
-                  <label for="select-select-opponent">OPPONENT FIGHTER</label>
-                  <select id="select-select-opponent"></select>
+            <!-- SIMPLIFIED FIGHTER SELECTION CONTROLS (Direct Selection Without Redundant Lock-In) -->
+            <div class="cs-select-cta-bar">
+              <button type="button" class="btn-select-fighter-action" id="btn-confirm-select-fighter">
+                <span class="btn-select-icon">✓</span>
+                <div class="btn-select-text-group">
+                  <span class="btn-select-title" id="lbl-select-fighter-action">SELECT AS ACTIVE FIGHTER</span>
+                  <span class="btn-select-sub">EQUIP FOR CASUAL & RANKED MATCHES</span>
                 </div>
-                <div class="cs-config-field">
-                  <label>OPPONENT FIGHTER</label>
-                  <div class="cs-config-static-val" style="padding: 10px 12px; background: rgba(0,0,0,0.25); border: 1px solid var(--border-neutral); border-radius: 6px; font-size: 13px; font-weight: 700; color: var(--accent-gold); display: flex; align-items: center; gap: 8px;">
-                    <span>🎲</span> RANDOM RIVAL (AUTO-MATCH)
-                  </div>
-                </div>
-                <div class="cs-config-field">
-                  <label for="select-select-arena">COMBAT ARENA</label>
-                  <select id="select-select-arena"></select>
-                </div>
-                <div class="cs-config-field full-width">
-                  <label for="select-select-diff">AI DIFFICULTY & FORMAT</label>
-                  <select id="select-select-diff">
-                    <option value="RECRUIT">Recruit (Accessible AI)</option>
-                    <option value="WARRIOR" selected>Warrior (Normal AI)</option>
-                    <option value="MASTER">Master (Hard AI)</option>
-                    <option value="GODLIKE">Godlike (Tournament AI)</option>
-                    <option value="LOCAL_2P">Local 2-Player (Split Keyboard)</option>
-                  </select>
-                </div>
-              </div>
+              </button>
+              <button type="button" class="btn-return-lobby-action" id="btn-cs-return-home" title="Return to Main Lobby">
+                <span>RETURN TO LOBBY</span>
+                <span class="btn-return-arrow">➔</span>
+              </button>
             </div>
 
-            <!-- PRIMARY LOCK-IN CTA -->
-            <button class="cs-btn-lockin" id="btn-select-launch-match">
-              <div class="cs-lockin-inner">
-                <span class="cs-lockin-icon">⚡</span>
-                <div class="cs-lockin-text-block">
-                  <span class="cs-lockin-title">LOCK IN & FIGHT</span>
-                  <span class="cs-lockin-sub">ENTER COMBAT ARENA [SPACE / ENTER]</span>
-                </div>
-                <span class="cs-lockin-arrow">➔</span>
-              </div>
-            </button>
-
-            <!-- Hidden container retaining core reactor, stance & tactical list DOM IDs -->
-            <div style="display:none;">
+            <!-- Hidden container retaining core reactor, stance, match select dropdowns & legacy lockin ID -->
+            <div style="display:none;" aria-hidden="true">
+              <select id="select-select-opponent"></select>
+              <select id="select-select-arena"></select>
+              <select id="select-select-diff">
+                <option value="RECRUIT">Recruit</option>
+                <option value="WARRIOR" selected>Warrior</option>
+                <option value="MASTER">Master</option>
+                <option value="GODLIKE">Godlike</option>
+                <option value="LOCAL_2P">Local 2-Player</option>
+              </select>
+              <button id="btn-select-launch-match"><span class="cs-lockin-title">LOCK IN & FIGHT</span></button>
               <div class="cs-stance-card" id="cs-stance-card">
                 <span class="cs-stance-badge" id="cs-stance-name">IAIDO STANCE</span>
                 <span class="cs-stance-val" id="cs-stance-weapon">Energy Katana</span>
@@ -1076,128 +1024,99 @@
       </div>
     </section>
 
-    <!-- 5B. RANKED 1V1 COMPETITIVE SETUP SCREEN -->
+    <!-- 5B. RANK SCREEN: CLEAN 3-SECTION COMPETITIVE PROFILE -->
     <section class="screen" id="screen-ranked-setup">
-      <div class="ranked-screen-container">
+      <div class="clean-rank-container">
         
-        <!-- Header -->
-        <div class="ranked-screen-top-bar">
+        <!-- Screen Top Header -->
+        <div class="clean-rank-header">
           <div>
-            <span class="cs-phase-tag">COMPETITIVE LADDER // SEASON 1: GENESIS</span>
-            <h2 class="modes-main-title">RANKED 1V1 LADDER</h2>
+            <span class="cs-phase-tag">COMPETITIVE STANDING // SEASON 1: GENESIS</span>
+            <h2 class="modes-main-title" style="margin: 0;">RANK & COMPETITIVE STANDING</h2>
           </div>
-          <button class="btn-secondary" id="btn-back-to-play-from-ranked">← BACK TO MODES</button>
+          <button type="button" class="btn-secondary" id="btn-rank-return-home" style="padding: 8px 18px; font-size: 12px; font-weight: 700;">← RETURN TO LOBBY</button>
         </div>
 
-        <!-- TIER 1 (TOP): Current Standing & RP Progress -->
-        <div class="ranked-status-strip" id="ranked-setup-status-strip">
-          <div class="ranked-status-main">
-            <div class="rank-crest-icon" id="ranked-setup-crest">🥈</div>
-            <div class="ranked-status-info">
-              <span class="ranked-kicker">CURRENT STANDING</span>
-              <div class="ranked-title" id="ranked-setup-rank-title">SILVER I</div>
-              <div class="ranked-rp-sub" id="ranked-setup-rp-text">585 Total RP • 85 / 100 RP towards Gold III</div>
-              <div class="ranked-progress-bar-frame">
-                <div class="ranked-progress-bar-fill" style="width: 85%;"></div>
+        <!-- SECTION A: CURRENT RANK (Prominent, Compact & Honest) -->
+        <div class="rank-section-card" id="rank-section-current">
+          <div class="rank-section-title">SECTION A // CURRENT RANK</div>
+          <div class="rank-hero-layout">
+            <div class="rank-crest-badge" id="ranked-setup-crest" aria-label="Rank Icon">🥈</div>
+            <div class="rank-hero-meta">
+              <div class="rank-tier-row">
+                <span class="rank-hero-name" id="ranked-setup-rank-title">SILVER I</span>
+                <span class="rank-peak-tag" id="ranked-setup-peak">SEASON PEAK: SILVER I</span>
+              </div>
+              <div class="rank-rp-counter" id="ranked-setup-rp-text">585 Total RP • 85 / 100 RP towards Next Division</div>
+              <div class="rank-bar-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="85">
+                <div class="rank-bar-fill" id="ranked-setup-bar-fill" style="width: 85%;"></div>
               </div>
             </div>
           </div>
-          <div class="ranked-telemetry-strip">
-            <div class="stat-mini"><span class="stat-mini-label">WIN STREAK</span><span class="stat-mini-val" id="ranked-setup-streak" style="color: var(--action-primary); font-family: var(--font-display); font-weight: 700;">🔥 3</span></div>
-            <div class="stat-mini"><span class="stat-mini-label">SEASON PEAK</span><span class="stat-mini-val" id="ranked-setup-peak" style="color: var(--accent-gold); font-family: var(--font-display); font-weight: 700;">Silver I</span></div>
-            <div class="stat-mini"><span class="stat-mini-label">WIN RATE</span><span class="stat-mini-val" id="ranked-setup-winrate" style="color: var(--accent-green); font-family: var(--font-display); font-weight: 700;">75.0%</span></div>
-          </div>
         </div>
 
-        <!-- TIER 2 (MIDDLE): Next Rank Target & Fighter Pickers -->
-        <div class="ranked-next-tier-banner">
-          <div class="next-tier-pill">NEXT RANK TARGET</div>
-          <div class="next-tier-content">
-            <span class="next-tier-name">GOLD III</span>
-            <span class="next-tier-sep">•</span>
-            <span class="next-tier-delta">15 RP TO PROMOTION THRESHOLD (600 RP)</span>
-          </div>
-        </div>
-
-        <div class="ranked-deployment-grid">
-          <!-- Left: P1 Fighter Picker -->
-          <div class="ranked-deploy-card">
-            <div class="deploy-card-header">
-              <span>YOUR WARRIOR (P1)</span>
-              <span id="ranked-p1-main-badge" class="badge-gold">MAIN FIGHTER</span>
+        <!-- SECTION B: MATCHES PLAYED & STATS (Clean Separate Metrics) -->
+        <div class="rank-section-card" id="rank-section-stats">
+          <div class="rank-section-title">SECTION B // MATCHES PLAYED & TELEMETRY</div>
+          <div class="rank-stats-grid">
+            <div class="rank-stat-card">
+              <span class="rank-stat-label">TOTAL MATCHES</span>
+              <span class="rank-stat-value" id="ranked-stat-total-matches">0</span>
             </div>
-            <select id="select-ranked-p1-char" class="ranked-select"></select>
-
-            <div class="deploy-sub-field">
-              <label for="select-ranked-arena">COMPETITIVE ARENA</label>
-              <select id="select-ranked-arena" class="ranked-select"></select>
+            <div class="rank-stat-card win">
+              <span class="rank-stat-label">VICTORIES</span>
+              <span class="rank-stat-value win" id="ranked-stat-wins">0</span>
             </div>
-          </div>
-
-          <!-- Right: Opponent & Competitive Mode -->
-          <div class="ranked-deploy-card">
-            <div class="deploy-card-header">
-              <span>MATCH PROTOCOL & OPPONENT</span>
+            <div class="rank-stat-card loss">
+              <span class="rank-stat-label">DEFEATS</span>
+              <span class="rank-stat-value loss" id="ranked-stat-losses">0</span>
             </div>
-            <select id="select-ranked-opponent-mode" class="ranked-select">
-              <option value="MMR_BOT" selected>Ranked Ladder Rival (MMR-Calibrated AI matching current rank tier)</option>
-              <option value="LOCAL_2P">Local 2-Player Ranked Duel (Split Keyboard Wager)</option>
-            </select>
-
-            <div class="deploy-sub-field">
-              <label for="select-ranked-p2-char">OPPONENT WARRIOR</label>
-              <select id="select-ranked-p2-char" class="ranked-select"></select>
+            <div class="rank-stat-card">
+              <span class="rank-stat-label">WIN RATE</span>
+              <span class="rank-stat-value" id="ranked-setup-winrate">0.0%</span>
+            </div>
+            <div class="rank-stat-card streak">
+              <span class="rank-stat-label">WIN STREAK</span>
+              <span class="rank-stat-value streak" id="ranked-setup-streak">🔥 0</span>
             </div>
           </div>
         </div>
 
-        <!-- Telemetry bar -->
-        <div class="network-architecture-card ranked-telemetry-bar">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="net-status-dot online"></span>
-              <span style="font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: 1px; color: var(--accent-cyan);">COMPETITIVE MATCH TELEMETRY</span>
+        <!-- SECTION C: MATCH HISTORY (Compact Scannable Win/Loss List) -->
+        <div class="rank-section-card" id="rank-section-history">
+          <div class="rank-history-header-row">
+            <div>
+              <div class="rank-section-title" style="margin-bottom: 2px;">SECTION C // MATCH HISTORY</div>
+              <div style="font-size: 12px; color: var(--text-secondary);">Real combat records saved in your local operative dossier.</div>
             </div>
-            <span class="net-pill-badge" id="net-architecture-provider-badge">SEASON 1 LADDER ACTIVE</span>
+            <div class="rank-history-filter-pills" role="tablist" aria-label="Filter Match History">
+              <button type="button" class="rank-filter-pill active" id="rank-filter-all" data-filter="ALL">ALL</button>
+              <button type="button" class="rank-filter-pill" id="rank-filter-ranked" data-filter="Ranked">RANKED</button>
+              <button type="button" class="rank-filter-pill" id="rank-filter-casual" data-filter="Casual">CASUAL</button>
+            </div>
           </div>
-          <div style="display: flex; gap: 20px; margin-top: 8px; font-size: 12px; color: #CBD5E1; flex-wrap: wrap;">
-            <div><strong style="color: #FFFFFF;">FORMAT:</strong> Best of 3 Rounds</div>
-            <div><strong style="color: #FFFFFF;">CURRENT RP:</strong> <span style="color: var(--accent-gold); font-weight: 700;">585 RP (Silver I)</span></div>
-            <div><strong style="color: #FFFFFF;">PROMOTION:</strong> <span style="color: #F87171; font-weight: 700;">600 RP (Gold III)</span></div>
+
+          <!-- Match History Compact List Container -->
+          <div class="rank-history-list custom-scroll" id="ranked-history-list">
+            <!-- Dynamically populated from progressionManager.data.matchHistory -->
+          </div>
+
+          <!-- Honest Empty State Display -->
+          <div class="rank-history-empty" id="ranked-empty-state" style="display: none;">
+            <span class="empty-icon" aria-hidden="true">⚔️</span>
+            <div class="empty-msg">No matches yet. Play your first match to start your history.</div>
           </div>
         </div>
 
-        <!-- TIER 3 (BOTTOM): Match Action & Scannable Recent History -->
-        <div class="ranked-bottom-tier">
-          <div class="ranked-cta-wrap">
-            <button class="btn-primary-glow ranked-start-btn" id="btn-start-ranked-match">
-              START RANKED DUEL ⚔
-            </button>
-          </div>
-
-          <div class="ranked-recent-history-section">
-            <div class="recent-history-title">RECENT RANKED MATCHES</div>
-            <div class="recent-matches-strip">
-              <div class="recent-match-chip win">
-                <span class="outcome-tag win">WIN</span>
-                <span class="rp-change">+24 RP</span>
-                <span class="match-opp">vs SOLARIS</span>
-                <span class="match-score">2 - 0</span>
-              </div>
-              <div class="recent-match-chip loss">
-                <span class="outcome-tag loss">LOSS</span>
-                <span class="rp-change">-18 RP</span>
-                <span class="match-opp">vs NOX</span>
-                <span class="match-score">1 - 2</span>
-              </div>
-              <div class="recent-match-chip win">
-                <span class="outcome-tag win">WIN</span>
-                <span class="rp-change">+22 RP</span>
-                <span class="match-opp">vs AERON</span>
-                <span class="match-score">2 - 1</span>
-              </div>
-            </div>
-          </div>
+        <!-- Hidden container maintaining legacy element IDs for backward compatibility -->
+        <div style="display:none;" aria-hidden="true">
+          <button id="btn-back-to-play-from-ranked"></button>
+          <select id="select-ranked-p1-char"></select>
+          <select id="select-ranked-p2-char"></select>
+          <select id="select-ranked-arena"></select>
+          <select id="select-ranked-opponent-mode"></select>
+          <button id="btn-start-ranked-match"></button>
+          <div id="ranked-p1-main-badge"></div>
         </div>
 
       </div>
@@ -2126,6 +2045,7 @@
             <button id="btn-pause-settings" class="btn-pause-secondary">⚙ AUDIO & SETTINGS</button>
             <button id="btn-pause-fullscreen" class="btn-pause-secondary">⛶ TOGGLE FULLSCREEN</button>
             <button id="btn-pause-restart" class="btn-pause-secondary">↺ RESTART MATCH</button>
+            <a href="https://github.com/siddhantpandey2306-gif/RiftBorn-Combat/issues" target="_blank" rel="noopener noreferrer" id="btn-pause-feedback" class="btn-pause-secondary" style="display:flex; align-items:center; justify-content:center; gap:6px; text-decoration:none;">💬 REPORT BUG / FEEDBACK ↗</a>
             <button id="btn-pause-quit" class="btn-pause-secondary danger">🚪 QUIT TO HOME</button>
           </div>
         </div>
@@ -2762,22 +2682,25 @@
       <span class="mobile-nav-icon">⌂</span>
       <span class="mobile-nav-label">HOME</span>
     </button>
-    <button class="mobile-nav-btn" data-screen="screen-play" id="mobile-nav-play">
-      <span class="mobile-nav-icon">⚔</span>
-      <span class="mobile-nav-label">FIGHT</span>
-    </button>
     <button class="mobile-nav-btn" data-screen="screen-character-select" id="mobile-nav-characters">
-      <span class="mobile-nav-icon">👥</span>
+      <span class="mobile-nav-icon">🥋</span>
       <span class="mobile-nav-label">FIGHTERS</span>
     </button>
     <button class="mobile-nav-btn" data-screen="screen-ranked-setup" id="mobile-nav-ranked">
       <span class="mobile-nav-icon">🏆</span>
       <span class="mobile-nav-label">RANK</span>
     </button>
+    <button class="mobile-nav-btn" id="mobile-nav-missions">
+      <span class="mobile-nav-icon">🎯</span>
+      <span class="mobile-nav-label">MISSIONS</span>
+      <span id="mobile-nav-missions-badge" class="nav-alert-dot" style="display:none;"></span>
+    </button>
     <button class="mobile-nav-btn" data-screen="screen-profile" id="mobile-nav-profile">
       <span class="mobile-nav-icon">👤</span>
       <span class="mobile-nav-label">PROFILE</span>
     </button>
+    <!-- Hidden compatibility button for nav-play reference -->
+    <button class="mobile-nav-btn" data-screen="screen-play" id="mobile-nav-play" style="display:none;"></button>
   </nav>
 
   <!-- FLOATING BACK-TO-TOP BUTTON -->

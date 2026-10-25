@@ -39,7 +39,12 @@ class RiftbornApp {
     this.selectedCodexLogId = 'log_1';
     this.queueTimer = null;
     this.matchHistoryFilter = 'ALL';
+    this.rankHistoryFilter = 'ALL';
     this.leaderboardTab = 'GLOBAL';
+    this.currentMatchMode = 'casual';
+    try {
+      this.currentMatchMode = localStorage.getItem('riftborn_selected_mode') || 'casual';
+    } catch (_) {}
 
     // Live preview stage state
     this.previewFighter = null;
@@ -62,6 +67,7 @@ class RiftbornApp {
     window.showToast = (msg, type, dur) => this.showToast(msg, type, dur);
     window.showConfirmation = (title, msg, onConfirm, isDestructive) => this.showConfirmation(title, msg, onConfirm, isDestructive);
     this.setupNavigation();
+    this.setupLobbyModeSelector();
     this.setupAudioSettings();
     this.setupModeSelector();
     this.setupCharacterSelect();
@@ -124,6 +130,9 @@ class RiftbornApp {
 
     // Hide fight view when browsing menus
     document.getElementById('game-view').style.display = 'none';
+    document.body.classList.remove('in-combat');
+    const fb = document.getElementById('btn-floating-contact');
+    if (fb) fb.style.display = '';
 
     // Clear combat-only overlays when navigating menus
     const tutOverlay = document.getElementById('tutorial-overlay');
@@ -890,10 +899,17 @@ class RiftbornApp {
     const quickStartBtn = document.getElementById('btn-quick-start-fight');
     if (quickStartBtn) {
       quickStartBtn.addEventListener('click', () => {
-        const p1Id = this.homeRoster[this.homeShowcaseCharIndex] || progressionManager.getMainCharacter() || 'vex';
+        const p1Id = progressionManager.getMainCharacter() || this.homeRoster[this.homeShowcaseCharIndex] || 'vex';
         const p2Id = this.getRandomOpponent(p1Id);
         soundEngine.playUiClick();
-        this.launchMatchWithTransition(p1Id, p2Id, 'neon_metro', 'WARRIOR');
+
+        if (this.currentMatchMode === 'ranked') {
+          const currentRank = progressionManager.getCurrentRankInfo();
+          const diff = competitiveNetworkCoordinator?.localProvider?.getRankCalibratedBotDifficulty?.(currentRank.tier) || 'WARRIOR';
+          this.launchMatchWithTransition(p1Id, p2Id, 'neon_metro', diff, 'Ranked');
+        } else {
+          this.launchMatchWithTransition(p1Id, p2Id, 'neon_metro', 'WARRIOR', 'Casual');
+        }
       });
     }
 
@@ -1185,6 +1201,76 @@ class RiftbornApp {
     }
   }
 
+  // --- LOBBY MODE SELECTOR & SHORTCUTS (FREE FIRE / BGMI STYLE) ---
+  setupLobbyModeSelector() {
+    const btnCasual = document.getElementById('btn-lobby-mode-casual');
+    const btnRanked = document.getElementById('btn-lobby-mode-ranked');
+
+    if (btnCasual) {
+      btnCasual.addEventListener('click', () => {
+        this.currentMatchMode = 'casual';
+        try { localStorage.setItem('riftborn_selected_mode', 'casual'); } catch (_) {}
+        this.updateLobbyModeUI();
+        soundEngine.playUiClick();
+      });
+    }
+
+    if (btnRanked) {
+      btnRanked.addEventListener('click', () => {
+        this.currentMatchMode = 'ranked';
+        try { localStorage.setItem('riftborn_selected_mode', 'ranked'); } catch (_) {}
+        this.updateLobbyModeUI();
+        soundEngine.playUiClick();
+      });
+    }
+
+    // Missions hub shortcuts (desktop nav button, mobile bottom bar, home lobby widget)
+    const openMissions = () => {
+      const hubModal = document.getElementById('modal-challenges-hub');
+      if (hubModal) {
+        hubModal.classList.add('active');
+        this.renderChallengesHub('daily');
+        soundEngine.playUiClick();
+      }
+    };
+
+    const navMissionsBtn = document.getElementById('nav-missions-btn');
+    if (navMissionsBtn) navMissionsBtn.addEventListener('click', openMissions);
+
+    const mobileNavMissions = document.getElementById('mobile-nav-missions');
+    if (mobileNavMissions) mobileNavMissions.addEventListener('click', openMissions);
+
+    const homeModuleChal = document.getElementById('home-module-challenge');
+    if (homeModuleChal) homeModuleChal.addEventListener('click', openMissions);
+
+    // Rank screen shortcuts
+    const homeModuleRank = document.getElementById('home-module-rank');
+    if (homeModuleRank) {
+      homeModuleRank.addEventListener('click', () => {
+        this.showScreen('screen-ranked-setup');
+        soundEngine.playUiClick();
+      });
+    }
+
+    this.updateLobbyModeUI();
+  }
+
+  updateLobbyModeUI() {
+    const btnCasual = document.getElementById('btn-lobby-mode-casual');
+    const btnRanked = document.getElementById('btn-lobby-mode-ranked');
+    const caption = document.getElementById('lobby-play-mode-caption');
+
+    if (this.currentMatchMode === 'ranked') {
+      if (btnCasual) btnCasual.classList.remove('active');
+      if (btnRanked) btnRanked.classList.add('active');
+      if (caption) caption.textContent = 'RANKED 1V1 COMPETITIVE';
+    } else {
+      if (btnCasual) btnCasual.classList.add('active');
+      if (btnRanked) btnRanked.classList.remove('active');
+      if (caption) caption.textContent = 'CASUAL 1V1 MATCH';
+    }
+  }
+
   // --- BATTLE MODES SELECTOR (2-COLUMN) ---
   setupModeSelector() {
     const modesData = {
@@ -1305,7 +1391,7 @@ class RiftbornApp {
   }
 
   // --- GENERAL MATCH LAUNCHER ---
-  launchMatch(p1Id, p2Id, arenaId, diff) {
+  launchMatch(p1Id, p2Id, arenaId, diff, mode = 'Casual') {
     if (document.activeElement && typeof document.activeElement.blur === 'function') {
       document.activeElement.blur();
     }
@@ -1313,7 +1399,7 @@ class RiftbornApp {
     this.engine.isLocal2Player = (diff === 'LOCAL_2P');
     this.selectedDifficulty = diff;
     this.showGameView();
-    this.engine.initMatch(p1Id, p2Id, arenaId, 'Casual', diff === 'LOCAL_2P' ? 'WARRIOR' : diff);
+    this.engine.initMatch(p1Id, p2Id, arenaId, mode, diff === 'LOCAL_2P' ? 'WARRIOR' : diff);
 
     // Dynamic HUD Controls Bar Labels
     const p1Data = CHARACTERS[p1Id] || CHARACTERS.vex;
@@ -1754,11 +1840,35 @@ class RiftbornApp {
       });
     });
 
-    // Launch match button
+    // Launch match button (fallback / direct)
     const launchBtn = document.getElementById('btn-select-launch-match');
     if (launchBtn) {
       launchBtn.addEventListener('click', () => {
         this.handleLockInMatch();
+      });
+    }
+
+    // Single-click Equip Active Fighter action
+    const btnConfirmSelect = document.getElementById('btn-confirm-select-fighter');
+    if (btnConfirmSelect) {
+      btnConfirmSelect.addEventListener('click', () => {
+        const charId = this.selectedSelectCharId || 'vex';
+        progressionManager.setMainCharacter(charId);
+        const idx = this.homeRoster.indexOf(charId);
+        if (idx !== -1) this.homeShowcaseCharIndex = idx;
+        this.updateHomeHeroDisplay();
+        this.selectCharacterForSelect(charId);
+        this.showToast(`${CHARACTERS[charId]?.name || 'Fighter'} is now your Active Fighter!`, 'success');
+        soundEngine.playParry();
+      });
+    }
+
+    // Return to Lobby action
+    const btnCsReturnHome = document.getElementById('btn-cs-return-home');
+    if (btnCsReturnHome) {
+      btnCsReturnHome.addEventListener('click', () => {
+        this.showScreen('screen-home');
+        soundEngine.playUiClick();
       });
     }
 
@@ -1776,6 +1886,13 @@ class RiftbornApp {
 
         // Ignore if typing inside input, textarea, or select
         if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA')) return;
+
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          this.showScreen('screen-home');
+          soundEngine.playUiClick();
+          return;
+        }
 
         const roster = ['vex', 'solaris', 'lyra', 'aeron', 'kairo', 'nox'];
         const currentIdx = roster.indexOf(this.selectedSelectCharId);
@@ -1803,12 +1920,18 @@ class RiftbornApp {
         } else if (e.key === '6') {
           this.triggerPreviewAction('ULTIMATE');
         } else if (e.key === 'Enter' || e.key === ' ') {
-          // If Space or Enter was pressed on another interactive button, let that button handle it
-          if (e.target && e.target.tagName === 'BUTTON' && e.target.id !== 'btn-select-launch-match') {
+          if (e.target && e.target.tagName === 'BUTTON' && e.target.id !== 'btn-confirm-select-fighter') {
             return;
           }
           e.preventDefault();
-          this.handleLockInMatch();
+          const charId = this.selectedSelectCharId || 'vex';
+          progressionManager.setMainCharacter(charId);
+          const idx = this.homeRoster.indexOf(charId);
+          if (idx !== -1) this.homeShowcaseCharIndex = idx;
+          this.updateHomeHeroDisplay();
+          this.selectCharacterForSelect(charId);
+          this.showToast(`${CHARACTERS[charId]?.name || 'Fighter'} is now your Active Fighter!`, 'success');
+          soundEngine.playParry();
         }
       });
     }
@@ -1837,7 +1960,7 @@ class RiftbornApp {
     this.launchMatchWithTransition(p1Id, p2Id, arenaId, diff);
   }
 
-  launchMatchWithTransition(p1Id, p2Id, arenaId, diff) {
+  launchMatchWithTransition(p1Id, p2Id, arenaId, diff, mode = 'Casual') {
     if (this.isTransitioningToArena) return;
     this.isTransitioningToArena = true;
 
@@ -1921,7 +2044,7 @@ class RiftbornApp {
 
     // 3. Smooth handoff to match arena after cinematic presentation
     setTimeout(() => {
-      this.launchMatch(p1Id, p2Id, arenaId, diff);
+      this.launchMatch(p1Id, p2Id, arenaId, diff, mode);
 
       if (overlay) {
         overlay.classList.add('fading-out');
@@ -2196,6 +2319,20 @@ class RiftbornApp {
     document.querySelectorAll('.preview-act-btn').forEach(b => {
       b.classList.toggle('active', b.getAttribute('data-action') === 'IDLE');
     });
+
+    // Update active state on the equip action button
+    const isCurrentMain = (progressionManager.getMainCharacter() === charId);
+    const btnConfirm = document.getElementById('btn-confirm-select-fighter');
+    const lblConfirm = document.getElementById('lbl-select-fighter-action');
+    if (btnConfirm && lblConfirm) {
+      if (isCurrentMain) {
+        btnConfirm.classList.add('equipped');
+        lblConfirm.textContent = '✓ ACTIVE FIGHTER';
+      } else {
+        btnConfirm.classList.remove('equipped');
+        lblConfirm.textContent = 'SELECT AS ACTIVE FIGHTER';
+      }
+    }
 
     if (!this.previewAnimFrame) {
       this.startPreviewLoop();
@@ -3018,74 +3155,68 @@ class RiftbornApp {
     }
   }
 
-  // --- RANKED 1V1 COMPETITIVE SETUP ---
+  // --- RANKED SCREEN CONTROLLER (SECTION A: RANK, SECTION B: MATCHES, SECTION C: HISTORY) ---
   setupRankedSetup() {
-    const p1Select = document.getElementById('select-ranked-p1-char');
-    const p2Select = document.getElementById('select-ranked-p2-char');
-    const arenaSelect = document.getElementById('select-ranked-arena');
-    const modeSelect = document.getElementById('select-ranked-opponent-mode');
+    this.rankHistoryFilter = 'ALL';
+    const filterAll = document.getElementById('filter-rank-all');
+    const filterRanked = document.getElementById('filter-rank-ranked');
+    const filterCasual = document.getElementById('filter-rank-casual');
 
-    if (!p1Select || !p2Select || !arenaSelect) return;
+    const setRankFilter = (f) => {
+      this.rankHistoryFilter = f;
+      [filterAll, filterRanked, filterCasual].forEach(b => {
+        if (b) b.classList.remove('active');
+      });
+      if (f === 'ALL' && filterAll) filterAll.classList.add('active');
+      if (f === 'Ranked' && filterRanked) filterRanked.classList.add('active');
+      if (f === 'Casual' && filterCasual) filterCasual.classList.add('active');
+      this.renderRankMatchHistoryList();
+      soundEngine.playUiClick();
+    };
 
-    p1Select.innerHTML = '';
-    p2Select.innerHTML = '';
-    arenaSelect.innerHTML = '';
+    if (filterAll) filterAll.onclick = () => setRankFilter('ALL');
+    if (filterRanked) filterRanked.onclick = () => setRankFilter('Ranked');
+    if (filterCasual) filterCasual.onclick = () => setRankFilter('Casual');
 
-    const currentMain = progressionManager.getMainCharacter();
-
-    for (const charId in CHARACTERS) {
-      const c = CHARACTERS[charId];
-      const isMain = (charId === currentMain);
-      p1Select.innerHTML += `<option value="${charId}" ${isMain ? 'selected' : ''}>${c.name} (${c.role})${isMain ? ' ★ MAIN' : ''}</option>`;
-      p2Select.innerHTML += `<option value="${charId}" ${charId === 'solaris' ? 'selected' : ''}>${c.name} (${c.role})</option>`;
-    }
-
-    for (const arenaId in ARENAS) {
-      const a = ARENAS[arenaId];
-      arenaSelect.innerHTML += `<option value="${arenaId}">${a.name} - ${a.subtitle}</option>`;
-    }
-
-    // Back button
-    const backBtn = document.getElementById('btn-back-to-play-from-ranked');
+    // Return to home
+    const backBtn = document.getElementById('btn-rank-return-home');
     if (backBtn) {
-      backBtn.addEventListener('click', () => {
-        this.showScreen('screen-play');
+      backBtn.onclick = () => {
+        this.showScreen('screen-home');
         soundEngine.playUiClick();
-      });
+      };
     }
 
-    // Launch Ranked Match
-    const startRankedBtn = document.getElementById('btn-start-ranked-match');
+    // Launch Ranked Match CTA button
+    const startRankedBtn = document.getElementById('btn-rank-start-match');
     if (startRankedBtn) {
-      startRankedBtn.addEventListener('click', () => {
-        const p1 = p1Select.value;
-        const p2 = p2Select.value;
-        const arena = arenaSelect.value;
-        const oppMode = modeSelect ? modeSelect.value : 'MMR_BOT';
-
-        const isLocal2P = (oppMode === 'LOCAL_2P');
-        this.engine.isLocal2Player = isLocal2P;
-
-        // Get bot difficulty calibrated to player's rank tier
+      startRankedBtn.onclick = () => {
+        const p1Id = progressionManager.getMainCharacter() || this.selectedSelectCharId || 'vex';
+        const p2Id = this.getRandomOpponent(p1Id);
         const currentRank = progressionManager.getCurrentRankInfo();
-        const diff = isLocal2P ? 'WARRIOR' : competitiveNetworkCoordinator.localProvider.getRankCalibratedBotDifficulty(currentRank.tier);
+        const diff = competitiveNetworkCoordinator?.localProvider?.getRankCalibratedBotDifficulty?.(currentRank.tier) || 'WARRIOR';
+        soundEngine.playUiClick();
+        this.launchMatchWithTransition(p1Id, p2Id, 'neon_metro', diff, 'Ranked');
+      };
+    }
 
-        this.selectedDifficulty = diff;
-        this.showGameView();
-        this.engine.initMatch(p1, p2, arena, 'Ranked', diff);
-        this.engine.startLoop();
-        soundEngine.playParry();
-      });
+    // Legacy fallback button
+    const legacyBackBtn = document.getElementById('btn-back-to-play-from-ranked');
+    if (legacyBackBtn) {
+      legacyBackBtn.onclick = () => {
+        this.showScreen('screen-home');
+        soundEngine.playUiClick();
+      };
     }
   }
 
   renderRankedSetup() {
     const rankInfo = progressionManager.getCurrentRankInfo();
-    const prof = progressionManager.data.profile;
-    const ranked = progressionManager.data.ranked;
+    const prof = progressionManager.data.profile || {};
+    const ranked = progressionManager.data.ranked || {};
 
     const crestEl = document.getElementById('ranked-setup-crest');
-    if (crestEl) crestEl.textContent = rankInfo.icon;
+    if (crestEl) crestEl.textContent = rankInfo.icon || '🥈';
 
     const titleEl = document.getElementById('ranked-setup-rank-title');
     if (titleEl) {
@@ -3098,22 +3229,82 @@ class RiftbornApp {
       rpTextEl.textContent = `${rankInfo.totalRp} Total RP • ${rankInfo.divisionRp} / 100 RP towards ${rankInfo.nextTierName} Promotion`;
     }
 
+    const rpBarFill = document.getElementById('ranked-setup-bar-fill');
+    if (rpBarFill) {
+      rpBarFill.style.width = `${Math.min(100, Math.max(0, rankInfo.divisionRp))}%`;
+    }
+
     const streakEl = document.getElementById('ranked-setup-streak');
-    if (streakEl) streakEl.textContent = `🔥 ${prof.winStreak || 0}`;
+    if (streakEl) streakEl.textContent = `🔥 ${prof.winStreak || ranked.streak || 0}`;
 
     const peakEl = document.getElementById('ranked-setup-peak');
     if (peakEl) peakEl.textContent = ranked.peakTier || rankInfo.formattedName;
 
+    const history = progressionManager.data.matchHistory || [];
+    const totalMatches = history.length || ((ranked.seasonWins || 0) + (ranked.seasonLosses || 0));
+    const totalWins = history.filter(m => m.result === 'VICTORY').length || (ranked.seasonWins || 0);
+    const totalLosses = history.filter(m => m.result === 'DEFEAT').length || (ranked.seasonLosses || 0);
+
+    const totalEl = document.getElementById('ranked-stat-total-matches');
+    if (totalEl) totalEl.textContent = totalMatches;
+
+    const winsEl = document.getElementById('ranked-stat-wins');
+    if (winsEl) winsEl.textContent = totalWins;
+
+    const lossesEl = document.getElementById('ranked-stat-losses');
+    if (lossesEl) lossesEl.textContent = totalLosses;
+
     const winrateEl = document.getElementById('ranked-setup-winrate');
     if (winrateEl) winrateEl.textContent = progressionManager.getOverallWinRate();
 
-    const mainBadge = document.getElementById('ranked-p1-main-badge');
-    const curMain = progressionManager.getMainCharacter();
-    if (mainBadge) mainBadge.textContent = `${CHARACTERS[curMain]?.name.toUpperCase() || 'VEX'} (MAIN)`;
+    this.renderRankMatchHistoryList();
+  }
 
-    // Pre-select current main
-    const p1Select = document.getElementById('select-ranked-p1-char');
-    if (p1Select) p1Select.value = curMain;
+  renderRankMatchHistoryList() {
+    const listEl = document.getElementById('ranked-history-list');
+    const emptyEl = document.getElementById('ranked-empty-state');
+    if (!listEl) return;
+    listEl.innerHTML = '';
+
+    const filter = this.rankHistoryFilter || 'ALL';
+    const matches = (progressionManager.data.matchHistory || []).filter(m => {
+      if (filter === 'ALL') return true;
+      return m.mode === filter;
+    });
+
+    if (matches.length === 0) {
+      if (emptyEl) emptyEl.style.display = 'block';
+      return;
+    }
+
+    if (emptyEl) emptyEl.style.display = 'none';
+
+    matches.slice(0, 20).forEach(m => {
+      const row = document.createElement('div');
+      row.className = 'rank-match-row';
+      const isWin = (m.result === 'VICTORY');
+      const heroChar = CHARACTERS[m.hero] || { name: m.hero || 'Warrior', coreColor: '#00D2FF' };
+      const oppChar = CHARACTERS[m.opponent] || { name: m.opponent || 'Rival', coreColor: '#FF5E7E' };
+      const timeStr = m.timestamp ? new Date(m.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' }) : 'Recent';
+
+      row.innerHTML = `
+        <div class="rank-match-left">
+          <span class="rank-outcome-tag ${isWin ? 'win' : 'loss'}">${isWin ? 'WIN' : 'LOSS'}</span>
+          <div class="rank-match-fighters">
+            <span class="fighter-p1" style="color: ${heroChar.coreColor}">● ${escapeHtml(heroChar.name)}</span>
+            <span class="vs-divider">VS</span>
+            <span class="fighter-p2" style="color: ${oppChar.coreColor}">● ${escapeHtml(oppChar.name)}</span>
+          </div>
+        </div>
+        <div class="rank-match-right">
+          <span class="rank-match-mode">${escapeHtml(m.mode || 'Casual')}</span>
+          <span class="rank-match-score">${escapeHtml(m.roundScore || '2 - 0')}</span>
+          <span class="rank-match-rp" style="color: ${m.rpChange && m.rpChange.startsWith('+') ? 'var(--accent-green)' : (m.rpChange && m.rpChange.startsWith('-') ? 'var(--accent-red)' : 'var(--text-muted)')}">${escapeHtml(m.rpChange || '0 RP')}</span>
+          <span class="rank-match-time">${escapeHtml(timeStr)}</span>
+        </div>
+      `;
+      listEl.appendChild(row);
+    });
   }
 
   // --- PROFILE SCREEN CONTROLLER & TELEMETRY ---
@@ -3535,6 +3726,10 @@ class RiftbornApp {
   showGameView() {
     this.stopHomeHeroLoop();
     this.stopPreviewLoop();
+
+    document.body.classList.add('in-combat');
+    const fb = document.getElementById('btn-floating-contact');
+    if (fb) fb.style.display = 'none';
 
     // Blur active focused element so Space doesn't re-trigger buttons during gameplay
     if (document.activeElement && typeof document.activeElement.blur === 'function') {
