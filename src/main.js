@@ -1,5 +1,5 @@
 // RIFTBORN Master Application Controller
-// Handles UI routing, Roster carousel, Character customization, Story dialogue, Matchmaking, and HUD updates
+// Handles UI routing, Roster carousel, Character customization, Matchmaking, and HUD updates
 
 import { CHARACTERS, ARENAS } from './characters/characterData.js';
 import { GameEngine } from './engine/GameEngine.js';
@@ -8,7 +8,6 @@ import { ParticleSystem } from './engine/ParticleSystem.js';
 import { characterRenderer } from './engine/CharacterRenderer.js';
 import { soundEngine } from './engine/SoundEngine.js';
 import { progressionManager, COSMETIC_REWARDS_CATALOG } from './progression/ProgressionManager.js';
-import { STORY_CHAPTERS } from './modes/StoryMode.js';
 import { GLOBAL_LEADERBOARD } from './social/SocialSystem.js';
 import { RANK_TIERS, SEASON_CONFIG, CompetitiveRankEngine, competitiveNetworkCoordinator } from './competitive/CompetitiveSystem.js';
 
@@ -33,10 +32,6 @@ class RiftbornApp {
     this.selectedCustomCharId = 'vex';
     this.selectedProgCharId = 'vex';
     this.selectedDifficulty = 'NORMAL';
-    this.currentChapter = null;
-    this.currentStage = null;
-    this.dialogueStep = 0;
-    this.selectedCodexLogId = 'log_1';
     this.queueTimer = null;
     this.matchHistoryFilter = 'ALL';
     this.rankHistoryFilter = 'ALL';
@@ -75,7 +70,6 @@ class RiftbornApp {
     this.setupCasualSetup();
     this.setupRankedSetup();
     this.setupProfileScreen();
-    this.setupStoryMode();
     this.setupRoster();
     this.setupRewardsPass();
     this.setupInventory();
@@ -162,8 +156,6 @@ class RiftbornApp {
     // Dynamic screen rendering refreshes
     if (screenId === 'screen-progression') {
       this.renderProgression(this.selectedProgCharId);
-    } else if (screenId === 'screen-story') {
-      this.setupStoryMode();
     } else if (screenId === 'screen-profile') {
       this.renderProfile();
     } else if (screenId === 'screen-ranked-setup') {
@@ -393,7 +385,7 @@ class RiftbornApp {
       },
       'screen-play': {
         title: 'Select Combat Mode | RIFTBORN',
-        desc: 'Choose your arena challenge: Casual Sparring, Ranked 1v1 Season 1, Dojo Training, or Story Chronicles.'
+        desc: 'Choose your arena challenge: Casual Sparring, Ranked 1v1 Season 1, or Dojo Training.'
       },
       'screen-ranked-setup': {
         title: 'Competitive Ranked 1v1 Ladder | RIFTBORN',
@@ -402,10 +394,6 @@ class RiftbornApp {
       'screen-profile': {
         title: 'Operative Profile & Telemetry | RIFTBORN',
         desc: 'Review combat account level, win rates, character mastery breakdown, and seasonal performance graphs.'
-      },
-      'screen-story': {
-        title: 'Story Mode: Chronicles of the Genesis Breach | RIFTBORN',
-        desc: 'Embark on the narrative campaign across Sector 9, face Warden Aeron, and investigate the Crimson Core anomaly.'
       },
       'screen-settings': {
         title: 'System Preferences & Controls | RIFTBORN',
@@ -561,7 +549,6 @@ class RiftbornApp {
       { id: 'm_casual', title: 'Casual 1v1 Sparring', category: 'Game Mode', desc: 'Offline skirmishes against configurable Easy, Normal, or Hard AI bots.', screen: 'screen-casual-setup' },
       { id: 'm_ranked', title: 'Ranked 1v1 Season Ladder', category: 'Game Mode', desc: 'Competitive matchmaking ladder with Bronze to Diamond Elo RP divisions.', screen: 'screen-ranked-setup' },
       { id: 'm_dojo', title: 'Dojo Training Mode', category: 'Game Mode', desc: 'Practice combos with telemetry, damage meters, and position reset.', screen: 'screen-character-select' },
-      { id: 'm_story', title: 'Story Mode Chronicles', category: 'Game Mode', desc: 'Narrative campaign through Sector 9, Boss Aeron, and Genesis Rift breach.', screen: 'screen-story' },
       { id: 'g_parry', title: 'Kinetic Block & Perfect Parry', category: 'Combat Mechanics', desc: 'Mitigate 85% damage or tap H right before impact for a frame-advantage stun counter.', action: () => this.openMoveListGuide('controls') },
       { id: 'g_combos', title: 'Signature Combo Routes', category: 'Combat Mechanics', desc: 'Learn cancel chains from Light attack into Heavy Launcher and Air Juggle.', action: () => this.openMoveListGuide('combos') },
       { id: 'g_touch', title: 'Mobile Touch Controls Customizer', category: 'Settings', desc: 'Configure joystick placement, button scaling, and opacity for mobile screens.', action: () => { const m = document.getElementById('modal-touch-customizer'); if (m) m.classList.add('active'); } },
@@ -1049,13 +1036,6 @@ class RiftbornApp {
       });
     }
 
-    const qmStory = document.getElementById('btn-quick-mode-story');
-    if (qmStory) {
-      qmStory.addEventListener('click', () => {
-        this.showScreen('screen-story');
-        soundEngine.playUiClick();
-      });
-    }
 
 
     // In-game Pause & Exit buttons
@@ -1168,35 +1148,21 @@ class RiftbornApp {
     const btnResultsOpenChal = document.getElementById('btn-results-open-challenges');
     if (btnResultsOpenChal) {
       btnResultsOpenChal.addEventListener('click', () => {
-        const hubModal = document.getElementById('modal-challenges-hub');
-        if (hubModal) {
-          hubModal.classList.add('active');
-          this.renderChallengesHub('daily');
-          soundEngine.playUiClick();
-        }
+        this.openChallengesHub('daily');
       });
     }
 
     const navChalBtn = document.getElementById('nav-challenges');
     if (navChalBtn) {
       navChalBtn.addEventListener('click', () => {
-        const hubModal = document.getElementById('modal-challenges-hub');
-        if (hubModal) {
-          hubModal.classList.add('active');
-          this.renderChallengesHub('daily');
-          soundEngine.playUiClick();
-        }
+        this.openChallengesHub('daily');
       });
     }
 
     const btnCloseHub = document.getElementById('btn-close-challenges-hub');
     if (btnCloseHub) {
       btnCloseHub.addEventListener('click', () => {
-        const hubModal = document.getElementById('modal-challenges-hub');
-        if (hubModal) {
-          hubModal.classList.remove('active');
-          soundEngine.playUiClick();
-        }
+        this.closeChallengesHub();
       });
     }
   }
@@ -1226,12 +1192,7 @@ class RiftbornApp {
 
     // Missions hub shortcuts (desktop nav button, mobile bottom bar, home lobby widget)
     const openMissions = () => {
-      const hubModal = document.getElementById('modal-challenges-hub');
-      if (hubModal) {
-        hubModal.classList.add('active');
-        this.renderChallengesHub('daily');
-        soundEngine.playUiClick();
-      }
+      this.openChallengesHub('daily');
     };
 
     const navMissionsBtn = document.getElementById('nav-missions-btn');
@@ -1295,17 +1256,6 @@ class RiftbornApp {
         reward: '+250 XP • RP RATING',
         btnSub: 'ENTER RANKED DUEL [ENTER]',
         action: () => this.showScreen('screen-ranked-setup')
-      },
-      story: {
-        badge: 'CINEMATIC CAMPAIGN',
-        diff: 'DIFFICULTY: NARRATIVE',
-        diffVal: 'Episode Progression',
-        title: 'STORY CAMPAIGN',
-        desc: '6 cinematic narrative chapters. Unravel the mystery of the Genesis Rift and stop the rogue singularity Aethel.',
-        format: '5 Story Chapters & Codex',
-        reward: '+500 XP • LORE LOGS',
-        btnSub: 'CHRONICLES CAMPAIGN [ENTER]',
-        action: () => this.showScreen('screen-story')
       },
       survival: {
         badge: 'ENDURANCE PROTOCOL',
@@ -3072,7 +3022,7 @@ class RiftbornApp {
           this.renderCustomizationScreen(charId);
         } else {
           soundEngine.playBlock();
-          this.showToast('Not enough Rift Shards! Earn more shards by winning matches and completing story chapters.', 'error');
+          this.showToast('Not enough Rift Shards! Earn more shards by winning matches and completing challenges.', 'error');
         }
       });
     });
@@ -3387,308 +3337,7 @@ class RiftbornApp {
     }
   }
 
-  // --- STORY MODE CONTROLLER ---
-  setupStoryMode() {
-    // 1. Tab switching between Chapters and Codex
-    const tabChaptersBtn = document.getElementById('btn-story-tab-chapters');
-    const tabCodexBtn = document.getElementById('btn-story-tab-codex');
-    const chaptersView = document.getElementById('story-chapters-view');
-    const codexView = document.getElementById('story-codex-view');
 
-    if (tabChaptersBtn && tabCodexBtn) {
-      tabChaptersBtn.onclick = () => {
-        tabChaptersBtn.classList.add('active');
-        tabCodexBtn.classList.remove('active');
-        chaptersView.style.display = 'block';
-        codexView.style.display = 'none';
-        soundEngine.playUiClick();
-      };
-
-      tabCodexBtn.onclick = () => {
-        tabCodexBtn.classList.add('active');
-        tabChaptersBtn.classList.remove('active');
-        chaptersView.style.display = 'none';
-        codexView.style.display = 'block';
-        this.renderCodexView();
-        soundEngine.playUiClick();
-      };
-    }
-
-    // 2. Update overall campaign progress
-    const unlockedCount = [1, 2, 3, 4, 5].filter(id => progressionManager.isChapterUnlocked(id)).length;
-    const completedCount = [1, 2, 3, 4, 5].filter(id => progressionManager.isChapterCompleted(id)).length;
-    const progressEl = document.getElementById('story-overall-progress');
-    if (progressEl) {
-      progressEl.textContent = `Campaign Progress: ${completedCount} / 5 Chapters Cleared • Chapter ${unlockedCount} / 5 Unlocked (${Math.round((completedCount / 5) * 100)}%)`;
-    }
-
-    // 3. Populate Chapter Cards
-    const grid = document.getElementById('story-chapters-grid');
-    if (!grid) return;
-    grid.innerHTML = '';
-
-    STORY_CHAPTERS.forEach(ch => {
-      const isUnlocked = progressionManager.isChapterUnlocked(ch.id);
-      const isCompleted = progressionManager.isChapterCompleted(ch.id);
-      const curStage = progressionManager.getChapterStage(ch.id);
-      const stars = progressionManager.getChapterStars(ch.id);
-
-      const card = document.createElement('div');
-      card.className = `story-chapter-card ${!isUnlocked ? 'locked' : ''} ${isCompleted ? 'completed' : ''}`;
-      
-      // Determine accent color
-      let accentColor = '#00D2FF';
-      if (ch.id === 1) accentColor = '#FF3366'; // Crimson
-      else if (ch.id === 2) accentColor = '#00FF88'; // Emerald
-      else if (ch.id === 3) accentColor = '#FFB800'; // Gold
-      else if (ch.id === 4) accentColor = '#A855F7'; // Violet
-      else if (ch.id === 5) accentColor = '#00D2FF'; // Genesis cyan
-      card.style.setProperty('--card-core-accent', accentColor);
-
-      const bossStage = ch.stages[ch.stages.length - 1];
-      const starString = isCompleted ? '★★★'.slice(0, Math.max(1, stars)) : '';
-
-      card.innerHTML = `
-        <div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <div class="mode-badge" style="color: ${accentColor}; border: 1px solid ${accentColor}; margin: 0;">
-              ${!isUnlocked ? '🔒 LOCKED' : isCompleted ? `✓ CLEARED ${starString}` : `CHAPTER ${ch.id} // ACTIVE`}
-            </div>
-            <div style="font-family: 'Oswald', 'Bebas Neue', sans-serif; font-size: 10px; font-weight: 800; color: var(--text-muted);">${ch.coreFocus}</div>
-          </div>
-
-          <div style="font-family: var(--font-display); font-size: 18px; font-weight: 700; margin: 8px 0 2px; color: ${isUnlocked ? 'var(--text-primary)' : 'var(--text-muted)'};">${ch.title}</div>
-          <div style="font-size: 11px; color: var(--accent-cyan); font-weight: 700; margin-bottom: 8px;">${ch.subtitle}</div>
-          
-          <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 12px;">
-            ${ch.synopsis.slice(0, 150)}...
-          </div>
-
-          <!-- Stage Progress Pills (Stage 1, Stage 2, Boss) -->
-          <div style="font-family: 'Oswald', 'Bebas Neue', sans-serif; font-size: 10px; color: var(--text-muted); font-weight: 800;">ENCOUNTER PROGRESSION:</div>
-          <div class="story-stage-indicator">
-            <div class="stage-pill ${isCompleted || curStage > 1 ? 'done' : curStage === 1 ? 'current' : ''}"></div>
-            <div class="stage-pill ${isCompleted || curStage > 2 ? 'done' : curStage === 2 ? 'current' : ''}"></div>
-            <div class="stage-pill ${isCompleted ? 'done' : curStage >= 3 ? 'current' : ''}"></div>
-          </div>
-
-          <!-- Boss Tag -->
-          <div class="story-boss-preview-badge" style="margin-top: 10px;">
-            <span>⚔</span>
-            <span>${bossStage ? bossStage.bossTitle : 'BOSS ENCOUNTER'}</span>
-          </div>
-        </div>
-
-        <div style="margin-top: 16px; border-top: 1px solid var(--border-subtle); padding-top: 12px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 11px;">
-            <span style="color: var(--accent-gold); font-weight: 700;">+${ch.rewards.shards} ✦ • +${ch.rewards.charXp} XP</span>
-            <span style="color: var(--text-muted);">Title: "${ch.rewards.title}"</span>
-          </div>
-
-          ${isUnlocked
-            ? `<button class="btn-primary-glow btn-play-chapter" data-chapter="${ch.id}" style="width: 100%; padding: 10px; font-size: 12px;">
-                ${isCompleted ? 'REPLAY CHAPTER ➔' : `CONTINUE STAGE ${curStage} ➔`}
-               </button>`
-            : `<button class="btn-secondary" disabled style="width: 100%; padding: 10px; font-size: 11px; opacity: 0.5;">
-                🔒 COMPLETE CHAPTER ${ch.id - 1} TO UNLOCK
-               </button>`
-          }
-        </div>
-      `;
-
-      grid.appendChild(card);
-    });
-
-    // Wire up chapter play buttons
-    grid.querySelectorAll('.btn-play-chapter').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = parseInt(btn.getAttribute('data-chapter'));
-        this.openStoryDialogue(id);
-      });
-    });
-
-    // Advance story dialogue clicks
-    const contentBox = document.getElementById('story-dialogue-content');
-    if (contentBox) {
-      contentBox.onclick = () => this.advanceStoryDialogue();
-    }
-
-    const nextBtn = document.getElementById('btn-advance-story-dialogue');
-    if (nextBtn) {
-      nextBtn.onclick = () => this.advanceStoryDialogue();
-    }
-
-    const startBattleBtn = document.getElementById('btn-start-story-battle');
-    if (startBattleBtn) {
-      startBattleBtn.onclick = () => {
-        document.getElementById('modal-story-dialogue').classList.remove('active');
-        if (this.currentChapter && this.currentStage) {
-          this.launchStoryStage(this.currentChapter, this.currentStage);
-        }
-      };
-    }
-  }
-
-  // --- ARCHITECT CODEX LOGS VIEWER ---
-  renderCodexView() {
-    const listContainer = document.getElementById('codex-logs-list');
-    if (!listContainer) return;
-    listContainer.innerHTML = '';
-
-    STORY_CHAPTERS.forEach(ch => {
-      const log = ch.codexLog;
-      if (!log) return;
-
-      const isUnlocked = progressionManager.isCodexLogUnlocked(log.id);
-      const isSelected = this.selectedCodexLogId === log.id;
-
-      const itemBtn = document.createElement('div');
-      itemBtn.className = `codex-item-btn ${isSelected ? 'active' : ''}`;
-      itemBtn.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-          <span style="font-family: 'Oswald', 'Bebas Neue', sans-serif; font-size: 10px; font-weight: 800; color: ${isUnlocked ? 'var(--accent-cyan)' : 'var(--text-muted)'};">
-            ${isUnlocked ? 'DECRYPTED ARCHIVE' : '🔒 ENCRYPTED CIPHER'}
-          </span>
-          <span style="font-size: 10px; color: var(--text-muted);">CH ${ch.id}</span>
-        </div>
-        <div style="font-family: 'Oswald', 'Bebas Neue', sans-serif; font-size: 12px; font-weight: 700; color: ${isUnlocked ? '#FFF' : 'var(--text-muted)'};">
-          ${isUnlocked ? log.title : `Archon Cipher 0${ch.id} (Locked)`}
-        </div>
-        <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
-          ${isUnlocked ? log.classification : `Complete Chapter ${ch.id} to Decrypt`}
-        </div>
-      `;
-
-      if (isUnlocked) {
-        itemBtn.addEventListener('click', () => {
-          this.selectedCodexLogId = log.id;
-          document.querySelectorAll('.codex-item-btn').forEach(b => b.classList.remove('active'));
-          itemBtn.classList.add('active');
-          this.displayCodexLog(log);
-          soundEngine.playUiClick();
-        });
-      }
-
-      listContainer.appendChild(itemBtn);
-    });
-
-    // Display initially selected log or first unlocked log
-    const initialLog = STORY_CHAPTERS.find(c => c.codexLog && c.codexLog.id === this.selectedCodexLogId)?.codexLog 
-      || STORY_CHAPTERS[0].codexLog;
-    if (initialLog) this.displayCodexLog(initialLog);
-  }
-
-  displayCodexLog(log) {
-    const stampEl = document.getElementById('codex-reader-stamp');
-    if (stampEl) stampEl.textContent = log.classification || 'CLASSIFIED EYES ONLY';
-
-    const dateEl = document.getElementById('codex-reader-date');
-    if (dateEl) dateEl.textContent = log.date || 'CYCLE 342 POST-DISJUNCTION';
-
-    const titleEl = document.getElementById('codex-reader-title');
-    if (titleEl) titleEl.textContent = log.title;
-
-    const authEl = document.getElementById('codex-reader-author');
-    if (authEl) authEl.textContent = `Author: ${log.author}`;
-
-    const bodyEl = document.getElementById('codex-reader-body');
-    if (bodyEl) bodyEl.textContent = log.content;
-  }
-
-  openStoryDialogue(chapterId) {
-    const ch = STORY_CHAPTERS.find(c => c.id === chapterId);
-    if (!ch) return;
-    this.currentChapter = ch;
-
-    // Determine which stage within the chapter to engage
-    let stageIdx = progressionManager.getChapterStage(chapterId);
-    if (stageIdx > ch.stages.length) stageIdx = ch.stages.length;
-    this.currentStage = ch.stages[stageIdx - 1] || ch.stages[0];
-    this.dialogueStep = 0;
-
-    // Modal elements
-    document.getElementById('story-dialogue-title').textContent = ch.title.toUpperCase();
-    document.getElementById('story-dialogue-sub').textContent = `${ch.subtitle} • ${this.currentStage.name}`;
-
-    const stageBadge = document.getElementById('story-dialogue-stage-badge');
-    if (stageBadge) {
-      if (this.currentStage.isBoss) {
-        stageBadge.textContent = '🔥 CLIMACTIC BOSS';
-        stageBadge.style.color = '#FF0055';
-        stageBadge.style.borderColor = '#FF0055';
-        stageBadge.style.background = 'rgba(255, 0, 85, 0.2)';
-      } else {
-        stageBadge.textContent = `STAGE ${this.currentStage.stageIndex} / ${ch.stages.length}`;
-        stageBadge.style.color = 'var(--accent-cyan)';
-        stageBadge.style.borderColor = 'var(--accent-cyan)';
-        stageBadge.style.background = 'rgba(0, 210, 255, 0.15)';
-      }
-    }
-
-    // Boss traits box
-    const bossBox = document.getElementById('story-boss-traits-box');
-    if (bossBox) {
-      if (this.currentStage.isBoss) {
-        bossBox.style.display = 'block';
-        document.getElementById('story-boss-title-banner').textContent = `BOSS ENCOUNTER: ${this.currentStage.bossTitle}`;
-        document.getElementById('story-boss-traits-desc').textContent = this.currentStage.bossTraits || 'Enhanced Combat Capabilities';
-      } else {
-        bossBox.style.display = 'none';
-      }
-    }
-
-    // Objective text
-    const objEl = document.getElementById('story-objective-text');
-    if (objEl) objEl.textContent = this.currentStage.objective;
-
-    document.getElementById('modal-story-dialogue').classList.add('active');
-    this.renderCurrentDialogueLine();
-  }
-
-  advanceStoryDialogue() {
-    if (!this.currentStage || !this.currentStage.dialogue) return;
-    this.dialogueStep++;
-    if (this.dialogueStep >= this.currentStage.dialogue.length) {
-      this.dialogueStep = this.currentStage.dialogue.length - 1;
-    }
-    this.renderCurrentDialogueLine();
-    soundEngine.playUiHover();
-  }
-
-  renderCurrentDialogueLine() {
-    if (!this.currentStage || !this.currentStage.dialogue) return;
-    const line = this.currentStage.dialogue[this.dialogueStep];
-    if (!line) return;
-
-    const speakerEl = document.getElementById('story-speaker-name');
-    if (speakerEl) speakerEl.textContent = line.speaker.toUpperCase();
-
-    const textEl = document.getElementById('story-speech-text');
-    if (textEl) textEl.textContent = line.text;
-
-    const stepEl = document.getElementById('story-dialogue-step');
-    if (stepEl) stepEl.textContent = `${this.dialogueStep + 1} / ${this.currentStage.dialogue.length}`;
-
-    // Update Speaker Avatar
-    const avEl = document.getElementById('story-speaker-avatar');
-    if (avEl) {
-      avEl.textContent = line.speaker.charAt(0);
-      const speakerLower = line.speaker.toLowerCase();
-      const speakerChar = CHARACTERS[speakerLower];
-      const color = speakerChar ? speakerChar.coreColor : '#00D2FF';
-      avEl.style.borderColor = color;
-      avEl.style.color = color;
-      avEl.style.background = `${color}22`;
-      avEl.style.boxShadow = `0 0 16px ${color}66`;
-    }
-  }
-
-  launchStoryStage(chapter, stage) {
-    this.engine.isLocal2Player = false;
-    this.showGameView();
-    this.engine.initMatch(stage.hero, stage.opponent, stage.arena, 'Story', stage.aiDifficulty);
-    this.engine.startLoop();
-  }
 
   // --- RANKED 1V1 COMPETITIVE SETUP NAVIGATION ---
   openRankedSetup() {
@@ -3911,7 +3560,6 @@ class RiftbornApp {
       'btn-select-launch-match',  // Fighter select LOCK IN & FIGHT
       'btn-casual-launch-match',  // Casual setup DEPLOY
       'btn-ranked-launch-match',  // Ranked setup MATCH
-      'btn-start-story-battle',   // Story battle ENGAGE
       'btn-enter-landscape-prompt'// Rotate overlay button
     ];
 
@@ -4407,7 +4055,6 @@ class RiftbornApp {
       window.addEventListener('keydown', keyHandler, { once: true });
 
       this.updateUserDisplay();
-      this.setupStoryMode();
       modal.classList.add('active');
     };
   }
@@ -4458,43 +4105,71 @@ class RiftbornApp {
   }
 
   // --- CHALLENGES & BOUNTIES HUB CONTROLLER ---
+  openChallengesHub(tab = 'daily') {
+    const modal = document.getElementById('modal-challenges-hub');
+    if (!modal) return;
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    this.activeChallengesTab = tab;
+    this.renderChallengesHub(this.activeChallengesTab);
+    soundEngine.playUiClick();
+  }
+
+  closeChallengesHub() {
+    const modal = document.getElementById('modal-challenges-hub');
+    if (!modal) return;
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+    soundEngine.playUiClick();
+  }
+
   setupChallengesHub() {
     const modal = document.getElementById('modal-challenges-hub');
     const tabDaily = document.getElementById('tab-challenges-daily');
     const tabWeekly = document.getElementById('tab-challenges-weekly');
     const tabCatalog = document.getElementById('tab-challenges-catalog');
     const btnClaimAll = document.getElementById('btn-hub-claim-all');
+    const btnCloseHub = document.getElementById('btn-close-challenges-hub');
 
-    let currentTab = 'daily';
+    this.activeChallengesTab = this.activeChallengesTab || 'daily';
+
+    if (btnCloseHub) {
+      btnCloseHub.onclick = () => this.closeChallengesHub();
+    }
+
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          this.closeChallengesHub();
+        }
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const m = document.getElementById('modal-challenges-hub');
+        if (m && m.classList.contains('active')) {
+          this.closeChallengesHub();
+        }
+      }
+    });
+
+    const setTab = (tab) => {
+      this.activeChallengesTab = tab;
+      this.renderChallengesHub(tab);
+      soundEngine.playUiClick();
+    };
 
     if (tabDaily) {
-      tabDaily.onclick = () => {
-        currentTab = 'daily';
-        [tabDaily, tabWeekly, tabCatalog].forEach(t => t && t.classList.remove('active'));
-        tabDaily.classList.add('active');
-        this.renderChallengesHub('daily');
-        soundEngine.playUiClick();
-      };
+      tabDaily.onclick = () => setTab('daily');
     }
 
     if (tabWeekly) {
-      tabWeekly.onclick = () => {
-        currentTab = 'weekly';
-        [tabDaily, tabWeekly, tabCatalog].forEach(t => t && t.classList.remove('active'));
-        tabWeekly.classList.add('active');
-        this.renderChallengesHub('weekly');
-        soundEngine.playUiClick();
-      };
+      tabWeekly.onclick = () => setTab('weekly');
     }
 
     if (tabCatalog) {
-      tabCatalog.onclick = () => {
-        currentTab = 'catalog';
-        [tabDaily, tabWeekly, tabCatalog].forEach(t => t && t.classList.remove('active'));
-        tabCatalog.classList.add('active');
-        this.renderChallengesHub('catalog');
-        soundEngine.playUiClick();
-      };
+      tabCatalog.onclick = () => setTab('catalog');
     }
 
     if (btnClaimAll) {
@@ -4519,17 +4194,38 @@ class RiftbornApp {
 
         soundEngine.playParry();
         this.updateUserDisplay();
-        this.renderChallengesHub(currentTab);
+        this.renderChallengesHub(this.activeChallengesTab);
         this.showToast(`Claimed all completed bounties! Received +${totalCoins} Rift Coins and +${totalXp} XP!`, 'success');
       };
     }
   }
 
   renderChallengesHub(tab = 'daily') {
+    this.activeChallengesTab = tab;
     const listContainer = document.getElementById('hub-challenges-list');
     const timerText = document.getElementById('hub-timer-text');
+    const tabDaily = document.getElementById('tab-challenges-daily');
+    const tabWeekly = document.getElementById('tab-challenges-weekly');
+    const tabCatalog = document.getElementById('tab-challenges-catalog');
+    const btnClaimAll = document.getElementById('btn-hub-claim-all');
+
     if (!listContainer) return;
     listContainer.innerHTML = '';
+
+    // Synchronize active tabs and accessibility states
+    const tabsMap = {
+      daily: tabDaily,
+      weekly: tabWeekly,
+      catalog: tabCatalog
+    };
+
+    Object.entries(tabsMap).forEach(([tKey, tEl]) => {
+      if (tEl) {
+        const isActive = (tKey === tab);
+        tEl.classList.toggle('active', isActive);
+        tEl.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      }
+    });
 
     const chMgr = progressionManager.challengeManager;
     if (timerText && chMgr) {
@@ -4546,6 +4242,20 @@ class RiftbornApp {
     const wBadge = document.getElementById('weekly-claimable-badge');
     if (dBadge) dBadge.style.display = dailyClaimable > 0 ? 'inline-flex' : 'none';
     if (wBadge) wBadge.style.display = weeklyClaimable > 0 ? 'inline-flex' : 'none';
+
+    // Synchronize Claim All button state
+    const allClaimable = [...(cData.daily || []), ...(cData.weekly || [])].filter(c => c.completed && !c.claimed);
+    if (btnClaimAll) {
+      if (allClaimable.length > 0) {
+        btnClaimAll.disabled = false;
+        btnClaimAll.classList.remove('disabled');
+        btnClaimAll.textContent = `CLAIM ALL (${allClaimable.length})`;
+      } else {
+        btnClaimAll.disabled = true;
+        btnClaimAll.classList.add('disabled');
+        btnClaimAll.textContent = 'CLAIM ALL COMPLETED';
+      }
+    }
 
     if (tab === 'catalog') {
       // Render cosmetic rewards catalog
@@ -4617,6 +4327,19 @@ class RiftbornApp {
 
     // Render Daily or Weekly challenges
     const list = tab === 'daily' ? (cData.daily || []) : (cData.weekly || []);
+
+    if (list.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'hub-empty-state';
+      empty.innerHTML = `
+        <div class="hub-empty-icon" aria-hidden="true">🎯</div>
+        <div class="hub-empty-title">All Objectives Complete!</div>
+        <div style="font-size: 11px; color: var(--text-muted);">Check back after the countdown resets for fresh challenges.</div>
+      `;
+      listContainer.appendChild(empty);
+      return;
+    }
+
     list.forEach(ch => {
       const card = document.createElement('div');
       card.className = `hub-challenge-card ${ch.completed ? 'completed' : ''}`;

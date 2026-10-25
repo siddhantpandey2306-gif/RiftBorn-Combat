@@ -52,7 +52,6 @@
       <button class="nav-btn" data-screen="screen-profile" id="nav-profile">PROFILE</button>
       <!-- Hidden compatibility buttons for internal script references if any -->
       <button class="nav-btn" data-screen="screen-play" id="nav-play" style="display:none;">FIGHT</button>
-      <button class="nav-btn" data-screen="screen-story" id="nav-story" style="display:none;">STORY</button>
       <button class="nav-btn" data-screen="screen-characters" id="nav-characters-dossier" style="display:none;">DOSSIER</button>
       <button class="nav-btn" data-screen="screen-progression" id="nav-progression" style="display:none;">PROGRESSION</button>
       <button class="nav-btn" data-screen="screen-character-select" id="nav-dojo" style="display:none;">DOJO</button>
@@ -141,7 +140,6 @@
         <button class="drawer-nav-btn" data-screen="screen-ranked-setup"><span class="drawer-icon" aria-hidden="true">🏆</span> RANKED LADDER</button>
         <button class="drawer-nav-btn" id="drawer-btn-challenges"><span class="drawer-icon" aria-hidden="true">🎯</span> MISSIONS HUB</button>
         <button class="drawer-nav-btn" data-screen="screen-profile"><span class="drawer-icon" aria-hidden="true">👤</span> OPERATIVE PROFILE</button>
-        <button class="drawer-nav-btn" data-screen="screen-story"><span class="drawer-icon" aria-hidden="true">📜</span> STORY CHRONICLES</button>
       </nav>
 
       <div class="drawer-section-title">TACTICAL UTILITIES</div>
@@ -691,7 +689,7 @@
               <div style="font-family: var(--font-display); font-size: 11px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; letter-spacing: 1px;">HOW TO EARN WARRIOR XP</div>
               <div style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: var(--text-secondary);">
                 <div>⚔ <strong style="color:var(--text-primary);">Winning Matches:</strong> +350 to +470 XP</div>
-                <div>📖 <strong style="color:var(--text-primary);">Story Chapters:</strong> +500 XP & 150 Shards</div>
+                <div>⚡ <strong style="color:var(--text-primary);">Combat Sparring:</strong> +150 to +300 XP & Coins</div>
                 <div>🎯 <strong style="color:var(--text-primary);">Mastery Feats:</strong> +350 XP per challenge</div>
                 <div>👑 <strong style="color:var(--text-primary);">Defeating Bosses:</strong> +800 XP & 300 Shards</div>
               </div>
@@ -780,17 +778,6 @@
             <span class="mode-item-arrow">➔</span>
           </div>
 
-          <!-- Story Mode -->
-          <div class="mode-nav-item" id="mode-card-story" data-mode="story">
-            <div class="mode-item-icon-badge violet">🌌</div>
-            <div class="mode-item-indicator violet"></div>
-            <div class="mode-item-meta">
-              <span class="mode-item-tag tag-violet">LORE CAMPAIGN</span>
-              <div class="mode-item-title">STORY CAMPAIGN</div>
-              <div class="mode-item-sub">6 Cinematic Chapters & Lore Codex</div>
-            </div>
-            <span class="mode-item-arrow">➔</span>
-          </div>
 
           <!-- Survival -->
           <div class="mode-nav-item" id="mode-card-survival" data-mode="survival">
@@ -1122,56 +1109,6 @@
       </div>
     </section>
 
-    <!-- 6. STORY MODE SCREEN -->
-    <section class="screen" id="screen-story">
-      <!-- Story Header Banner with Progress and Navigation -->
-      <div class="story-header-banner">
-        <div>
-          <div class="hero-tag" style="background: rgba(168, 85, 247, 0.15); border-color: var(--core-violet); color: var(--core-violet); margin-bottom: 6px;">NARRATIVE CAMPAIGN // SEASON 1</div>
-          <h2 style="font-family: var(--font-display); font-size: 32px; font-weight: 700; letter-spacing: 2px; margin: 0; line-height: 1.1; color: var(--text-primary);">CHRONICLES OF THE GENESIS RIFT</h2>
-          <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;" id="story-overall-progress">Campaign Progress: Chapter 1 / 5 Unlocked (20%)</div>
-        </div>
-
-        <div style="display: flex; gap: 16px; align-items: center;">
-          <div class="story-tab-toggle">
-            <button class="story-tab-btn active" id="btn-story-tab-chapters">CHAPTERS (5)</button>
-            <button class="story-tab-btn" id="btn-story-tab-codex">ARCHITECT CODEX</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- View 1: 5 Story Chapters Grid -->
-      <div id="story-chapters-view">
-        <div id="story-chapters-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
-          <!-- Dynamically populated with Chapter 1 to Chapter 5 -->
-        </div>
-      </div>
-
-      <!-- View 2: Architect Codex / Lore Archives Viewer (hidden by default) -->
-      <div id="story-codex-view" style="display: none;">
-        <div class="codex-layout">
-          <!-- Left: Logs List -->
-          <div class="codex-list custom-scroll" id="codex-logs-list">
-            <!-- Dynamically populated with logs 1 to 5 -->
-          </div>
-
-          <!-- Right: Document Reading Terminal -->
-          <div class="codex-reader-panel custom-scroll" id="codex-reader-panel">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div class="codex-classified-stamp" id="codex-reader-stamp">TOP SECRET // VANGUARD BLACK ARCHIVE</div>
-              <div style="font-family: var(--font-display); font-size: 11px; color: var(--text-muted);" id="codex-reader-date">CYCLE 342 POST-DISJUNCTION</div>
-            </div>
-            <div>
-              <h2 style="font-family: var(--font-display); font-size: 22px; margin: 0; color: var(--accent-cyan);" id="codex-reader-title">ARCHON CIPHER 01: The Sub-Nullfolds</h2>
-              <div style="font-size: 12px; color: var(--accent-gold); margin-top: 4px;" id="codex-reader-author">Author: Dr. Evelyn Vance, Lead Biomechanical Architect</div>
-            </div>
-            <div class="codex-text-body" id="codex-reader-body">
-              Select an unlocked Architect Cipher log from the left index to decrypt the archive.
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- 7. RIFT PASS REWARDS SCREEN -->
     <section class="screen" id="screen-rewards">
@@ -1757,7 +1694,6 @@
         <div class="footer-links-col">
           <div class="footer-col-title">INTELLIGENCE</div>
           <button class="footer-nav-btn" data-screen="screen-profile">Operative Profile</button>
-          <button class="footer-nav-btn" data-screen="screen-story">Story Chronicles</button>
           <button class="footer-nav-btn" id="footer-btn-guide">Move List Guide</button>
           <button class="footer-nav-btn" id="footer-btn-faq">Gameplay FAQ</button>
           <button class="footer-nav-btn" data-screen="screen-settings">System Configuration</button>
@@ -2545,44 +2481,44 @@
   </div>
 
   <!-- CHALLENGES & BOUNTIES HUB MODAL -->
-  <div class="modal-overlay" id="modal-challenges-hub">
+  <div class="modal-overlay" id="modal-challenges-hub" role="dialog" aria-modal="true" aria-labelledby="hub-modal-title">
     <div class="modal-box challenges-hub-box">
       <!-- Hub Header -->
       <div class="hub-header">
-        <div>
-          <div class="hero-tag" style="background: rgba(255,184,0,0.15); border-color: var(--accent-gold); color: var(--accent-gold); margin-bottom: 4px;">COMBAT REWARD LOOP</div>
-          <h2 class="modal-title" style="text-align: left; margin: 0; font-size: 24px;">CHALLENGES & BOUNTIES</h2>
-          <div style="font-size: 12px; color: var(--text-secondary); margin-top: 3px;">
+        <div class="hub-header-text">
+          <div class="hub-tag">COMBAT REWARD LOOP</div>
+          <h2 class="modal-title hub-title" id="hub-modal-title">CHALLENGES & BOUNTIES</h2>
+          <div class="hub-subtitle">
             Encouraging diverse fighting styles: Evasion, Neutral Spacing, Meter Economy & Roster Versatility.
           </div>
         </div>
-        <button class="hub-close-btn" id="btn-close-challenges-hub" title="Close Hub">✕</button>
+        <button class="hub-close-btn" id="btn-close-challenges-hub" aria-label="Close Challenges Hub" title="Close Hub">✕</button>
       </div>
 
       <!-- Hub Tab Switcher & Countdown Timer -->
       <div class="hub-tabs-row">
-        <div class="hub-tab-buttons">
-          <button class="hub-tab-btn active" id="tab-challenges-daily">DAILY OBJECTIVES <span class="tab-badge" id="daily-claimable-badge" style="display: none;">!</span></button>
-          <button class="hub-tab-btn" id="tab-challenges-weekly">WEEKLY GAUNTLET <span class="tab-badge" id="weekly-claimable-badge" style="display: none;">!</span></button>
-          <button class="hub-tab-btn" id="tab-challenges-catalog">COSMETIC CATALOG</button>
+        <div class="hub-tab-buttons" role="tablist">
+          <button class="hub-tab-btn active" id="tab-challenges-daily" role="tab" aria-selected="true">DAILY OBJECTIVES <span class="tab-badge" id="daily-claimable-badge" style="display: none;">!</span></button>
+          <button class="hub-tab-btn" id="tab-challenges-weekly" role="tab" aria-selected="false">WEEKLY GAUNTLET <span class="tab-badge" id="weekly-claimable-badge" style="display: none;">!</span></button>
+          <button class="hub-tab-btn" id="tab-challenges-catalog" role="tab" aria-selected="false">COSMETIC CATALOG</button>
         </div>
-        <div class="hub-timer-pill">
-          <span style="color: var(--accent-gold);">⏳</span>
+        <div class="hub-timer-pill" aria-live="polite">
+          <span class="hub-timer-icon" aria-hidden="true">⏳</span>
           <span id="hub-timer-text">Resets in 18h 42m</span>
         </div>
       </div>
 
       <!-- Scrollable Container -->
-      <div class="hub-list-container custom-scroll" id="hub-challenges-list">
+      <div class="hub-list-container custom-scroll" id="hub-challenges-list" tabindex="0" role="region" aria-label="Challenges and Rewards list">
         <!-- Rendered dynamically -->
       </div>
 
       <!-- Hub Footer -->
       <div class="hub-footer-row">
-        <div style="font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
-          <span style="color: var(--accent-green); font-size: 13px;">✓</span> 100% Non-pay-to-win. All rewards are purely cosmetic or tactical progression.
+        <div class="hub-footer-note">
+          <span class="hub-check-icon" aria-hidden="true">✓</span> 100% Non-pay-to-win. All rewards are purely cosmetic or tactical progression.
         </div>
-        <button class="btn-primary-glow" id="btn-hub-claim-all" style="padding: 10px 22px; font-size: 13px;">CLAIM ALL COMPLETED</button>
+        <button class="btn-primary-glow btn-hub-claim-all" id="btn-hub-claim-all" disabled>CLAIM ALL COMPLETED</button>
       </div>
     </div>
   </div>
@@ -2627,51 +2563,6 @@
     </div>
   </div>
 
-  <!-- STORY DIALOGUE MODAL -->
-  <div class="modal-overlay" id="modal-story-dialogue">
-    <div class="modal-box" style="max-width: 720px; text-align: left;">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-        <div>
-          <div class="modal-title" id="story-dialogue-title" style="color: var(--char-nox); margin: 0; font-size: 24px; font-family: var(--font-display); letter-spacing: 1.5px;">CHAPTER 1 — AWAKENING</div>
-          <div style="color: var(--char-aeron); font-weight: 600; font-size: 12px;" id="story-dialogue-sub">Vanguard Bio-Synthesis Complex // Sector 9</div>
-        </div>
-        <div id="story-dialogue-stage-badge" style="font-family: var(--font-display); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 4px; background: var(--surface-secondary); border: 1px solid var(--border-subtle); color: var(--text-primary);">STAGE 1 / 3</div>
-      </div>
-
-      <!-- Boss Traits Alert (shown only on boss encounters) -->
-      <div id="story-boss-traits-box" style="display: none; background: var(--surface-secondary); border: 1px solid var(--action-primary); border-radius: var(--radius-sm); padding: 8px 12px; margin-bottom: 12px;">
-        <div style="font-family: var(--font-display); font-size: 11px; font-weight: 700; color: var(--action-primary); letter-spacing: 1px;" id="story-boss-title-banner">BOSS ENCOUNTER: AERON</div>
-        <div style="font-size: 11px; color: var(--text-primary);" id="story-boss-traits-desc">Heightened Parry Window • Continuous Projectiles</div>
-      </div>
-
-      <!-- Combat Objective Hint -->
-      <div style="background: var(--surface-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 8px 12px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
-        <span style="font-family: var(--font-display); font-size: 10px; font-weight: 700; color: var(--accent-gold); letter-spacing: 1px;">OBJECTIVE:</span>
-        <span style="font-size: 12px; color: var(--text-secondary);" id="story-objective-text">Land basic combo strings and defeat Warden Aeron.</span>
-      </div>
-
-      <!-- Dialogue Speech Bubble with Speaker Avatar -->
-      <div style="background: var(--surface-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 18px; min-height: 160px; display: flex; gap: 16px; align-items: flex-start; cursor: pointer;" id="story-dialogue-content">
-        <div id="story-speaker-avatar" style="width: 48px; height: 48px; border-radius: var(--radius-sm); border: 2px solid var(--char-vex); background: var(--surface-white); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--char-vex); flex-shrink: 0; box-shadow: var(--shadow-subtle);">V</div>
-        <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-height: 120px;">
-          <div>
-            <div style="font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--char-vex); margin-bottom: 6px; letter-spacing: 1px;" id="story-speaker-name">VEX</div>
-            <p style="font-size: 13px; line-height: 1.6; color: var(--text-primary); margin: 0;" id="story-speech-text">The Vanguard sensors picked up anomalous Crimson radiation in Sector 9...</p>
-          </div>
-          <div style="text-align: right; color: var(--text-muted); font-size: 11px; margin-top: 12px; font-weight: 600;">CLICK TO ADVANCE DIALOGUE ➔</div>
-        </div>
-      </div>
-
-      <!-- Action Footer -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
-        <span style="font-size: 12px; font-family: var(--font-display); font-weight: 700; color: var(--text-secondary); letter-spacing: 1px;" id="story-dialogue-step">1 / 4</span>
-        <div style="display: flex; gap: 10px;">
-          <button class="btn-secondary" id="btn-advance-story-dialogue" style="padding: 8px 18px; font-size: 12px;">NEXT ➔</button>
-          <button class="btn-primary-glow" id="btn-start-story-battle" style="padding: 10px 24px; font-size: 13px;">ENGAGE BATTLE</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- MOBILE ORIENTATION: Landscape is enforced automatically without disruptive prompts -->
   <div id="orientation-prompt-overlay" style="display: none !important;" aria-hidden="true"></div>
@@ -2720,7 +2611,7 @@
       <div class="search-modal-header">
         <div class="search-input-wrapper">
           <span class="search-input-icon" aria-hidden="true">🔍</span>
-          <input type="search" id="site-search-input" class="site-search-input" placeholder="Search fighters, abilities, arenas, story, guide, settings..." aria-label="Search site content" autocomplete="off" spellcheck="false">
+          <input type="search" id="site-search-input" class="site-search-input" placeholder="Search fighters, abilities, arenas, guide, settings..." aria-label="Search site content" autocomplete="off" spellcheck="false">
           <span class="search-kbd-hint">ESC</span>
         </div>
         <button class="nav-icon-btn btn-close-search" id="btn-close-search" aria-label="Close search">✕</button>
