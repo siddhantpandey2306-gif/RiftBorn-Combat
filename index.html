@@ -1155,6 +1155,10 @@
               <div class="profile-name-row">
                 <span class="profile-clan-badge" id="profile-clan-tag">[RIFT]</span>
                 <h2 class="profile-username" id="profile-username-big">RiftOperative</h2>
+                <button type="button" class="btn-edit-profile-name" id="btn-edit-username" title="Change Operative Call Sign" aria-label="Change Operative Call Sign">
+                  <span aria-hidden="true">✏️</span>
+                  <span>CHANGE NAME</span>
+                </button>
                 <button type="button" class="btn-copy-tag" id="btn-copy-player-id" title="Copy Operative Battle Code" aria-label="Copy Operative Battle Code">
                   <span id="copy-btn-icon" aria-hidden="true">📋</span>
                   <span id="copy-btn-text">COPY TAG</span>
@@ -1401,6 +1405,16 @@
             
             <!-- Panel 1: Gameplay & Graphics (Active) -->
             <div class="settings-tab-panel active" id="settings-panel-gameplay">
+              <div class="setting-row-box">
+                <div class="setting-meta">
+                  <div class="setting-title">OPERATIVE CALL SIGN</div>
+                  <div class="setting-desc">Public combat handle: <strong id="settings-current-username" style="color: var(--accent-gold, #ffa500);">RiftOperative</strong> <span id="settings-current-clantag" style="color: var(--text-secondary); font-size: 11px;">[RIFT]</span></div>
+                </div>
+                <div class="setting-control-group">
+                  <button type="button" class="btn-primary" id="btn-settings-change-name" style="padding: 6px 14px; font-size: 11px; font-weight: 700;">CHANGE NAME</button>
+                </div>
+              </div>
+
               <div class="setting-row-box">
                 <div class="setting-meta">
                   <div class="setting-title">SCREEN SHAKE</div>
@@ -2694,6 +2708,97 @@
           <button type="submit" class="btn-feedback-submit" id="btn-submit-feedback">
             <span class="btn-submit-text">SUBMIT FEEDBACK</span>
             <span class="btn-submit-spinner" style="display: none;" aria-hidden="true"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- EDIT CALL SIGN / USERNAME MODAL -->
+  <div class="modal-overlay" id="modal-edit-username" role="dialog" aria-modal="true" aria-labelledby="edit-username-modal-title" style="display: none;">
+    <div class="modal-box edit-username-modal-box">
+      <div class="feedback-modal-header">
+        <div class="feedback-modal-header-text">
+          <div class="feedback-modal-tag"><span class="pulse-dot"></span> OPERATIVE IDENTITY PROTOCOL</div>
+          <h2 class="modal-title feedback-modal-title" id="edit-username-modal-title">CHANGE OPERATIVE CALL SIGN</h2>
+          <p class="feedback-modal-subtitle">
+            Update your public fighter handle and clan affiliation displayed across matches, profiles, and leaderboards.
+          </p>
+        </div>
+        <button class="feedback-close-btn" id="btn-close-edit-username" aria-label="Close Name Edit Modal" title="Close (Esc)">✕</button>
+      </div>
+
+      <form id="form-edit-username" class="feedback-form" novalidate autocomplete="off">
+        <div class="feedback-form-row">
+          <!-- Username Input -->
+          <div class="feedback-field-group flex-2">
+            <div class="feedback-label-row">
+              <label for="input-edit-username" class="feedback-field-label">CALL SIGN / NAME <span class="feedback-required-star">*</span></label>
+              <span class="feedback-char-count" id="username-char-counter">13 / 20</span>
+            </div>
+            <div class="username-input-wrapper">
+              <input 
+                type="text" 
+                id="input-edit-username" 
+                name="username" 
+                class="feedback-input-text" 
+                placeholder="Enter call sign..." 
+                minlength="2" 
+                maxlength="20" 
+                required 
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <button type="button" class="btn-randomize-name" id="btn-randomize-username" title="Generate Random Cool Call Sign" aria-label="Generate Random Call Sign">
+                <span aria-hidden="true">🎲</span>
+                <span>RANDOM</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Clan Tag Input -->
+          <div class="feedback-field-group flex-1">
+            <div class="feedback-label-row">
+              <label for="input-edit-clantag" class="feedback-field-label">CLAN TAG</label>
+              <span class="feedback-char-count" id="clantag-char-counter">4 / 5</span>
+            </div>
+            <input 
+              type="text" 
+              id="input-edit-clantag" 
+              name="clantag" 
+              class="feedback-input-text" 
+              placeholder="RIFT" 
+              maxlength="5" 
+              autocomplete="off"
+              spellcheck="false"
+              style="text-transform: uppercase;"
+            />
+          </div>
+        </div>
+
+        <p class="edit-username-hint">
+          <span>ℹ️</span> 2 to 20 alphanumeric characters. Changes take effect immediately and are saved locally.
+        </p>
+
+        <!-- Error Alert -->
+        <div class="feedback-alert feedback-alert-error" id="edit-username-error" style="display: none;" role="alert">
+          <span class="alert-icon">⚠️</span>
+          <span class="alert-message" id="edit-username-error-text">Please enter a valid call sign.</span>
+        </div>
+
+        <!-- Success Alert -->
+        <div class="feedback-alert feedback-alert-success" id="edit-username-success" style="display: none;" role="status">
+          <span class="alert-icon">✓</span>
+          <div class="alert-content">
+            <strong class="alert-title">Call sign updated successfully!</strong>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="feedback-modal-footer">
+          <button type="button" class="btn-feedback-cancel" id="btn-cancel-edit-username">CANCEL</button>
+          <button type="submit" class="btn-feedback-submit" id="btn-save-username">
+            <span>SAVE CALL SIGN</span>
           </button>
         </div>
       </form>

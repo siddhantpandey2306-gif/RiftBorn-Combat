@@ -91,6 +91,7 @@ class RiftbornApp {
     this.setupCookieConsent();
     this.setupFooterAndLegal();
     this.setupFeedbackModal();
+    this.setupUsernameModal();
     this.updateUserDisplay();
     this.renderHomeHero();
 
@@ -1372,6 +1373,11 @@ class RiftbornApp {
     document.getElementById('nav-shards-display').textContent = prof.shards.toLocaleString();
     document.getElementById('nav-prisms-display').textContent = prof.corePrisms.toLocaleString();
     document.getElementById('nav-username').textContent = prof.username;
+    
+    const settingsUser = document.getElementById('settings-current-username');
+    if (settingsUser) settingsUser.textContent = prof.username;
+    const settingsClan = document.getElementById('settings-current-clantag');
+    if (settingsClan) settingsClan.textContent = `[${prof.clanTag || 'RIFT'}]`;
     
     const navBadge = document.getElementById('nav-rank-badge');
     if (navBadge) {
@@ -5827,6 +5833,143 @@ class RiftbornApp {
       return screenTitles[id] || id;
     }
     return 'Main Menu';
+  }
+
+  // --- OPERATIVE CALL SIGN / USERNAME MANAGEMENT ---
+  setupUsernameModal() {
+    const modal = document.getElementById('modal-edit-username');
+    const form = document.getElementById('form-edit-username');
+    if (!modal || !form) return;
+
+    const btnClose = document.getElementById('btn-close-edit-username');
+    const btnCancel = document.getElementById('btn-cancel-edit-username');
+    const inputUsername = document.getElementById('input-edit-username');
+    const inputClanTag = document.getElementById('input-edit-clantag');
+    const counterUsername = document.getElementById('username-char-counter');
+    const counterClanTag = document.getElementById('clantag-char-counter');
+    const btnRandom = document.getElementById('btn-randomize-username');
+    const alertError = document.getElementById('edit-username-error');
+    const errorText = document.getElementById('edit-username-error-text');
+    const alertSuccess = document.getElementById('edit-username-success');
+
+    const RANDOM_CALLSIGNS = [
+      'VanguardX', 'NovaStriker', 'NeonSpectre', 'CyberReaper', 'VoidBreaker',
+      'ShadowRift', 'PulseBlade', 'ChronoPhantom', 'SolarFlare', 'GrimVanguard',
+      'ApexSpar', 'AeroKnight', 'ZeroDrift', 'AbyssWalker', 'Hyperion',
+      'EclipseFist', 'FluxMaster', 'PhantomBlade', 'OmegaStriker', 'TitanRift',
+      'QuantumStrike', 'LaserCore', 'IronValkyrie', 'AstralMonk', 'EchoFighter'
+    ];
+
+    const RANDOM_CLANS = ['RIFT', 'NOVA', 'VOID', 'CYBR', 'APEX', 'NEON', 'ECHO', 'VALK'];
+
+    const updateCounters = () => {
+      if (inputUsername && counterUsername) {
+        counterUsername.textContent = `${inputUsername.value.length} / 20`;
+      }
+      if (inputClanTag && counterClanTag) {
+        counterClanTag.textContent = `${inputClanTag.value.length} / 5`;
+      }
+    };
+
+    if (inputUsername) inputUsername.addEventListener('input', updateCounters);
+    if (inputClanTag) inputClanTag.addEventListener('input', updateCounters);
+
+    if (btnRandom) {
+      btnRandom.addEventListener('click', () => {
+        const randName = RANDOM_CALLSIGNS[Math.floor(Math.random() * RANDOM_CALLSIGNS.length)];
+        const randTag = RANDOM_CLANS[Math.floor(Math.random() * RANDOM_CLANS.length)];
+        if (inputUsername) inputUsername.value = randName;
+        if (inputClanTag) inputClanTag.value = randTag;
+        updateCounters();
+        if (alertError) alertError.style.display = 'none';
+        soundEngine?.playUiClick?.();
+      });
+    }
+
+    const openModal = () => {
+      if (alertError) alertError.style.display = 'none';
+      if (alertSuccess) alertSuccess.style.display = 'none';
+
+      const currentName = progressionManager.getUsername();
+      const currentTag = progressionManager.getClanTag();
+
+      if (inputUsername) inputUsername.value = currentName;
+      if (inputClanTag) inputClanTag.value = currentTag;
+      updateCounters();
+
+      modal.style.display = 'flex';
+      setTimeout(() => {
+        if (inputUsername) {
+          inputUsername.focus();
+          inputUsername.select();
+        }
+      }, 50);
+      soundEngine?.playUiClick?.();
+    };
+
+    const closeModal = () => {
+      modal.style.display = 'none';
+      if (alertError) alertError.style.display = 'none';
+      if (alertSuccess) alertSuccess.style.display = 'none';
+      soundEngine?.playUiClick?.();
+    };
+
+    this.openUsernameModal = openModal;
+    this.closeUsernameModal = closeModal;
+
+    // Triggers
+    const btnEditProfile = document.getElementById('btn-edit-username');
+    if (btnEditProfile) btnEditProfile.addEventListener('click', openModal);
+
+    const btnSettingsChange = document.getElementById('btn-settings-change-name');
+    if (btnSettingsChange) btnSettingsChange.addEventListener('click', openModal);
+
+    if (btnClose) btnClose.addEventListener('click', closeModal);
+    if (btnCancel) btnCancel.addEventListener('click', closeModal);
+
+    // Backdrop click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    // Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.style.display !== 'none') {
+        closeModal();
+      }
+    });
+
+    // Form submit
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const newName = inputUsername?.value?.trim() || '';
+      const newTag = inputClanTag?.value?.trim() || 'RIFT';
+
+      const result = progressionManager.setUsername(newName, newTag);
+      if (!result.success) {
+        if (alertError && errorText) {
+          errorText.textContent = result.error || 'Please enter a valid call sign.';
+          alertError.style.display = 'flex';
+        }
+        inputUsername?.focus();
+        return;
+      }
+
+      // Success
+      if (alertError) alertError.style.display = 'none';
+      if (alertSuccess) alertSuccess.style.display = 'flex';
+
+      this.updateUserDisplay();
+      this.renderProfile();
+      soundEngine?.playUiClick?.();
+
+      this.showToast(`Call sign updated to ${result.username}!`, 'success', 3000);
+
+      setTimeout(() => {
+        closeModal();
+      }, 600);
+    });
   }
 }
 

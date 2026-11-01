@@ -171,6 +171,23 @@ async function runFeedbackTests() {
   assert(htmlContent.includes('id="btn-pause-feedback"'), 'Pause menu feedback button is present in index.html');
   assert(htmlContent.includes('id="btn-results-feedback"'), 'Match results feedback button is present in index.html');
   assert(htmlContent.includes('connect-src \'self\' https://*.supabase.co;'), 'CSP permits connections to Supabase');
+  assert(htmlContent.includes('id="modal-edit-username"'), 'Name change modal markup is present in index.html');
+  assert(htmlContent.includes('id="btn-edit-username"'), 'Edit name button is present in profile screen');
+  assert(htmlContent.includes('id="btn-settings-change-name"'), 'Change name button is present in settings screen');
+
+  // Test 13: Player Name Change & Validation
+  const { progressionManager } = await import('./src/progression/ProgressionManager.js');
+  const validRename = progressionManager.setUsername('NovaStriker', 'CYBR');
+  assert(validRename.success === true && validRename.username === 'NovaStriker' && validRename.clanTag === 'CYBR', 'Player can successfully change their call sign and clan tag');
+
+  const tooShortRename = progressionManager.setUsername('A');
+  assert(tooShortRename.success === false && tooShortRename.error.includes('2'), 'Name under 2 characters is rejected');
+
+  const tooLongRename = progressionManager.setUsername('A'.repeat(25));
+  assert(tooLongRename.success === false && tooLongRename.error.includes('20'), 'Name over 20 characters is rejected');
+
+  const sanitizeRename = progressionManager.setUsername('<b>Vanguard</b>');
+  assert(sanitizeRename.success === true && sanitizeRename.username === 'Vanguard', 'Harmful characters are stripped from user name');
 
   console.log(`\n--- FEEDBACK SYSTEM TESTS COMPLETED: ${passed} PASSED, ${failed} FAILED ---\n`);
 

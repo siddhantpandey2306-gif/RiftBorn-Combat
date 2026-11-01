@@ -878,6 +878,47 @@ export class ProgressionManager {
     return false;
   }
 
+  getUsername() {
+    return this.data.profile?.username || 'RiftOperative';
+  }
+
+  getClanTag() {
+    return this.data.profile?.clanTag || 'RIFT';
+  }
+
+  setUsername(newName, newClanTag = null) {
+    if (typeof newName !== 'string') {
+      return { success: false, error: 'Call sign must be a valid text string.' };
+    }
+    const cleanName = newName.replace(/<[^>]*>/g, '').replace(/[<>"'&]/g, '').trim();
+    if (cleanName.length < 2) {
+      return { success: false, error: 'Call sign must be at least 2 characters long.' };
+    }
+    if (cleanName.length > 20) {
+      return { success: false, error: 'Call sign cannot exceed 20 characters.' };
+    }
+
+    if (!this.data.profile) {
+      this.data.profile = this.getDefaultData().profile;
+    }
+
+    this.data.profile.username = cleanName;
+
+    if (newClanTag !== null && newClanTag !== undefined) {
+      const cleanTag = String(newClanTag).replace(/[^A-Za-z0-9_\-]/g, '').trim().toUpperCase().slice(0, 5);
+      if (cleanTag.length > 0) {
+        this.data.profile.clanTag = cleanTag;
+      }
+    }
+
+    this.saveData(this.data);
+    return {
+      success: true,
+      username: this.data.profile.username,
+      clanTag: this.data.profile.clanTag
+    };
+  }
+
   getMainCharacter() {
     return this.data.profile.mainCharacter || 'vex';
   }
