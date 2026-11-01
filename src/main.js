@@ -10,6 +10,7 @@ import { soundEngine } from './engine/SoundEngine.js';
 import { progressionManager, COSMETIC_REWARDS_CATALOG } from './progression/ProgressionManager.js';
 import { GLOBAL_LEADERBOARD } from './social/SocialSystem.js';
 import { RANK_TIERS, SEASON_CONFIG, CompetitiveRankEngine, competitiveNetworkCoordinator } from './competitive/CompetitiveSystem.js';
+import { feedbackService } from './services/FeedbackService.js';
 
 export function escapeHtml(str) {
   if (str === null || str === undefined) return '';
@@ -89,6 +90,7 @@ class RiftbornApp {
     this.setupCopyButtons();
     this.setupCookieConsent();
     this.setupFooterAndLegal();
+    this.setupFeedbackModal();
     this.updateUserDisplay();
     this.renderHomeHero();
 
@@ -125,8 +127,6 @@ class RiftbornApp {
     // Hide fight view when browsing menus
     document.getElementById('game-view').style.display = 'none';
     document.body.classList.remove('in-combat');
-    const fb = document.getElementById('btn-floating-contact');
-    if (fb) fb.style.display = '';
 
     // Clear combat-only overlays when navigating menus
     const tutOverlay = document.getElementById('tutorial-overlay');
@@ -3372,8 +3372,6 @@ class RiftbornApp {
     this.stopPreviewLoop();
 
     document.body.classList.add('in-combat');
-    const fb = document.getElementById('btn-floating-contact');
-    if (fb) fb.style.display = 'none';
 
     // Blur active focused element so Space doesn't re-trigger buttons during gameplay
     if (document.activeElement && typeof document.activeElement.blur === 'function') {
@@ -5570,6 +5568,265 @@ class RiftbornApp {
     if (dmgEl) dmgEl.textContent = '0 DMG';
 
     soundEngine.playParry();
+  }
+
+  // --- IN-GAME FEEDBACK & BUG REPORT MODAL SYSTEM ---
+  setupFeedbackModal() {
+    const modal = document.getElementById('modal-feedback');
+    const form = document.getElementById('form-game-feedback');
+    if (!modal || !form) return;
+
+    const btnClose = document.getElementById('btn-close-feedback-modal');
+    const btnCancel = document.getElementById('btn-cancel-feedback');
+    const titleInput = document.getElementById('fb-input-title');
+    const titleCounter = document.getElementById('fb-title-counter');
+    const descInput = document.getElementById('fb-input-description');
+    const descCounter = document.getElementById('fb-desc-counter');
+    const categoryInput = document.getElementById('fb-input-category');
+    const catPills = modal.querySelectorAll('.feedback-cat-pill');
+    const prioritySelect = document.getElementById('fb-input-priority');
+    const emailInput = document.getElementById('fb-input-email');
+    const honeypotInput = document.getElementById('fb-hp-field');
+    const alertError = document.getElementById('fb-alert-error');
+    const errorText = document.getElementById('fb-error-text');
+    const alertSuccess = document.getElementById('fb-alert-success');
+    const submitBtn = document.getElementById('btn-submit-feedback');
+    const submitText = submitBtn?.querySelector('.btn-submit-text');
+    const submitSpinner = submitBtn?.querySelector('.btn-submit-spinner');
+
+    const metaVersion = document.getElementById('fb-meta-version');
+    const metaScreen = document.getElementById('fb-meta-screen');
+    const metaDevice = document.getElementById('fb-meta-device');
+
+    const updateCharCounters = () => {
+      if (titleInput && titleCounter) {
+        titleCounter.textContent = `${titleInput.value.length} / 120`;
+      }
+      if (descInput && descCounter) {
+        descCounter.textContent = `${descInput.value.length} / 2000`;
+      }
+    };
+
+    if (titleInput) titleInput.addEventListener('input', updateCharCounters);
+    if (descInput) descInput.addEventListener('input', updateCharCounters);
+
+    // Category pills switching
+    catPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        catPills.forEach(p => {
+          p.classList.remove('active');
+          p.setAttribute('aria-checked', 'false');
+        });
+        pill.classList.add('active');
+        pill.setAttribute('aria-checked', 'true');
+        const cat = pill.getAttribute('data-category');
+        if (categoryInput) categoryInput.value = cat;
+        soundEngine?.playUiClick?.();
+      });
+    });
+
+    const openModal = (initialCategory = 'bug') => {
+      const activeScreenName = this.getActiveScreenName();
+      if (metaVersion) metaVersion.textContent = 'v1.2.0';
+      if (metaScreen) metaScreen.textContent = activeScreenName;
+      if (metaDevice) metaDevice.textContent = feedbackService.getDeviceSummary();
+
+      // Reset alert states
+      if (alertError) alertError.style.display = 'none';
+      if (alertSuccess) alertSuccess.style.display = 'none';
+      if (submitBtn) submitBtn.disabled = false;
+      if (submitText) submitText.textContent = 'SUBMIT FEEDBACK';
+      if (submitSpinner) submitSpinner.style.display = 'none';
+
+      // Set category pill
+      catPills.forEach(p => {
+        const matches = p.getAttribute('data-category') === initialCategory;
+        p.classList.toggle('active', matches);
+        p.setAttribute('aria-checked', matches ? 'true' : 'false');
+      });
+      if (categoryInput) categoryInput.value = initialCategory;
+
+      modal.style.display = 'flex';
+      setTimeout(() => {
+        titleInput?.focus();
+      }, 50);
+      soundEngine?.playUiClick?.();
+    };
+
+    const closeModal = () => {
+      modal.style.display = 'none';
+      if (alertError) alertError.style.display = 'none';
+      if (alertSuccess) alertSuccess.style.display = 'none';
+      soundEngine?.playUiClick?.();
+    };
+
+    this.openFeedbackModal = openModal;
+    this.closeFeedbackModal = closeModal;
+
+    // Entry points
+    const btnSettingsOpen = document.getElementById('btn-settings-open-feedback');
+    if (btnSettingsOpen) btnSettingsOpen.addEventListener('click', () => openModal('suggestion'));
+
+    const btnPauseFeedback = document.getElementById('btn-pause-feedback');
+    if (btnPauseFeedback) btnPauseFeedback.addEventListener('click', () => openModal('bug'));
+
+    const btnResultsFeedback = document.getElementById('btn-results-feedback');
+    if (btnResultsFeedback) btnResultsFeedback.addEventListener('click', () => openModal('gameplay'));
+
+    const btnDrawerFeedback = document.getElementById('drawer-btn-feedback');
+    if (btnDrawerFeedback) {
+      btnDrawerFeedback.addEventListener('click', () => {
+        const drawer = document.getElementById('mobile-drawer');
+        const overlay = document.getElementById('drawer-overlay');
+        if (drawer) drawer.classList.remove('open');
+        if (overlay) overlay.classList.remove('open');
+        document.body.classList.remove('drawer-open');
+        openModal('bug');
+      });
+    }
+
+    const btnFooterFeedback = document.getElementById('footer-btn-open-feedback');
+    if (btnFooterFeedback) btnFooterFeedback.addEventListener('click', () => openModal('suggestion'));
+
+    const btnPrivacyFeedback = document.getElementById('btn-privacy-open-feedback');
+    if (btnPrivacyFeedback) btnPrivacyFeedback.addEventListener('click', () => openModal('other'));
+
+    if (btnClose) btnClose.addEventListener('click', closeModal);
+    if (btnCancel) btnCancel.addEventListener('click', closeModal);
+
+    // Backdrop click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    // Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.style.display !== 'none') {
+        closeModal();
+      }
+    });
+
+    // Form submit
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (alertError) alertError.style.display = 'none';
+      if (alertSuccess) alertSuccess.style.display = 'none';
+
+      const category = categoryInput?.value || 'bug';
+      const title = titleInput?.value?.trim() || '';
+      const description = descInput?.value?.trim() || '';
+      const priority = prioritySelect?.value || 'normal';
+      const playerEmail = emailInput?.value?.trim() || null;
+      const honeypot = honeypotInput?.value?.trim() || '';
+      const pageName = this.getActiveScreenName();
+
+      // Client quick validations
+      if (!title) {
+        if (alertError && errorText) {
+          errorText.textContent = 'Please enter a short title for your report.';
+          alertError.style.display = 'flex';
+        }
+        titleInput?.focus();
+        return;
+      }
+
+      if (!description) {
+        if (alertError && errorText) {
+          errorText.textContent = 'Please enter a description explaining your feedback.';
+          alertError.style.display = 'flex';
+        }
+        descInput?.focus();
+        return;
+      }
+
+      // Set loading state
+      if (submitBtn) submitBtn.disabled = true;
+      if (submitText) submitText.textContent = 'SUBMITTING...';
+      if (submitSpinner) submitSpinner.style.display = 'inline-block';
+
+      try {
+        const result = await feedbackService.submitFeedback({
+          category,
+          title,
+          description,
+          priority,
+          playerEmail,
+          pageName,
+          honeypot
+        });
+
+        if (result.success) {
+          if (alertSuccess) alertSuccess.style.display = 'flex';
+          // Clear inputs on success
+          if (titleInput) titleInput.value = '';
+          if (descInput) descInput.value = '';
+          if (emailInput) emailInput.value = '';
+          if (prioritySelect) prioritySelect.value = 'normal';
+          updateCharCounters();
+
+          if (submitText) submitText.textContent = 'SUBMITTED';
+          if (submitSpinner) submitSpinner.style.display = 'none';
+          soundEngine?.playUiClick?.();
+
+          // Auto-close modal after brief delay so player sees success confirmation
+          setTimeout(() => {
+            if (modal.style.display !== 'none' && alertSuccess?.style.display !== 'none') {
+              closeModal();
+            }
+          }, 3000);
+        } else {
+          // Failure: keep player inputs intact and show useful error
+          if (alertError && errorText) {
+            errorText.textContent = result.error || 'Failed to submit feedback. Please check your connection and try again.';
+            alertError.style.display = 'flex';
+          }
+          if (submitBtn) submitBtn.disabled = false;
+          if (submitText) submitText.textContent = 'RETRY SUBMISSION';
+          if (submitSpinner) submitSpinner.style.display = 'none';
+        }
+      } catch (err) {
+        if (alertError && errorText) {
+          errorText.textContent = err.message || 'An unexpected error occurred. Please try again.';
+          alertError.style.display = 'flex';
+        }
+        if (submitBtn) submitBtn.disabled = false;
+        if (submitText) submitText.textContent = 'RETRY SUBMISSION';
+        if (submitSpinner) submitSpinner.style.display = 'none';
+      }
+    });
+  }
+
+  getActiveScreenName() {
+    const pauseModal = document.getElementById('modal-combat-pause');
+    if (pauseModal && pauseModal.style.display !== 'none') {
+      return 'Combat Pause Menu';
+    }
+    const resultsModal = document.getElementById('modal-match-results');
+    if (resultsModal && resultsModal.style.display !== 'none') {
+      return 'Match Results';
+    }
+    const gameView = document.getElementById('game-view');
+    if (gameView && gameView.style.display !== 'none') {
+      return 'Combat Arena';
+    }
+    const activeScreen = document.querySelector('.screen.active');
+    if (activeScreen) {
+      const id = activeScreen.id;
+      const screenTitles = {
+        'screen-home': 'Home Screen',
+        'screen-settings': 'Settings',
+        'screen-character-select': 'Character Select',
+        'screen-roster': 'Fighters Roster',
+        'screen-profile': 'Profile',
+        'screen-ranked': 'Ranked Arena',
+        'screen-casual': 'Casual Match',
+        'screen-rewards-pass': 'Missions Hub',
+        'screen-progression': 'Progression & Tree'
+      };
+      return screenTitles[id] || id;
+    }
+    return 'Main Menu';
   }
 }
 

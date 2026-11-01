@@ -13,23 +13,25 @@
   <meta name="x5-orientation" content="landscape">
   <meta name="x5-fullscreen" content="true">
   <meta name="x5-page-mode" content="app">
-  <link rel="canonical" href="https://siddhantpandey2306-gif.github.io/RiftBorn-Combat/">
+  <link rel="canonical" href="https://riftborn.io/">
   <meta property="og:title" content="RIFTBORN — Original Competitive Fighting Game">
   <meta property="og:description" content="RIFTBORN is an original competitive futuristic hero-based fighting game. Channel unique energy cores, master fast-paced combat, unlock progression, and climb the Rift Champion ranks.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://siddhantpandey2306-gif.github.io/RiftBorn-Combat/">
-  <meta property="og:image" content="https://siddhantpandey2306-gif.github.io/RiftBorn-Combat/favicon.svg">
+  <meta property="og:url" content="https://riftborn.io/">
+  <meta property="og:image" content="/favicon.svg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="RIFTBORN — Original Competitive Fighting Game">
   <meta name="twitter:description" content="RIFTBORN is an original competitive futuristic hero-based fighting game. Channel unique energy cores, master fast-paced combat, unlock progression, and climb the Rift Champion ranks.">
-  <meta name="twitter:image" content="https://siddhantpandey2306-gif.github.io/RiftBorn-Combat/favicon.svg">
+  <meta name="twitter:image" content="/favicon.svg">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/favicon.svg">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; media-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; media-src 'self' data: blob:; connect-src 'self' https://*.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests;">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <link rel="stylesheet" href="./style.css">
   <script type="module" src="./src/theme-init.js"></script>
@@ -89,11 +91,6 @@
       <button class="nav-icon-btn" data-screen="screen-settings" id="nav-settings" title="System Settings" aria-label="System Settings">
         <span class="nav-icon-glyph" aria-hidden="true">⚙</span>
       </button>
-
-      <a href="https://github.com/siddhantpandey2306-gif/RiftBorn-Combat/issues" target="_blank" rel="noopener noreferrer" class="nav-icon-btn nav-feedback-btn" id="nav-btn-feedback" title="Feedback & Bug Reports on GitHub" aria-label="Feedback and Bug Reports">
-        <span class="nav-icon-glyph" aria-hidden="true">💬</span>
-        <span class="nav-icon-label">FEEDBACK</span>
-      </a>
 
       <button class="nav-icon-btn" id="btn-toggle-fullscreen" title="Toggle Fullscreen" aria-label="Toggle Fullscreen">
         <span class="nav-icon-glyph" aria-hidden="true">⛶</span>
@@ -156,7 +153,7 @@
         <button class="drawer-nav-btn" id="drawer-btn-search"><span class="drawer-icon" aria-hidden="true">🔍</span> SEARCH CONTENT</button>
         <button class="drawer-nav-btn" id="drawer-btn-guide"><span class="drawer-icon" aria-hidden="true">📖</span> COMBAT GUIDE & MOVES</button>
         <button class="drawer-nav-btn" data-screen="screen-settings"><span class="drawer-icon" aria-hidden="true">⚙</span> SYSTEM CONFIGURATION</button>
-        <a href="https://github.com/siddhantpandey2306-gif/RiftBorn-Combat/issues" target="_blank" rel="noopener noreferrer" class="drawer-nav-btn" id="drawer-btn-feedback"><span class="drawer-icon" aria-hidden="true">💬</span> FEEDBACK & BUGS</a>
+        <button type="button" class="drawer-nav-btn" id="drawer-btn-feedback"><span class="drawer-icon" aria-hidden="true">💬</span> FEEDBACK & SUPPORT</button>
       </nav>
 
       <div class="drawer-section-title">PREFERENCES & QUICK ACTIONS</div>
@@ -1393,6 +1390,10 @@
               <span class="tab-icon">📱</span>
               <span class="tab-title">MOBILE TOUCH HUD</span>
             </button>
+            <button class="settings-nav-tab" data-tab="feedback" id="settings-tab-feedback">
+              <span class="tab-icon">💬</span>
+              <span class="tab-title">FEEDBACK & SUPPORT</span>
+            </button>
           </div>
 
           <!-- Right Column: Settings Panels -->
@@ -1486,6 +1487,26 @@
               </div>
             </div>
 
+            <!-- Panel 5: Feedback & Support -->
+            <div class="settings-tab-panel" id="settings-panel-feedback" style="display: none;">
+              <div class="setting-row-box">
+                <div class="setting-meta">
+                  <div class="setting-title">IN-GAME FEEDBACK & BUG REPORTING</div>
+                  <div class="setting-desc">Report gameplay bugs, balance concerns, performance issues, or feature suggestions directly to the team.</div>
+                </div>
+                <span class="net-pill-badge">PLAYER SUPPORT</span>
+              </div>
+
+              <div class="feedback-support-card">
+                <p class="feedback-support-desc">
+                  Encountered an issue or have ideas to improve RIFTBORN? Submit structured feedback and bug reports directly. Every report is stored securely and reviewed privately.
+                </p>
+                <button type="button" class="btn-game-primary" id="btn-settings-open-feedback" style="display: inline-flex; align-items: center; gap: 8px;">
+                  <span>💬 SEND FEEDBACK / REPORT BUG</span>
+                </button>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -1570,11 +1591,11 @@
           <div class="legal-section">
             <h2 class="legal-heading">4. Contact & Security Reporting</h2>
             <p class="legal-body-text">
-              For security vulnerability disclosures, audit verification, or questions regarding our privacy architecture, please submit an issue through our verified project repository:
+              For security vulnerability disclosures, audit verification, or questions regarding our privacy architecture, please submit a report directly through our secure in-game reporting tool:
               <br><br>
-              <a href="https://github.com/siddhantpandey2306-gif/RiftBorn-Combat/issues" target="_blank" rel="noopener noreferrer" class="footer-external-link">
-                <strong>https://github.com/siddhantpandey2306-gif/RiftBorn-Combat/issues ↗</strong>
-              </a>
+              <button type="button" class="btn-game-secondary" id="btn-privacy-open-feedback" style="font-weight: 700; cursor: pointer;">
+                🛡️ OPEN SECURE FEEDBACK & BUG REPORT
+              </button>
             </p>
           </div>
         </div>
@@ -1597,7 +1618,7 @@
           <div class="legal-section">
             <h2 class="legal-heading">1. Acceptance of Terms</h2>
             <p class="legal-body-text">
-              By loading, playing, or accessing RIFTBORN, you agree to comply with these Terms of Service and applicable open-source license agreements. If you do not agree with any portion of these terms, please discontinue use of the application.
+              By loading, playing, or accessing RIFTBORN, you agree to comply with these Terms of Service. If you do not agree with any portion of these terms, please discontinue use of the application.
             </p>
           </div>
 
@@ -1608,7 +1629,7 @@
             </p>
             <ul class="legal-list">
               <li>Attempt to reverse engineer network coordinators to transmit malicious packets or exploit WebSocket ports.</li>
-              <li>Impersonate creators, developers, or official project contributors.</li>
+              <li>Impersonate creators, developers, or official project staff.</li>
               <li>Use unauthorized botting scripts or automate inputs in online multiplayer scenarios.</li>
             </ul>
           </div>
@@ -1616,7 +1637,7 @@
           <div class="legal-section">
             <h2 class="legal-heading">3. Intellectual Property</h2>
             <p class="legal-body-text">
-              All original visual artwork, character concepts (Vex, Solaris, Lyra, Aeron, Kairo, Nox), canvas renderers, combat sound engines, lore, and software source code are the intellectual property of Siddhant Pandey and the RIFTBORN project contributors. Code is licensed under standard open-source terms referenced in the repository license.
+              All original visual artwork, character concepts (Vex, Solaris, Lyra, Aeron, Kairo, Nox), canvas renderers, combat sound engines, lore, and software assets are the intellectual property of the RIFTBORN project. All rights reserved.
             </p>
           </div>
 
@@ -1630,7 +1651,7 @@
           <div class="legal-section">
             <h2 class="legal-heading">5. Governing Law & Project Contacts</h2>
             <p class="legal-body-text">
-              Any questions regarding these Terms of Service should be directed to the project maintainers via the public GitHub repository at <a href="https://github.com/siddhantpandey2306-gif/RiftBorn-Combat" target="_blank" rel="noopener noreferrer" class="footer-external-link">github.com/siddhantpandey2306-gif/RiftBorn-Combat</a>.
+              Any questions regarding these Terms of Service should be directed to the RIFTBORN community team via the in-game Feedback & Support channel in System Settings.
             </p>
           </div>
         </div>
@@ -1687,9 +1708,9 @@
           </div>
           <p class="footer-tagline">Original 2D futuristic combat powered by procedural WebGL & HTML5 Canvas rendering. Master your core energy and battle for supremacy.</p>
           <div class="footer-repo-link">
-            <a href="https://github.com/siddhantpandey2306-gif/RiftBorn-Combat" target="_blank" rel="noopener noreferrer" class="footer-external-link">
-              <span>View Source on GitHub ↗</span>
-            </a>
+            <button type="button" class="btn-link-footer" id="footer-btn-open-feedback" style="background:none; border:none; color:var(--accent-gold, #ffa500); cursor:pointer; font-size:12px; font-weight:700; padding:0; text-decoration:underline;">
+              <span>Community Feedback & Support ↗</span>
+            </button>
           </div>
         </div>
 
@@ -1720,7 +1741,7 @@
 
       <div class="footer-bottom-row">
         <div class="footer-copy">
-          &copy; <span id="current-year">2026</span> RIFTBORN. Original open-source browser fighting game developed by Siddhant Pandey.
+          &copy; <span id="current-year">2026</span> RIFTBORN. All rights reserved. Original futuristic browser fighting game.
         </div>
         <div class="footer-meta-badges">
           <span class="footer-badge">NO COOKIE TRACKING</span>
@@ -1996,7 +2017,7 @@
           <button id="btn-pause-settings" class="btn-pause-secondary">⚙ AUDIO & SETTINGS</button>
           <button id="btn-pause-fullscreen" class="btn-pause-secondary">⛶ TOGGLE FULLSCREEN</button>
           <button id="btn-pause-restart" class="btn-pause-secondary">↺ RESTART MATCH</button>
-          <a href="https://github.com/siddhantpandey2306-gif/RiftBorn-Combat/issues" target="_blank" rel="noopener noreferrer" id="btn-pause-feedback" class="btn-pause-secondary" style="display:flex; align-items:center; justify-content:center; gap:6px; text-decoration:none;">💬 REPORT BUG / FEEDBACK ↗</a>
+          <button type="button" id="btn-pause-feedback" class="btn-pause-secondary">💬 REPORT BUG / FEEDBACK</button>
           <button id="btn-pause-quit" class="btn-pause-secondary danger">🚪 QUIT TO HOME</button>
         </div>
 
@@ -2392,6 +2413,8 @@
             <button class="btn-subtle-link" id="btn-results-challenges-btn">BOUNTIES & CHALLENGES</button>
             <span class="sub-sep">•</span>
             <button class="btn-subtle-link" id="btn-results-progression">CHARACTER PROGRESSION</button>
+            <span class="sub-sep">•</span>
+            <button type="button" class="btn-subtle-link" id="btn-results-feedback">💬 REPORT MATCH ISSUE</button>
           </div>
         </div>
 
@@ -2520,6 +2543,160 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- FEEDBACK & BUG REPORT MODAL -->
+  <div class="modal-overlay" id="modal-feedback" role="dialog" aria-modal="true" aria-labelledby="feedback-modal-title" style="display: none;">
+    <div class="modal-box feedback-modal-box">
+      <!-- Modal Header -->
+      <div class="feedback-modal-header">
+        <div class="feedback-modal-header-text">
+          <div class="feedback-modal-tag"><span class="pulse-dot"></span> COMMUNITY & SUPPORT</div>
+          <h2 class="modal-title feedback-modal-title" id="feedback-modal-title">FEEDBACK & BUG REPORT</h2>
+          <p class="feedback-modal-subtitle">
+            Report bugs, suggest balance changes, or share ideas directly with the developer.
+          </p>
+        </div>
+        <button class="feedback-close-btn" id="btn-close-feedback-modal" aria-label="Close Feedback Modal" title="Close (Esc)">✕</button>
+      </div>
+
+      <!-- Feedback Form Body -->
+      <form id="form-game-feedback" class="feedback-form" novalidate autocomplete="off">
+        <!-- Anti-Spam Honeypot (hidden from real users) -->
+        <div class="feedback-honeypot" aria-hidden="true" style="position: absolute; left: -9999px; opacity: 0; pointer-events: none;">
+          <label for="fb-hp-field">Leave this empty</label>
+          <input type="text" id="fb-hp-field" name="fb_website_url" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <!-- Category Selector -->
+        <div class="feedback-field-group">
+          <label class="feedback-field-label">CATEGORY <span class="feedback-required-star">*</span></label>
+          <div class="feedback-category-pills" role="radiogroup" aria-label="Feedback Category">
+            <button type="button" class="feedback-cat-pill active" data-category="bug" role="radio" aria-checked="true">
+              <span class="cat-pill-icon">🐞</span> Bug Report
+            </button>
+            <button type="button" class="feedback-cat-pill" data-category="gameplay" role="radio" aria-checked="false">
+              <span class="cat-pill-icon">⚔️</span> Gameplay Issue
+            </button>
+            <button type="button" class="feedback-cat-pill" data-category="performance" role="radio" aria-checked="false">
+              <span class="cat-pill-icon">⚡</span> Performance
+            </button>
+            <button type="button" class="feedback-cat-pill" data-category="suggestion" role="radio" aria-checked="false">
+              <span class="cat-pill-icon">💡</span> Suggestion
+            </button>
+            <button type="button" class="feedback-cat-pill" data-category="other" role="radio" aria-checked="false">
+              <span class="cat-pill-icon">💬</span> Other
+            </button>
+          </div>
+          <input type="hidden" id="fb-input-category" name="category" value="bug" />
+        </div>
+
+        <!-- Title & Priority Row -->
+        <div class="feedback-form-row">
+          <div class="feedback-field-group flex-2">
+            <div class="feedback-label-row">
+              <label for="fb-input-title" class="feedback-field-label">SHORT TITLE <span class="feedback-required-star">*</span></label>
+              <span class="feedback-char-count" id="fb-title-counter">0 / 120</span>
+            </div>
+            <input 
+              type="text" 
+              id="fb-input-title" 
+              name="title" 
+              class="feedback-input-text" 
+              placeholder="e.g. Evasion roll hitbox clip on corner ledge" 
+              maxlength="120"
+              required 
+            />
+          </div>
+
+          <div class="feedback-field-group flex-1">
+            <label for="fb-input-priority" class="feedback-field-label">PRIORITY</label>
+            <select id="fb-input-priority" name="priority" class="feedback-select">
+              <option value="normal" selected>Normal</option>
+              <option value="low">Low</option>
+              <option value="high">High</option>
+              <option value="urgent">Urgent</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="feedback-field-group">
+          <div class="feedback-label-row">
+            <label for="fb-input-description" class="feedback-field-label">DESCRIPTION <span class="feedback-required-star">*</span></label>
+            <span class="feedback-char-count" id="fb-desc-counter">0 / 2000</span>
+          </div>
+          <textarea 
+            id="fb-input-description" 
+            name="description" 
+            class="feedback-textarea" 
+            rows="4" 
+            placeholder="Describe what happened, steps to reproduce, or your suggestion in detail..." 
+            maxlength="2000"
+            required
+          ></textarea>
+        </div>
+
+        <!-- Optional Email -->
+        <div class="feedback-field-group">
+          <label for="fb-input-email" class="feedback-field-label">YOUR EMAIL <span class="feedback-optional-tag">(Optional — for follow-up only)</span></label>
+          <input 
+            type="email" 
+            id="fb-input-email" 
+            name="email" 
+            class="feedback-input-text" 
+            placeholder="player@example.com" 
+            maxlength="100"
+          />
+        </div>
+
+        <!-- Automatic Metadata Inspector Box -->
+        <div class="feedback-meta-box">
+          <div class="feedback-meta-header">
+            <span class="feedback-meta-icon">🛡️</span>
+            <span class="feedback-meta-title">AUTOMATIC DIAGNOSTIC CONTEXT</span>
+          </div>
+          <div class="feedback-meta-grid">
+            <div class="feedback-meta-item">
+              <span class="feedback-meta-k">Game Version:</span>
+              <span class="feedback-meta-v" id="fb-meta-version">v1.2.0</span>
+            </div>
+            <div class="feedback-meta-item">
+              <span class="feedback-meta-k">Screen:</span>
+              <span class="feedback-meta-v" id="fb-meta-screen">Settings</span>
+            </div>
+            <div class="feedback-meta-item full-width">
+              <span class="feedback-meta-k">Device:</span>
+              <span class="feedback-meta-v" id="fb-meta-device">Detecting...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error Alert Banner -->
+        <div class="feedback-alert feedback-alert-error" id="fb-alert-error" style="display: none;" role="alert">
+          <span class="alert-icon">⚠️</span>
+          <span class="alert-message" id="fb-error-text">Failed to submit feedback.</span>
+        </div>
+
+        <!-- Success Alert Banner -->
+        <div class="feedback-alert feedback-alert-success" id="fb-alert-success" style="display: none;" role="status">
+          <span class="alert-icon">✓</span>
+          <div class="alert-content">
+            <strong class="alert-title">Thank you! Your feedback has been submitted.</strong>
+            <p class="alert-subtitle">Every report is reviewed directly in the developer console to improve RIFTBORN.</p>
+          </div>
+        </div>
+
+        <!-- Modal Footer Controls -->
+        <div class="feedback-modal-footer">
+          <button type="button" class="btn-feedback-cancel" id="btn-cancel-feedback">CANCEL</button>
+          <button type="submit" class="btn-feedback-submit" id="btn-submit-feedback">
+            <span class="btn-submit-text">SUBMIT FEEDBACK</span>
+            <span class="btn-submit-spinner" style="display: none;" aria-hidden="true"></span>
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -2653,12 +2830,6 @@
   <button id="btn-back-to-top" class="btn-back-to-top" title="Scroll back to top" aria-label="Scroll back to top">
     <span aria-hidden="true">▲</span>
   </button>
-
-  <!-- FLOATING FEEDBACK / CONTACT BUTTON (Shifted to Navigation Bar & Drawer) -->
-  <a href="https://github.com/siddhantpandey2306-gif/RiftBorn-Combat/issues" target="_blank" rel="noopener noreferrer" id="btn-floating-contact" class="btn-floating-contact" style="display: none !important;" title="Feedback & Bug Reports on GitHub" aria-label="Report feedback or bug on GitHub">
-    <span class="floating-icon" aria-hidden="true">💬</span>
-    <span class="floating-label">FEEDBACK</span>
-  </a>
 
   <!-- SITE CONTENT SEARCH MODAL -->
   <div class="modal-overlay" id="modal-site-search" role="dialog" aria-modal="true" aria-labelledby="search-modal-title" style="display: none;">
