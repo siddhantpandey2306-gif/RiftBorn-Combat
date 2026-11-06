@@ -46,7 +46,6 @@
     <button type="button" class="nav-brand" id="btn-nav-brand" aria-label="RIFTBORN Home Screen">
       <div class="brand-emblem" aria-hidden="true"></div>
       <div class="brand-text">RIFTBORN</div>
-      <span class="brand-tag">ORIGINAL COMBAT</span>
     </button>
 
     <!-- Core Simplified Navigation: HOME, FIGHTERS, RANK, MISSIONS, PROFILE -->
@@ -68,42 +67,58 @@
     <!-- Right Controls: Search, Theme Toggle, Bounties, Guide, Settings, Currency, Mobile Menu -->
     <div class="nav-user">
       <button class="nav-icon-btn" id="btn-search-trigger" title="Search Content (Ctrl+K)" aria-label="Search site content">
-        <span class="nav-icon-glyph" aria-hidden="true">🔍</span>
+        <span class="nav-icon-glyph" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
         <span class="nav-icon-label">SEARCH</span>
       </button>
 
       <button class="nav-icon-btn" id="btn-theme-toggle" title="Toggle Light / Dark Theme" aria-label="Toggle Light or Dark Theme">
-        <span class="nav-icon-glyph" id="theme-icon-glyph" aria-hidden="true">🌙</span>
+        <span class="nav-icon-glyph" id="theme-icon-glyph" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </span>
         <span class="nav-icon-label" id="theme-icon-label">THEME</span>
       </button>
 
       <button class="nav-icon-btn" id="nav-guide-btn" title="Combat Guide & Move List" aria-label="Combat Guide and Move List">
-        <span class="nav-icon-glyph" aria-hidden="true">📖</span>
+        <span class="nav-icon-glyph" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/></svg>
+        </span>
         <span class="nav-icon-label">GUIDE</span>
       </button>
 
       <button class="nav-icon-btn" id="nav-challenges" title="Combat Missions & Bounties" aria-label="Combat Missions and Bounties">
-        <span class="nav-icon-glyph" aria-hidden="true">🎯</span>
+        <span class="nav-icon-glyph" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </span>
         <span class="nav-icon-label">MISSIONS</span>
         <span id="nav-challenges-badge" class="nav-alert-dot" style="display:none;"></span>
       </button>
 
       <button class="nav-icon-btn" data-screen="screen-settings" id="nav-settings" title="System Settings" aria-label="System Settings">
-        <span class="nav-icon-glyph" aria-hidden="true">⚙</span>
+        <span class="nav-icon-glyph" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </span>
       </button>
 
       <button class="nav-icon-btn" id="btn-toggle-fullscreen" title="Toggle Fullscreen" aria-label="Toggle Fullscreen">
-        <span class="nav-icon-glyph" aria-hidden="true">⛶</span>
+        <span class="nav-icon-glyph" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+        </span>
         <span class="nav-icon-label">FULLSCREEN</span>
       </button>
 
       <div class="nav-currency-group" aria-label="Player Currencies">
         <div class="currency-pill" title="Rift Shards">
-          <span class="currency-icon" aria-hidden="true">✦</span>
+          <span class="currency-icon" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 12l10 10 10-10L12 2z"/></svg>
+          </span>
           <span id="nav-shards-display">1,400</span>
         </div>
         <div class="currency-pill" title="Cosmetic Prisms">
-          <span class="currency-icon" aria-hidden="true">⬢</span>
+          <span class="currency-icon currency-prisms" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12,2 22,7.77 22,16.23 12,22 2,16.23 2,7.77"/></svg>
+          </span>
           <span id="nav-prisms-display">60</span>
         </div>
       </div>
@@ -118,7 +133,9 @@
 
       <!-- Mobile Hamburger Menu Button -->
       <button class="nav-icon-btn mobile-menu-btn" id="btn-mobile-menu" aria-label="Open Navigation Menu" aria-expanded="false" aria-controls="mobile-nav-drawer">
-        <span class="nav-icon-glyph" aria-hidden="true">☰</span>
+        <span class="nav-icon-glyph" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </span>
       </button>
     </div>
   </header>
@@ -136,34 +153,76 @@
         <div class="brand-emblem" aria-hidden="true"></div>
         <div class="brand-text">RIFTBORN</div>
       </div>
-      <button class="nav-icon-btn btn-close-drawer" id="btn-close-mobile-drawer" aria-label="Close navigation menu">✕</button>
+      <button class="nav-icon-btn btn-close-drawer" id="btn-close-mobile-drawer" aria-label="Close navigation menu">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
     <div class="mobile-drawer-scroll custom-scroll">
       <div class="drawer-section-title">COMBAT DESTINATIONS</div>
       <nav class="drawer-nav-list" aria-label="Mobile Primary Navigation">
-        <button class="drawer-nav-btn active" data-screen="screen-home"><span class="drawer-icon" aria-hidden="true">⌂</span> HOME</button>
-        <button class="drawer-nav-btn" data-screen="screen-character-select"><span class="drawer-icon" aria-hidden="true">🥋</span> FIGHTERS ROSTER</button>
-        <button class="drawer-nav-btn" data-screen="screen-ranked-setup"><span class="drawer-icon" aria-hidden="true">🏆</span> RANKED LADDER</button>
-        <button class="drawer-nav-btn" id="drawer-btn-challenges"><span class="drawer-icon" aria-hidden="true">🎯</span> MISSIONS HUB</button>
-        <button class="drawer-nav-btn" data-screen="screen-profile"><span class="drawer-icon" aria-hidden="true">👤</span> OPERATIVE PROFILE</button>
+        <button class="drawer-nav-btn active" data-screen="screen-home">
+          <span class="drawer-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </span> HOME
+        </button>
+        <button class="drawer-nav-btn" data-screen="screen-character-select">
+          <span class="drawer-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5M13 19l6-6M19 13l2 2-7 7-2-2 7-7M9.5 14.5L6 18H3v-3l3.5-3.5"/></svg>
+          </span> FIGHTERS ROSTER
+        </button>
+        <button class="drawer-nav-btn" data-screen="screen-ranked-setup">
+          <span class="drawer-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.45 1-1 1H8v4h8v-4h-1c-.55 0-1-.45-1-1v-2.34A8 8 0 0 0 20 8V3H4v5a8 8 0 0 0 6 6.66z"/></svg>
+          </span> RANKED LADDER
+        </button>
+        <button class="drawer-nav-btn" id="drawer-btn-challenges">
+          <span class="drawer-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </span> MISSIONS HUB
+        </button>
+        <button class="drawer-nav-btn" data-screen="screen-profile">
+          <span class="drawer-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </span> OPERATIVE PROFILE
+        </button>
       </nav>
 
       <div class="drawer-section-title">TACTICAL UTILITIES</div>
       <nav class="drawer-nav-list" aria-label="Mobile Tactical Utilities">
-        <button class="drawer-nav-btn" id="drawer-btn-search"><span class="drawer-icon" aria-hidden="true">🔍</span> SEARCH CONTENT</button>
-        <button class="drawer-nav-btn" id="drawer-btn-guide"><span class="drawer-icon" aria-hidden="true">📖</span> COMBAT GUIDE & MOVES</button>
-        <button class="drawer-nav-btn" data-screen="screen-settings"><span class="drawer-icon" aria-hidden="true">⚙</span> SYSTEM CONFIGURATION</button>
-        <button type="button" class="drawer-nav-btn" id="drawer-btn-feedback"><span class="drawer-icon" aria-hidden="true">💬</span> FEEDBACK & SUPPORT</button>
+        <button class="drawer-nav-btn" id="drawer-btn-search">
+          <span class="drawer-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </span> SEARCH CONTENT
+        </button>
+        <button class="drawer-nav-btn" id="drawer-btn-guide">
+          <span class="drawer-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/></svg>
+          </span> COMBAT GUIDE & MOVES
+        </button>
+        <button class="drawer-nav-btn" data-screen="screen-settings">
+          <span class="drawer-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </span> SYSTEM CONFIGURATION
+        </button>
+        <button type="button" class="drawer-nav-btn" id="drawer-btn-feedback">
+          <span class="drawer-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </span> FEEDBACK & SUPPORT
+        </button>
       </nav>
 
       <div class="drawer-section-title">PREFERENCES & QUICK ACTIONS</div>
       <div class="drawer-actions-row">
         <button class="drawer-action-pill" id="drawer-btn-theme" aria-label="Toggle Light or Dark Theme">
-          <span class="drawer-theme-icon" id="drawer-theme-icon" aria-hidden="true">🌙</span>
+          <span class="drawer-theme-icon" id="drawer-theme-icon" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </span>
           <span class="drawer-theme-text" id="drawer-theme-text">THEME</span>
         </button>
         <button class="drawer-action-pill" id="drawer-btn-fullscreen" aria-label="Toggle Fullscreen">
-          <span aria-hidden="true">⛶</span> FULLSCREEN
+          <span aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+          </span> FULLSCREEN
         </button>
       </div>
 
@@ -199,13 +258,19 @@
           
           <div class="lobby-hero-quick-actions">
             <button type="button" class="btn-lobby-change-fighter" id="btn-home-view-fighter" title="Choose or Customize Fighter">
-              <span class="btn-icon" aria-hidden="true">🥋</span>
+              <span class="btn-icon" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5M13 19l6-6M19 13l2 2-7 7-2-2 7-7M9.5 14.5L6 18H3v-3l3.5-3.5"/></svg>
+              </span>
               <span>CHANGE FIGHTER</span>
             </button>
             <div class="lobby-fighter-arrows">
-              <button type="button" class="btn-fighter-cycle" id="btn-home-prev-fighter" title="Previous Fighter" aria-label="Previous Fighter">◄</button>
+              <button type="button" class="btn-fighter-cycle" id="btn-home-prev-fighter" title="Previous Fighter" aria-label="Previous Fighter">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
               <span class="home-fighter-counter" id="home-fighter-index">1 / 6</span>
-              <button type="button" class="btn-fighter-cycle" id="btn-home-next-fighter" title="Next Fighter" aria-label="Next Fighter">►</button>
+              <button type="button" class="btn-fighter-cycle" id="btn-home-next-fighter" title="Next Fighter" aria-label="Next Fighter">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
             </div>
           </div>
         </div>
@@ -214,7 +279,9 @@
         <div class="lobby-top-right-hud">
           <!-- Small Missions Shortcut Card -->
           <div class="lobby-widget-pill" id="home-module-challenge" role="button" tabindex="0" title="Open Missions & Challenges">
-            <div class="widget-icon-box">🎯</div>
+            <div class="widget-icon-box">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            </div>
             <div class="widget-meta">
               <div class="widget-kicker">DAILY MISSION</div>
               <div class="widget-title-truncate" id="home-daily-title">Ascendant Victory</div>
@@ -222,7 +289,9 @@
                 <div class="widget-meter-fill" id="home-daily-bar-fill" style="width: 50%;"></div>
               </div>
             </div>
-            <span class="widget-arrow">➔</span>
+            <span class="widget-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
             <!-- Hidden elements for script updates -->
             <button id="btn-home-open-challenges" style="display:none;"></button>
             <span id="home-daily-desc" style="display:none;"></span>
@@ -231,13 +300,17 @@
 
           <!-- Small Rank Shortcut Card -->
           <div class="lobby-widget-pill" id="home-module-rank" role="button" tabindex="0" title="Open Rank & Ladder">
-            <div class="widget-icon-box" id="home-rank-crest">🥈</div>
+            <div class="widget-icon-box" id="home-rank-crest">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
             <div class="widget-meta">
               <div class="widget-kicker">CURRENT RANK</div>
               <div class="widget-title-truncate" id="home-rank-title">SILVER I</div>
-              <div class="widget-sub-stats" id="home-rank-streak">🔥 3 WINS</div>
+              <div class="widget-sub-stats" id="home-rank-streak">3 WINS</div>
             </div>
-            <span class="widget-arrow">➔</span>
+            <span class="widget-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
             <!-- Hidden elements for script updates -->
             <button id="btn-home-open-ranked" style="display:none;"></button>
             <span id="home-rank-rp" style="display:none;"></span>
@@ -274,11 +347,15 @@
           <!-- Compact Segmented Match-Mode Selector (Inspired by BGMI / Free Fire) -->
           <div class="lobby-mode-selector-strip" id="lobby-mode-selector" role="radiogroup" aria-label="Select Combat Match Mode">
             <button type="button" class="lobby-mode-pill active" id="btn-lobby-mode-casual" data-mode="casual" role="radio" aria-checked="true">
-              <span class="mode-pill-icon">⚔️</span>
+              <span class="mode-pill-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5M13 19l6-6M19 13l2 2-7 7-2-2 7-7M9.5 14.5L6 18H3v-3l3.5-3.5"/></svg>
+              </span>
               <span class="mode-pill-label">CASUAL</span>
             </button>
             <button type="button" class="lobby-mode-pill" id="btn-lobby-mode-ranked" data-mode="ranked" role="radio" aria-checked="false">
-              <span class="mode-pill-icon">🏆</span>
+              <span class="mode-pill-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.45 1-1 1H8v4h8v-4h-1c-.55 0-1-.45-1-1v-2.34A8 8 0 0 0 20 8V3H4v5a8 8 0 0 0 6 6.66z"/></svg>
+              </span>
               <span class="mode-pill-label">RANKED</span>
             </button>
           </div>
@@ -286,12 +363,16 @@
           <!-- Prominent Primary PLAY Button -->
           <button type="button" class="btn-lobby-primary-play" id="btn-quick-start-fight" title="Start Match [ENTER]">
             <div class="btn-lobby-play-content">
-              <span class="lobby-play-symbol" aria-hidden="true">⚔</span>
+              <span class="lobby-play-symbol" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5M13 19l6-6M19 13l2 2-7 7-2-2 7-7M9.5 14.5L6 18H3v-3l3.5-3.5"/></svg>
+              </span>
               <div class="lobby-play-text-col">
                 <span class="lobby-play-title">PLAY</span>
                 <span class="lobby-play-sub" id="lobby-play-mode-caption">CASUAL 1v1 • QUICK SPARRING</span>
               </div>
-              <span class="lobby-play-arrow" aria-hidden="true">➔</span>
+              <span class="lobby-play-arrow" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </span>
             </div>
           </button>
         </div>
@@ -2907,24 +2988,34 @@
   <!-- MOBILE BOTTOM NAVIGATION (Ergonomic for 320px - 430px) -->
   <nav id="mobile-bottom-nav" class="mobile-bottom-nav">
     <button class="mobile-nav-btn active" data-screen="screen-home" id="mobile-nav-home">
-      <span class="mobile-nav-icon">⌂</span>
+      <span class="mobile-nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </span>
       <span class="mobile-nav-label">HOME</span>
     </button>
     <button class="mobile-nav-btn" data-screen="screen-character-select" id="mobile-nav-characters">
-      <span class="mobile-nav-icon">🥋</span>
+      <span class="mobile-nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5M13 19l6-6M19 13l2 2-7 7-2-2 7-7M9.5 14.5L6 18H3v-3l3.5-3.5"/></svg>
+      </span>
       <span class="mobile-nav-label">FIGHTERS</span>
     </button>
     <button class="mobile-nav-btn" data-screen="screen-ranked-setup" id="mobile-nav-ranked">
-      <span class="mobile-nav-icon">🏆</span>
+      <span class="mobile-nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.45 1-1 1H8v4h8v-4h-1c-.55 0-1-.45-1-1v-2.34A8 8 0 0 0 20 8V3H4v5a8 8 0 0 0 6 6.66z"/></svg>
+      </span>
       <span class="mobile-nav-label">RANK</span>
     </button>
     <button class="mobile-nav-btn" id="mobile-nav-missions">
-      <span class="mobile-nav-icon">🎯</span>
+      <span class="mobile-nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+      </span>
       <span class="mobile-nav-label">MISSIONS</span>
       <span id="mobile-nav-missions-badge" class="nav-alert-dot" style="display:none;"></span>
     </button>
     <button class="mobile-nav-btn" data-screen="screen-profile" id="mobile-nav-profile">
-      <span class="mobile-nav-icon">👤</span>
+      <span class="mobile-nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </span>
       <span class="mobile-nav-label">PROFILE</span>
     </button>
     <!-- Hidden compatibility button for nav-play reference -->

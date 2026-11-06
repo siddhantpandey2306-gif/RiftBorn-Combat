@@ -433,6 +433,24 @@ button.nav-brand:hover {
   border-color: var(--border-strong);
 }
 
+/* Real Vector SVG Icons (Replacing raw emojis across UI) */
+.nav-icon-glyph svg,
+.drawer-icon svg,
+.drawer-theme-icon svg,
+.btn-icon svg,
+.widget-icon-box svg,
+.widget-arrow svg,
+.currency-icon svg,
+.mode-pill-icon svg,
+.lobby-play-symbol svg,
+.lobby-play-arrow svg,
+.mobile-nav-icon svg,
+.btn-fighter-cycle svg {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
 .nav-alert-dot {
   width: 7px;
   height: 7px;
@@ -5939,13 +5957,13 @@ button.nav-brand:hover {
   letter-spacing: 1px;
   padding: 4px 14px;
   border-radius: 4px;
-  box-shadow: 0 0 10px rgba(217, 54, 54, 0.5);
-  animation: pulseCue 1.2s infinite alternate;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 @keyframes pulseCue {
   from { transform: scale(1); }
-  to { transform: scale(1.08); }
+  to { transform: scale(1.04); }
 }
 
 .tutorial-progress-bar {
@@ -6959,18 +6977,20 @@ button.nav-brand:hover {
   transform: scale(0.92);
 }
 
-/* Pulse animation for primary play button */
-@keyframes heroPlayPulse {
-  0%, 100% {
-    box-shadow: 0 4px 16px rgba(217, 54, 54, 0.35);
-  }
-  50% {
-    box-shadow: 0 6px 24px rgba(217, 54, 54, 0.55);
-  }
+/* Intentional micro-interactions for primary play button */
+.btn-play-hero {
+  transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.16s ease, filter 0.16s ease;
+  box-shadow: 0 4px 16px rgba(217, 54, 54, 0.35);
 }
 
-.btn-play-hero:not(:hover):not(:disabled) {
-  animation: heroPlayPulse 3s ease-in-out infinite;
+.btn-play-hero:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(217, 54, 54, 0.55);
+}
+
+.btn-play-hero:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(217, 54, 54, 0.35);
 }
 
 /* Accessibility: Respect Reduced Motion Preference */
@@ -8287,18 +8307,11 @@ button.nav-brand:hover {
   animation: screenSlideIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Pulse animation on primary launch buttons */
-@keyframes buttonEnergyGlow {
-  0%, 100% {
-    box-shadow: 0 4px 16px rgba(217, 54, 54, 0.35);
-  }
-  50% {
-    box-shadow: 0 6px 24px rgba(217, 54, 54, 0.6);
-  }
-}
-
-.btn-play-hero:not(:disabled) {
-  animation: buttonEnergyGlow 3s infinite ease-in-out;
+/* Launch button state styles */
+.btn-play-hero:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.6);
 }
 
 /* ==========================================================================
@@ -9396,33 +9409,35 @@ body.drawer-open {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 14px;
-  background: rgba(14, 20, 32, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 8px;
+  padding: 8px 12px;
+  background: rgba(11, 15, 23, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
   cursor: pointer;
   backdrop-filter: blur(8px);
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   min-width: 175px;
 }
 
 .lobby-widget-pill:hover {
-  border-color: var(--accent-cyan);
-  background: rgba(20, 30, 48, 0.95);
+  border-color: rgba(0, 210, 255, 0.6);
+  background: rgba(15, 22, 34, 0.95);
   transform: translateY(-2px);
-  box-shadow: 0 4px 18px rgba(0, 210, 255, 0.2);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
 }
 
 .widget-icon-box {
-  font-size: 20px;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.05);
+  color: var(--accent-cyan);
   flex-shrink: 0;
+}
+
+#home-rank-crest.widget-icon-box {
+  color: var(--accent-gold);
 }
 
 .widget-meta {
@@ -9436,6 +9451,7 @@ body.drawer-open {
   font-weight: 800;
   letter-spacing: 1px;
   color: var(--text-muted);
+  margin-bottom: 2px;
 }
 
 .widget-title-truncate {
@@ -9452,7 +9468,7 @@ body.drawer-open {
   width: 100%;
   height: 4px;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
+  border-radius: 4px;
   overflow: hidden;
   margin-top: 4px;
 }
@@ -9460,7 +9476,7 @@ body.drawer-open {
 .widget-meter-fill {
   height: 100%;
   background: var(--accent-gold);
-  border-radius: 2px;
+  border-radius: 4px;
 }
 
 .widget-sub-stats {
@@ -9468,12 +9484,16 @@ body.drawer-open {
   font-weight: 700;
   color: var(--action-primary);
   margin-top: 2px;
+  display: flex;
+  align-items: center;
 }
 
 .widget-arrow {
-  font-size: 12px;
   color: var(--text-muted);
-  transition: transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .lobby-widget-pill:hover .widget-arrow {
@@ -9646,23 +9666,14 @@ body.drawer-open {
 }
 
 .btn-lobby-primary-play:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 14px 40px rgba(255, 23, 68, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(255, 23, 68, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  filter: brightness(1.08);
 }
 
 .btn-lobby-primary-play:active {
-  transform: translateY(1px) scale(0.99);
-}
-
-.btn-lobby-primary-play:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 14px 40px rgba(255, 23, 68, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  filter: brightness(1.1);
-}
-
-.btn-lobby-primary-play:active {
-  transform: translateY(1px) scale(0.99);
+  transform: translateY(1px);
+  box-shadow: 0 4px 14px rgba(255, 23, 68, 0.35);
 }
 
 .btn-lobby-play-content {
@@ -9673,7 +9684,9 @@ body.drawer-open {
 }
 
 .lobby-play-symbol {
-  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-right: 14px;
 }
 
@@ -9702,13 +9715,15 @@ body.drawer-open {
 }
 
 .lobby-play-arrow {
-  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-left: 14px;
   transition: transform 0.2s ease;
 }
 
 .btn-lobby-primary-play:hover .lobby-play-arrow {
-  transform: translateX(5px);
+  transform: translateX(4px);
 }
 
 /* ==========================================================================

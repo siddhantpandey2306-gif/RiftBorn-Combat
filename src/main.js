@@ -216,8 +216,10 @@ class RiftbornApp {
     // Update navbar theme button
     const themeGlyph = document.getElementById('theme-icon-glyph');
     const themeLabel = document.getElementById('theme-icon-label');
+    const sunSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+    const moonSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
     if (themeGlyph) {
-      themeGlyph.textContent = theme === 'dark' ? '☀' : '🌙';
+      themeGlyph.innerHTML = theme === 'dark' ? sunSvg : moonSvg;
     }
     if (themeLabel) {
       themeLabel.textContent = theme === 'dark' ? 'LIGHT' : 'DARK';
@@ -227,7 +229,7 @@ class RiftbornApp {
     const drawerThemeIcon = document.getElementById('drawer-theme-icon');
     const drawerThemeText = document.getElementById('drawer-theme-text');
     if (drawerThemeIcon) {
-      drawerThemeIcon.textContent = theme === 'dark' ? '☀' : '🌙';
+      drawerThemeIcon.innerHTML = theme === 'dark' ? sunSvg : moonSvg;
     }
     if (drawerThemeText) {
       drawerThemeText.textContent = theme === 'dark' ? 'LIGHT MODE' : 'DARK MODE';
@@ -1536,7 +1538,9 @@ class RiftbornApp {
     const ranked = progressionManager.data.ranked;
     const rankInfo = CompetitiveRankEngine.getRankFromRp(ranked.rp);
     const crestEl = document.getElementById('home-rank-crest');
-    if (crestEl) crestEl.textContent = rankInfo.icon || '🥈';
+    if (crestEl) {
+      crestEl.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${rankInfo.color || 'var(--accent-gold)'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;
+    }
     const rankTitle = document.getElementById('home-rank-title');
     if (rankTitle) {
       rankTitle.textContent = rankInfo.formattedName.toUpperCase();
@@ -1547,7 +1551,10 @@ class RiftbornApp {
       rankRp.textContent = `${ranked.rp} TOTAL RP • ${rankInfo.divisionRp}/100 RP TO NEXT DIVISION`;
     }
     const streakEl = document.getElementById('home-rank-streak');
-    if (streakEl) streakEl.textContent = `🔥 ${ranked.streak || 0}`;
+    if (streakEl) {
+      const streakVal = ranked.streak || 0;
+      streakEl.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:inline-block; vertical-align:-1px; margin-right:3px;"><path d="M12 2c.5 3 2.5 5 4.5 7 2 2 3.5 4.5 3.5 7.5A8 8 0 0 1 4 16.5c0-4 3-7 5-9 .5 2 1.5 3 2.5 3 .5-3 1.5-6.5.5-8.5z"/></svg>${streakVal} ${streakVal === 1 ? 'WIN' : 'WINS'}`;
+    }
     const winRateEl = document.getElementById('home-rank-winrate');
     if (winRateEl) {
       const total = (ranked.wins || 0) + (ranked.losses || 0);
